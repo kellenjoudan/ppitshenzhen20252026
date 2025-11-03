@@ -1,0 +1,263 @@
+.container {
+	position: relative;
+	width: 100%;
+	height: 100vh; /* Full viewport height */
+	overflow: hidden;
+}
+
+.container::before,
+.container::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 55px; /* Adjust the height for more or less gradient */
+	z-index: 2; /* Ensure it's above the background but below text */
+	pointer-events: none; /* Prevent interference with user interactions */
+}
+
+.container::before {
+	top: 0; /* Gradient at the top */
+	background: linear-gradient(
+		to bottom,
+		rgba(0, 0, 0, 0.6) 0%,
+		transparent 100%
+	);
+}
+
+.container::after {
+	bottom: 0; /* Gradient at the bottom */
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+}
+
+.hero {
+	position: relative;
+	display: flex;
+	width: 100%;
+	height: 100%;
+}
+
+@media (min-width: 768px) {
+	.leftPanel {
+		position: relative;
+		width: 40%; /* One-third of the page */
+		background: black;
+		z-index: 2;
+		pointer-events: none; /* Ensure it doesn't interfere with interactions */
+		height: 100%;
+		display: flex;
+		align-items: center;
+		padding-left: 70px; /* Ensure the text isn't touching the edge */
+	}
+
+	.rightPanel {
+		position: relative;
+		width: 100%; /* Extend the background image across the whole page */
+		height: 100%;
+		z-index: 1;
+	}
+
+	.rightPanel::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0px; /* Slight overlap to blend the two sections */
+		width: 100px;
+		height: 100%;
+		background: linear-gradient(
+			to right,
+			rgba(0, 0, 0, 0.95) 0%,
+			rgba(0, 0, 0, 0.8) 30%,
+			rgba(0, 0, 0, 0.6) 50%,
+			rgba(0, 0, 0, 0.3) 75%,
+			transparent 95%
+		); /* Gradient contrast between black and the background */
+		z-index: 1;
+	}
+
+	.dot {
+		width: 15px;
+		height: 15px;
+		background-color: rgba(255, 255, 255, 0.5);
+		border-radius: 50%;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+
+	.textContainer {
+		position: relative; /* Relative to the leftPanel */
+		z-index: 3; /* Ensure text appears above the gradient */
+		max-width: 100%; /* Ensure the text doesn't extend beyond the black rectangle */
+		color: white;
+		text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+		word-wrap: break-word; /* For better cross-browser support */
+		font-family: "Montserrat";
+	}
+
+	.textContainer h3 {
+		font-size: 1.3rem;
+		margin-bottom: 0px;
+		font-weight: 600;
+	}
+
+	.textContainer h1 {
+		font-size: 4rem;
+		margin-bottom: 20px;
+		font-weight: 600;
+		line-height: 1.1;
+	}
+
+	.textContainer p {
+		font-size: 1rem;
+		line-height: 1.6;
+	}
+}
+
+@media (max-width: 768px) {
+	.dots {
+		display: none;
+	}
+
+	.mobileLeftPanel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: flex-end; /* Align text to the bottom */
+		justify-content: center; /* Center the text horizontally */
+		padding: 20px;
+		z-index: 3;
+		pointer-events: none; /* Prevent interactions */
+		background: linear-gradient(
+			to top,
+			rgba(0, 0, 0, 0.8) 20%,
+			/* Strong black at the bottom */ rgba(0, 0, 0, 0.4) 30%,
+			/* Mid-opacity in the middle */ transparent 50%
+				/* Fully transparent at the top */
+		);
+	}
+
+	.hero {
+		position: relative; /* Ensure positioning context for absolute children */
+		height: 100vh; /* Full screen height */
+		overflow: visible; /* Prevent content overflow */
+	}
+
+	.textContainer {
+		pointer-events: auto; /* Enable interaction for text */
+		color: white;
+		width: 100%;
+		padding: 10px;
+		/* Make it scrollable if content exceeds 40% of the viewport height */
+		max-height: 45vh; /* 40% of the viewport height */
+		overflow-y: auto; /* Enable vertical scrolling if needed */
+		font-family: "Montserrat";
+	}
+
+	.textContainer h3 {
+		font-size: 1.3rem;
+		margin-bottom: 0px;
+		font-weight: 800;
+	}
+
+	.textContainer h1 {
+		font-size: 3.9rem;
+		margin-bottom: 10px;
+		font-weight: 600;
+		line-height: 0.9;
+	}
+
+	.textContainer p {
+		font-size: 1rem;
+		line-height: 1.2;
+	}
+
+	.rightPanel {
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		position: relative;
+	}
+
+	.slide img {
+		width: 100%; /* Ensure the image covers the entire width */
+		height: 100%; /* Ensure the image covers the entire height */
+		object-fit: cover; /* Crop image to fill the container */
+	}
+}
+
+.slides {
+	display: flex;
+	height: 100%;
+	transition: transform 0.8s ease-in-out;
+	will-change: transform; /* Optimize for smoother animations */
+	z-index: 1;
+}
+
+.slide {
+	position: absolute;
+	width: 100%;
+	height: 100vh;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	opacity: 0; /* Initially hidden */
+	transition: opacity 1s ease-in-out, transform 0.8s ease-in-out; /* Smooth transition */
+	z-index: 1;
+}
+
+.slide.active {
+	opacity: 1; /* Fully visible when active */
+	z-index: 2; /* Ensure the active slide is on top */
+}
+
+.slide img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* Ensure images cover the entire slide area */
+}
+
+.prev,
+.next {
+	position: absolute;
+	top: 50%; /* Vertically centered */
+	scale: 1.5 1.5;
+	transform: translateY(-50%);
+	font-size: 5rem; /* Bigger size for the arrows */
+	color: white;
+	background: none; /* Remove background */
+	border: none; /* Remove border */
+	cursor: pointer;
+	z-index: 5; /* Ensure arrows are above the gradient and image */
+	transition: transform 0.2s ease; /* Add hover effect */
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+.prev:hover,
+.next:hover {
+	transform: translateY(-50%) scale(1.2); /* Slightly enlarge on hover */
+}
+
+.prev {
+	left: 10px;
+}
+
+.next {
+	right: 10px;
+}
+
+.dots {
+	position: absolute;
+	bottom: 50px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	gap: 10px;
+	z-index: 3;
+}
+
+.dot.active {
+	background-color: #ffffff;
+}
