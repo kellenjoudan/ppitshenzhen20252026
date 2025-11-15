@@ -240,10 +240,10 @@ export default function CommitteeCarousel() {
 					<div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white">
 						<h1 className="text-5xl md:text-6xl font-bold leading-tight drop-shadow-lg">
 							<span className="block text-4xl md:text-6xl sm:text-4xl -mb-2 md:-mb-4 shadow-md">
-								meet the
+								Meet The
 							</span>
 							<span className="block text-6xl md:text-8xl sm:text-6xl -mt-2 md:-mt-4">
-								committee
+								Committee
 							</span>
 						</h1>
 					</div>
