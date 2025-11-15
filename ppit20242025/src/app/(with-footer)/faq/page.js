@@ -7,11 +7,6 @@ import Header from "../../Components/Header";
 export default function Faq() {
 	const [openDropdown, setOpenDropdown] = useState(null);
 	const [selectedCategory, setSelectedCategory] = useState("General");
-	const [menuOpen, setMenuOpen] = useState(false); // Track the state of the menu
-
-	const toggleMenu = () => {
-		setMenuOpen(!menuOpen); // Toggle the menu visibility
-	};
 
 	const toggleDropdown = (index) => {
 		setOpenDropdown(openDropdown === index ? null : index);
@@ -189,7 +184,7 @@ export default function Faq() {
 
 	return (
 		<div className="bg-[#1f2023]">
-			<Header menuOpen={menuOpen} toggleMenu={toggleMenu} />
+			<Header />
 			<div className="w-full lg:pt-24 md:pt-20 pt-16">
 				<div className="w-full font-montserrat font-bold xl:text-4xl md:text-3xl sm:text-2xl text-2xl tracking-wide text-center mt-8 py-3 text-slate-100">
 					Frequently asked questions

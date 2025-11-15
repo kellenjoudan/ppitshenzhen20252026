@@ -4,12 +4,6 @@ import Image from "next/image";
 import Header from "../../Components/Header";
 
 export default function CommitteeCarousel() {
-	const [menuOpen, setMenuOpen] = useState(false); // Track the state of the menu
-
-	const toggleMenu = () => {
-		setMenuOpen(!menuOpen); // Toggle the menu visibility
-	};
-
 	const [activeSection, setActiveSection] = useState(0);
 	const [showOverlay, setShowOverlay] = useState(false);
 
@@ -230,7 +224,7 @@ export default function CommitteeCarousel() {
 
 	return (
 		<div className="w-full overflow-x-hidden">
-			<Header menuOpen={menuOpen} toggleMenu={toggleMenu} />
+			<Header />
 			<div className="bg-black text-white font-[500] font-montserrat">
 				{/* Banner Section */}
 				<div className="relative h-[50vh] xl:h-screen w-full overflow-hidden mb-[2%] ">
