@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Header from "../../Components/Header";
 import styles from "./Events.module.css";
 import { useRef, useState, useEffect } from "react";
 
-export default function Home() {
+export default function Events() {
 	const slides = [
 		{
 			src: "/Events_images/image1.webp",
@@ -77,7 +76,6 @@ export default function Home() {
 
 	return (
 		<div className={styles.container}>
-			<Header />
 			<main className={styles.hero}>
 				
 				{/* Left Panel */}
