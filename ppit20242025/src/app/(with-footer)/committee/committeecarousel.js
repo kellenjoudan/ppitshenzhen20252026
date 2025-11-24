@@ -26,7 +26,7 @@ export default function CommitteeCarousel({ input }) {
             id: i,
             title: input[0][i],
             description: input[1][i],
-            image: `/CMT_Assets/Full/${input[0][i]}.png`, //!!STILL NEED TO MODIFY!!
+            image: `/CMT_Assets/Full/${input[0][i]}.webp`, //!!STILL NEED TO MODIFY!!
         })
 
         //for members and departmentlayouts
