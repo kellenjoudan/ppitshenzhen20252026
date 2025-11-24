@@ -16,11 +16,6 @@ import Cap from "../../../public/Home/cap.webp";
 import Link from "next/link";
 
 export default function Home() {
-	const [menuOpen, setMenuOpen] = useState(false);
-
-	const toggleMenu = () => {
-		setMenuOpen(!menuOpen);
-	};
 
 	const merchandise = [
 		{ name: "Sweater", price: "110元", image: SweaterImage },
@@ -50,7 +45,7 @@ export default function Home() {
 
 	return (
 		<>
-			<Header menuOpen={menuOpen} toggleMenu={toggleMenu} />
+			<Header />
 
 			{/* Hero Section */}
 			<div className="relative font-montserrat">

@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import Header from "../Components/Header";
 
 export default function WithFooterLayout({ children }) {
   return (
     <>
+      <Header />
       {children}
       <div className="FOOTER bg-gray-100 md:py-6 py-4 lg:px-16 md:px-12 sm:px-8 px-6">
         <div className="container mx-auto">

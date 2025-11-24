@@ -2,9 +2,11 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
-const Header = ({ menuOpen, toggleMenu }) => {
+const Header = () => {
+	const [menuOpen, setMenuOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
-
+	const toggleMenu = () => setMenuOpen((prev) => !prev);
+	
 	useEffect(() => {
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 0);
@@ -27,7 +29,7 @@ const Header = ({ menuOpen, toggleMenu }) => {
 			{/* Logo */}
 			<Link href="/">
 				<img
-					src="/images/PPITSZlogoheader.webp"
+					src="/PPITSZlogoheader.webp"
 					alt="Logo"
 					className="w-[125px] h-auto object-contain"
 				/>
