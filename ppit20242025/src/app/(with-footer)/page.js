@@ -1,7 +1,5 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
-import Header from "../../app/Components/Header";
 import PPIT from "../../../public/Home/PPIT.webp";
 import PPITTablet from "../../../public/Home/PPITtablet.webp";
 import PPITMobile from "../../../public/Home/PPITmobile.webp";
@@ -45,8 +43,6 @@ export default function Home() {
 
 	return (
 		<>
-			<Header />
-
 			{/* Hero Section */}
 			<div className="relative font-montserrat">
 				<div className="relative md:h-[100vh] h-[90vh] overflow-hidden">
