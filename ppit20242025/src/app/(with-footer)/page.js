@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
-import PPIT from "../../../public/Home/PPIT.webp";
-import PPITTablet from "../../../public/Home/PPITtablet.webp";
-import PPITMobile from "../../../public/Home/PPITmobile.webp";
-import AboutImage from "../../../public/Home/about-image.webp";
+import PPIT from "../../../public/Home/foto bareng.png";
+import PPITTablet from "../../../public/Home/foto bareng.png";
+import PPITMobile from "../../../public/Home/foto bareng.png";
+import AboutImage from "../../../public/Home/Logo ppit.PNG";
 import Vision from "../../../public/Home/vision.webp";
 import Mission from "../../../public/Home/mission.webp";
 import BestSeller from "../../../public/Home/merch.webp";
@@ -140,14 +140,14 @@ export default function Home() {
 							Saudara Ivan Prawira Limanauwyang juga merupakan salah satu
 							inisiator berdirinya organisasi ini. Setelah melewati satu periode
 							kepengerusan, PPITSZ akhirnya disahkan sebagai cabang pada tahun
-							2019. Saat ini, PPITSZ menaungi lebih dari 200 pelajar aktif yang
+							2019. Saat ini, PPITSZ menaungi lebih dari 500 pelajar aktif yang
 							tersebar di 4 lembaga pendidikan di Kota Shenzhen.
 						</div>
 						{/* New Statistics Section */}
 						<div className="mt-8 flex space-x-16">
 							<div className="flex flex-col items-start">
 								<div className="lg:text-5xl md:text-4xl text-3xl font-montserrat font-[420]">
-									6+
+									7+
 								</div>
 								<div className="text-gray-600 font-montserrat">
 									Tahun Berdiri
@@ -155,7 +155,7 @@ export default function Home() {
 							</div>
 							<div className="flex flex-col items-start">
 								<div className="lg:text-5xl md:text-4xl text-3xl font-montserrat font-[420]">
-									450+
+									500+
 								</div>
 								<div className="text-gray-600 font-montserrat">
 									Mahasiswa di Shenzhen
@@ -187,13 +187,7 @@ export default function Home() {
 									Visi
 								</h3>
 								<p className="text-gray-700 text-xl lg:text-2xl font-montserrat font-medium">
-									PPIT Shenzhen menjadi rumah kedua yang menginspirasi,
-									mendukung, dan memberdayakan pelajar Indonesia untuk mencapai
-									potensi penuh mereka. Kami menciptakan lingkungan inklusif,
-									memfasilitasi pertumbuhan akademis dan profesional, serta
-									memperkuat jaringan kolaborasi. Dengan semangat kebersamaan,
-									kami mendorong inovasi, kepemimpinan, dan kontribusi positif
-									bagi Indonesia dan dunia.
+									Menjadikan PPIT Shenzhen sebagai wadah yang hangat, inklusif, dan membangun, di mana setiap pelajar Indonesia dapat merasakan kebersamaan, menemukan kebahagiaan dalam kehidupan perkuliahan, serta berkembang secara pribadi dan kolektif.<br></br><br></br><br></br><br></br><br></br><br></br><br></br>
 								</p>
 								<div className="flex items-center justify-center">
 									<Image
@@ -214,13 +208,7 @@ export default function Home() {
 									Misi
 								</h3>
 								<p className="text-gray-700 text-xl lg:text-2xl font-montserrat font-medium">
-									Kami berkomitmen untuk terus maju dengan inisiatif dan
-									semangat tinggi, mendorong anggota PPIT Shenzhen meraih
-									keberhasilan dan memaksimalkan potensi mereka. Kami menekankan
-									pentingnya kinerja, komunikasi, dan kepercayaan dalam
-									membangun relasi yang kuat, baik internal maupun eksternal.
-									Selain itu, kami berupaya membangun jaringan alumni yang solid
-									untuk perkembangan bersama.
+									Mendorong pengembangan diri mahasiswa melalui kegiatan edukatif, kreatif, dan kolaboratif yang membentuk pribadi tangguh dan berdaya saing; menciptakan lingkungan yang menyenangkan melalui berbagai program yang membangun suasana positif, sehat, dan penuh tawa; menumbuhkan budaya keterbukaan, komunikasi dua arah, dan kolaborasi antarranggota demi terciptanya organisasi yang responsif dan adaptif; serta memperkuat rasa kekeluargaan antar pelajar Indonesia di Shenzhen agar setiap individu merasa diterima, didengar, dan dihargai.
 								</p>
 								<div className="flex items-center justify-center">
 									<Image
