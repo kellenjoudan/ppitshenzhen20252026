@@ -24,6 +24,14 @@ export default function Home() {
 
 	const universities = [
 		{
+			name: "Peking University Shenzhen Graduate School",
+			ranking: "#14 QS World Rankings 2026",
+		},
+		{
+			name: "Tsinghua Shenzhen International Graduate School",
+			ranking: "#17 QS World Rankings 2026",
+		},
+		{
 			name: "The Chinese University of Hong Kong, Shenzhen",
 			ranking: "#32 QS World Rankings 2026",
 		},
