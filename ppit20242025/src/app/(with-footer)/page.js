@@ -174,28 +174,23 @@ export default function Home() {
 			</section>
 
 			{/* Vision & Mission */}
-			<section className="bg-gray-50 py-20 px-4 md:px-8">
-				<div className="max-w-[90rem] mx-auto flex flex-col md:flex-row">
+			<section className="bg-[#81191A] pt-12 pb-20 px-4 md:px-8">
+				<div className="max-w-[90rem] mx-auto flex flex-col md:flex-row text-white">
 					<div className="ml-4">
-						<h2 className="text-2xl lg:text-4xl font-bold mb-12 font-montserrat">
-							VISI DAN MISI
-						</h2>
 						<div className="flex flex-col md:flex-row">
 							<div className="flex-1 pr-4 mb-8 md:mb-0">
-								<h3 className="text-2xl lg:text-3xl font-bold font-montserrat text-red-600 mb-4 flex items-center">
-									<span className="text-red-600 mr-2">►</span>
-									Visi
-								</h3>
-								<p className="text-gray-700 text-xl lg:text-2xl font-montserrat font-medium">
-									PPIT Shenzhen menjadi rumah kedua yang menginspirasi,
-									mendukung, dan memberdayakan pelajar Indonesia untuk mencapai
-									potensi penuh mereka. Kami menciptakan lingkungan inklusif,
-									memfasilitasi pertumbuhan akademis dan profesional, serta
-									memperkuat jaringan kolaborasi. Dengan semangat kebersamaan,
-									kami mendorong inovasi, kepemimpinan, dan kontribusi positif
-									bagi Indonesia dan dunia.
+								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
+									VISI
+								</h2>
+								<p className="text-xl lg:text-2xl font-montserrat font-small">
+									Menjadikan PPIT Shenzhen wadah yang 
+									hangat, inklusif, dan membangun, dimana setiap
+									pelajar Indonesia dapat merasakan kebersamaan 
+									dalam kehidupan perkuliahan, serta berkembang 
+									secara pribadi dan kolektif. 
+									
 								</p>
-								<div className="flex items-center justify-center">
+								{/* <div className="flex items-center justify-center">
 									<Image
 										src={Vision}
 										className="mt-6 md:mt-12 w-[25%] h-auto object-cover"
@@ -203,26 +198,29 @@ export default function Home() {
 										height={200}
 										alt="Vision"
 									/>
-								</div>
+								</div> */}
 							</div>
 							<div className="md:border-l-2 border-gray-300 mx-4" />
 							<div className="flex-1 md:pl-4 mb-8 md:mb-0">
-								<h3 className="text-2xl lg:text-3xl font-bold font-montserrat text-red-600 mb-4 flex items-center">
-									<span className="text-red-600 mr-2 font-montserrat font-bold">
-										►
-									</span>
-									Misi
-								</h3>
-								<p className="text-gray-700 text-xl lg:text-2xl font-montserrat font-medium">
-									Kami berkomitmen untuk terus maju dengan inisiatif dan
-									semangat tinggi, mendorong anggota PPIT Shenzhen meraih
-									keberhasilan dan memaksimalkan potensi mereka. Kami menekankan
-									pentingnya kinerja, komunikasi, dan kepercayaan dalam
-									membangun relasi yang kuat, baik internal maupun eksternal.
-									Selain itu, kami berupaya membangun jaringan alumni yang solid
-									untuk perkembangan bersama.
-								</p>
-								<div className="flex items-center justify-center">
+								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
+									MISI
+								</h2>
+									<ul className="list-disc list-inside text-left text-xl lg:text-2xl font-montserrat font-small mx-auto max-w-xl text-justify">
+										<li>
+										<span className="font-bold">Grow:</span> Mendorong Pengembangan diri mahasiswa melalui kegiatan edukatif, kreatif, dan kolaboratif yang membentuk pribadi tangguh dan berdaya saing.
+										</li>
+										<li>
+										<span className="font-bold">Laugh:</span> Menciptakan lingkungan yang menyenangkan melalui berbagai program yang membangun suasan positif, sehat, dan penuh tawa.
+										</li>
+										<li>
+										<span className="font-bold">Open:</span> Menumbuhkan budaya keterbukaan, komunikasi 2 arah, dan kolaborasi antaranggota demi terciptanya organisasi yang responsif dan adaptif.
+										</li>
+										<li>
+										<span className="font-bold">Warm:</span> Memperkuat rasa kekeluargaan antar pelajar Indonesia di Shenzhen agar setiap individu merasa diterima, didengar, dan dihargai.
+										</li>
+									</ul>
+				
+								{/* <div className="flex items-center justify-center">
 									<Image
 										src={Mission}
 										className="mt-6 md:mt-12 w-[25%] h-auto object-cover"
@@ -230,7 +228,7 @@ export default function Home() {
 										height={200}
 										alt="Mission"
 									/>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>
