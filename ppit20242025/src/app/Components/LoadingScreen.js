@@ -54,7 +54,7 @@ export default function LoadingScreen({ logoSrc, text, onFinish }) {
         {/* Wrapper to hide text before it reaches the line */}
         <div className="absolute left-6 h-full overflow-hidden z-30 w-[calc(100%-1rem)]">
           <div
-            className={`h-full text-[26px] text-white font-cinzel font-bold transition-transform transition-opacity duration-700 ease-out ${
+            className={`h-full text-[26px] text-white font-cinzel font-bold transition-transform duration-700 ease-out ${
               animateText
                 ? animateSplit
                   ? "translate-x-[150%] opacity-0" // slides out and fades
