@@ -26,7 +26,7 @@ export default function CommitteeCarousel({ input }) {
             id: i,
             title: input[0][i],
             description: input[1][i],
-            image: `/CMT_Assets/Full/${input[0][i]}.webp`, //!!STILL NEED TO MODIFY!!
+            image: `/BANNER_CMT_FULL/Full/${input[0][i]}.png`, //FORMAT FILE FOTO DIVISI: "NAMA_DIVISI.png" (in caps, sesuai dgn nama yg ada di folder)
         })
 
         //for members and departmentlayouts
@@ -159,9 +159,9 @@ export default function CommitteeCarousel({ input }) {
 			<Header menuOpen={menuOpen} toggleMenu={toggleMenu} />
 			<div className="bg-black text-white font-[500] font-montserrat">
 				{/* Banner Section */}
-				<div className="relative h-[50vh] xl:h-screen w-full overflow-hidden mb-[2%] ">
+				<div className="relative h-[50vh] xl:h-screen w-full mb-[2%] ">
 					<Image
-						src="/BANNER_CMT/top.png"
+						src="/BANNER_CMT_FULL/cropped.png"
 						alt="Banner Background"
 						fill
 						className="object-cover opacity-70"
@@ -183,16 +183,15 @@ export default function CommitteeCarousel({ input }) {
 					
 				{/* Navigation Buttons */}
 				<div className="flex flex-wrap justify-center space-x-5 md:space-x-4 mt-10 xl:mt-0 mb-0 xl:mb-3 md:w-[80%] w-[90%] mx-auto md:px-2 xl:px-0">
-					
 					{sections.map((section, index) => (
 						<button
-							key={section.id}
-							onClick={() => setActiveSection(index)}
-							className={`px-3 md:px-6 py-1 lg:text-xl md:text-lg sm:text-md text-sm rounded-full font-montserrat lg:pb-[-30px] md:pb-[-20px] pb-[-10px] font-semibold ${
-								activeSection === index
-									? "bg-black border-white border-[2px]"
-									: "bg-black hover:bg-white hover:text-black"
-							}`}
+						key={section.id}
+						onClick={() => setActiveSection(index)}
+						className={`px-3 md:px-6 py-1 lg:text-xl md:text-lg sm:text-md text-sm rounded-full font-montserrat lg:pb-[-30px] md:pb-[-20px] pb-[-10px] font-semibold ${
+							activeSection === index
+							? "bg-black border-white border-[2px]"
+							: "bg-black hover:bg-white hover:text-black"
+						}`}
 						>
 							{section.title}
 						</button>
@@ -200,34 +199,34 @@ export default function CommitteeCarousel({ input }) {
 				</div>
 
 				{/* Main Content */}
-				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-2">
-					<div className="relative w-[85vw] h-[38vh] sm:w-[55vw] sm:h-[45vh] md:w-[60vw] md:h-[50vh] lg:h-[65vh] xl:w-[70vw] xl:h-[80vh] overflow-hidden rounded-lg shadow-lg flex items-center justify-center xl:ml-auto xl:mr-0 mx-auto">
+				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-12">
+					<div className="relative h-[80vh] sm:h-[45vh] md:h-[50vh] lg:h-[65vh] xl:h-[80vh] overflow-hidden rounded-lg shadow-lg flex items-center justify-center xl:ml-auto xl:mr-0 mx-auto aspect-[4/5]">
 						{sections.map((section, index) => (
 							<Image
-								key={section.id}
-								src={section.image}
-								alt={`Image for ${section.description}`}
-								fill
-								className={`object-cover transition-opacity duration-400 ease-in-out ${
-									activeSection === index ? "opacity-100" : "opacity-0"
-								}`}
-								quality={100}
+							key={section.id}
+							src={section.image}
+							alt={`Image for ${section.description}`}
+							fill
+							className={`object-contain pl-8 pr-8 transition-opacity duration-400 ease-in-out ${
+								activeSection === index ? "opacity-100" : "opacity-0"
+							}`}
+							quality={100}
 							/>
 						))}
 					</div>
-					<div className="flex flex-col items-center justify-center xl:items-start md:w-[50%] w-[85%] space-y-4">
+					<div className="flex flex-col items-center justify-center xl:items-start md:w-[50%] w-[85%] space-y-4 pl-16 pr-8">
 						<h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-6xl font-bold text-center xl:text-left leading-tight w-full">
 							{sections[activeSection].description}
 						</h2>
 						<button
 							onClick={() => setShowOverlay(true)}
 							className="px-6 py-2 bg-red-500 text-white font-semibold rounded-full hover:bg-red-700 hover:scale-110 transition duration-300"
-						>
+							>
 							View Members
 						</button>
 					</div>
 				</div>
-
+				
 				{/* Overlay Section */}
 				{showOverlay && (
 					<div
