@@ -1,11 +1,9 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
-import Header from "../../app/Components/Header";
-import PPIT from "../../../public/Home/PPIT.webp";
-import PPITTablet from "../../../public/Home/PPITtablet.webp";
-import PPITMobile from "../../../public/Home/PPITmobile.webp";
-import AboutImage from "../../../public/Home/about-image.webp";
+import PPIT from "../../../public/Home/foto bareng.png";
+import PPITTablet from "../../../public/Home/foto bareng.png";
+import PPITMobile from "../../../public/Home/foto bareng.png";
+import AboutImage from "../../../public/Home/3D_Logo.webp";
 import Vision from "../../../public/Home/vision.webp";
 import Mission from "../../../public/Home/mission.webp";
 import BestSeller from "../../../public/Home/merch.webp";
@@ -26,6 +24,14 @@ export default function Home() {
 
 	const universities = [
 		{
+			name: "Peking University Shenzhen Graduate School",
+			ranking: "#14 QS World Rankings 2026",
+		},
+		{
+			name: "Tsinghua Shenzhen International Graduate School",
+			ranking: "#17 QS World Rankings 2026",
+		},
+		{
 			name: "The Chinese University of Hong Kong, Shenzhen",
 			ranking: "#32 QS World Rankings 2026",
 		},
@@ -45,8 +51,6 @@ export default function Home() {
 
 	return (
 		<>
-			<Header />
-
 			{/* Hero Section */}
 			<div className="relative font-montserrat">
 				<div className="relative md:h-[100vh] h-[90vh] overflow-hidden">
@@ -70,7 +74,7 @@ export default function Home() {
 						className="lg:hidden sm:block hidden w-full h-full object-cover "
 						quality={75}
 					/>
-					<div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+					<div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/100 via-black/30 to-transparent" />
 
 					<div className="absolute inset-x-0 bottom-0 flex flex-col items-center  md:mb-[-10px]">
 						<Link
@@ -105,11 +109,23 @@ export default function Home() {
 
 			{/* Inverted Black Wave */}
 			<div className="relative w-full" style={{ marginTop: "-1px" }}>
+				{/* Left repeating background */}
+				<div
+					className="absolute left-0 inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik.webp')] bg-repeat-y z-0"
+					style={{ width: "230px" }}
+				/>
+
+				{/* Right repeating background */}
+				<div
+					className="absolute right-0 inset-y-0 bg-[url('/Home/motif_batik.webp')] bg-repeat-y z-0"
+					style={{ width: "230px" }}
+				/>
+
 				<svg
 					viewBox="0 0 1440 320"
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"
-					className="w-full"
+					className="w-full z-10"
 					preserveAspectRatio="none"
 					style={{ height: "200px", transform: "rotate(180deg)" }}
 				>
@@ -123,56 +139,71 @@ export default function Home() {
 			{/* About Section */}
 			<section
 				id="about-us"
-				className="py-20 md:px-12 px-8 lg:px-8 max-w-[90rem] mx-auto"
+				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto"
 			>
-				<div className="flex items-center justify-center lg:block">
-					<hr className="w-[20%] md:w-[10%] my-4 border-t-[3px] border-red-600" />
-				</div>
-				<h2 className="text-center lg:text-left sm:text-4xl text-3xl font-bold mb-4 text-red-600 font-montserrat">
-					ABOUT US
-				</h2>
-				<div className="grid grid-row-4 md:grid-cols-8 md:grid-rows-1 gap-8">
-					<div className="row-start-2 md:row-start-1 md:col-span-5 lg:col-span-6">
-						<div className="text-2xl md:text-xl lg:text-3xl font-[530] text-center md:text-left font-montserrat">
-							Keinginan pelajar-pelajar Indonesia di Kota Shenzhen untuk berdiri
-							mandiri sebagai sebuah organisasi bermula pada tahun 2018.
-						</div>
-						<div className="text-lg md:text-base lg:text-xl mt-4 font-montserrat">
-							Di tahun yang sama, Perhimpunan Pelajar Indonesia di Tiongkok
-							ranting Shenzhen (PPITSZ) resmi berdiri sebagai ranting dari
-							cabang Guangzhou. Kepengurusan pertama PPITSZ dipimpin oleh
-							Saudara Ivan Prawira Limanauwyang juga merupakan salah satu
-							inisiator berdirinya organisasi ini. Setelah melewati satu periode
-							kepengerusan, PPITSZ akhirnya disahkan sebagai cabang pada tahun
-							2019. Saat ini, PPITSZ menaungi lebih dari 200 pelajar aktif yang
-							tersebar di 4 lembaga pendidikan di Kota Shenzhen.
-						</div>
-						{/* New Statistics Section */}
-						<div className="mt-8 flex space-x-16">
-							<div className="flex flex-col items-start">
-								<div className="lg:text-5xl md:text-4xl text-3xl font-montserrat font-[420]">
-									6+
-								</div>
-								<div className="text-gray-600 font-montserrat">
-									Tahun Berdiri
-								</div>
-							</div>
-							<div className="flex flex-col items-start">
-								<div className="lg:text-5xl md:text-4xl text-3xl font-montserrat font-[420]">
-									450+
-								</div>
-								<div className="text-gray-600 font-montserrat">
-									Mahasiswa di Shenzhen
-								</div>
-							</div>
-						</div>
+			{/* Left repeating background */}
+			<div
+				className="absolute left-0 inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik.webp')] bg-repeat-y z-0"
+				style={{ width: "230px" }}
+			/>
+
+			{/* Right repeating background */}
+			<div
+				className="absolute right-0 inset-y-0 bg-[url('/Home/motif_batik.webp')] bg-repeat-y z-0"
+				style={{ width: "230px" }}
+			/>
+			{/* Center */}
+				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8">
+					<div className="flex items-center justify-center lg:block">
+						<hr className="w-[20%] md:w-[10%] my-4 border-t-[3px] border-red-600" />
 					</div>
-					<div className="md:col-span-3 lg:col-span-2 md:h-full">
-						<Image
-							src={AboutImage}
-							alt="About Us Image"
-							className="rounded-none md:w-full sm:w-[65%] w-[75%] mx-auto h-auto max-w-[1000px] shadow-lg"
-						/>
+
+					<h2 className="text-center lg:text-left sm:text-4xl text-3xl font-bold mb-4 text-red-600 font-montserrat">
+						ABOUT US
+					</h2>
+					<div className="grid grid-row-4 md:grid-cols-8 md:grid-rows-1 gap-8">
+						<div className="row-start-2 md:row-start-1 md:col-span-5 lg:col-span-6">
+							<div className="text-2xl md:text-xl lg:text-3xl font-[530] text-center md:text-left font-montserrat">
+								Keinginan pelajar-pelajar Indonesia di Kota Shenzhen untuk berdiri
+								mandiri sebagai sebuah organisasi bermula pada tahun 2018.
+							</div>
+							<div className="text-lg md:text-base lg:text-xl mt-4 font-montserrat">
+								Di tahun yang sama, Perhimpunan Pelajar Indonesia di Tiongkok
+								ranting Shenzhen (PPITSZ) resmi berdiri sebagai ranting dari
+								cabang Guangzhou. Kepengurusan pertama PPITSZ dipimpin oleh
+								Saudara Ivan Prawira Limanauwyang juga merupakan salah satu
+								inisiator berdirinya organisasi ini. Setelah melewati satu periode
+								kepengerusan, PPITSZ akhirnya disahkan sebagai cabang pada tahun
+								2019. Saat ini, PPITSZ menaungi lebih dari 500 pelajar aktif yang
+								tersebar di 4 lembaga pendidikan di Kota Shenzhen.
+							</div>
+							{/* New Statistics Section */}
+							<div className="mt-8 flex space-x-16">
+								<div className="flex flex-col items-start">
+									<div className="lg:text-5xl md:text-4xl text-3xl text-red-600 font-montserrat font-[420]">
+										7+
+									</div>
+									<div className="text-gray-600 font-montserrat">
+										Tahun Berdiri
+									</div>
+								</div>
+								<div className="flex flex-col items-start">
+									<div className="lg:text-5xl md:text-4xl text-3xl text-red-600 font-montserrat font-[420]">
+										500+
+									</div>
+									<div className="text-gray-600 font-montserrat">
+										Mahasiswa di Shenzhen
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className="md:col-span-3 lg:col-span-2 md:h-full z-10">
+							<Image
+								src={AboutImage}
+								alt="About Us Image"
+								className="rounded-none"
+							/>
+						</div>
 					</div>
 				</div>
 			</section>
@@ -191,13 +222,7 @@ export default function Home() {
 									Visi
 								</h3>
 								<p className="text-gray-700 text-xl lg:text-2xl font-montserrat font-medium">
-									PPIT Shenzhen menjadi rumah kedua yang menginspirasi,
-									mendukung, dan memberdayakan pelajar Indonesia untuk mencapai
-									potensi penuh mereka. Kami menciptakan lingkungan inklusif,
-									memfasilitasi pertumbuhan akademis dan profesional, serta
-									memperkuat jaringan kolaborasi. Dengan semangat kebersamaan,
-									kami mendorong inovasi, kepemimpinan, dan kontribusi positif
-									bagi Indonesia dan dunia.
+									Menjadikan PPIT Shenzhen sebagai wadah yang hangat, inklusif, dan membangun, di mana setiap pelajar Indonesia dapat merasakan kebersamaan, menemukan kebahagiaan dalam kehidupan perkuliahan, serta berkembang secara pribadi dan kolektif.<br></br><br></br><br></br><br></br><br></br><br></br><br></br>
 								</p>
 								<div className="flex items-center justify-center">
 									<Image
@@ -218,13 +243,7 @@ export default function Home() {
 									Misi
 								</h3>
 								<p className="text-gray-700 text-xl lg:text-2xl font-montserrat font-medium">
-									Kami berkomitmen untuk terus maju dengan inisiatif dan
-									semangat tinggi, mendorong anggota PPIT Shenzhen meraih
-									keberhasilan dan memaksimalkan potensi mereka. Kami menekankan
-									pentingnya kinerja, komunikasi, dan kepercayaan dalam
-									membangun relasi yang kuat, baik internal maupun eksternal.
-									Selain itu, kami berupaya membangun jaringan alumni yang solid
-									untuk perkembangan bersama.
+									Mendorong pengembangan diri mahasiswa melalui kegiatan edukatif, kreatif, dan kolaboratif yang membentuk pribadi tangguh dan berdaya saing; menciptakan lingkungan yang menyenangkan melalui berbagai program yang membangun suasana positif, sehat, dan penuh tawa; menumbuhkan budaya keterbukaan, komunikasi dua arah, dan kolaborasi antarranggota demi terciptanya organisasi yang responsif dan adaptif; serta memperkuat rasa kekeluargaan antar pelajar Indonesia di Shenzhen agar setiap individu merasa diterima, didengar, dan dihargai.
 								</p>
 								<div className="flex items-center justify-center">
 									<Image

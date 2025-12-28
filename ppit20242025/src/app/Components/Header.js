@@ -20,19 +20,27 @@ const Header = () => {
 
 	return (
 		<header
-			className={`fixed top-0 w-full flex justify-between items-center p-5 text-xl z-[999] md:px-12 px-8 ${
+			className={`fixed top-0 w-full h-[78px] flex justify-between items-center p-5 text-xl z-[49] ${
 				isScrolled
-					? "bg-white shadow-md"
+					? "bg-[#8C0000]"
 					: "bg-gradient-to-b from-black to-transparent"
 			}`}
 		>
 			{/* Logo */}
-			<Link href="/">
+			<Link href="/" className="flex items-center">
 				<img
-					src="/PPITSZlogoheader.webp"
+					src="/ppitsz_whitelogo.webp"
 					alt="Logo"
-					className="w-[125px] h-auto object-contain"
+					className="w-[75px] h-[106px] object-contain"
 				/>
+
+				<img
+					src="/ppitsz2526_whitelogo.webp"
+					alt="Logo"
+					className="w-[38px] h-[54px] object-contain"
+				/>
+
+				<span className="text-white font-cinzel text-[26px] font-bold ml-4">PPIT SHENZHEN</span>
 			</Link>
 
 			{/* Overlay for mobile menu */}
@@ -45,26 +53,26 @@ const Header = () => {
 
 			{/* Hamburger button */}
 			<button
-				className={`flex flex-col justify-around w-8 h-8 border-none cursor-pointer z-[999] md:hidden ${
+				className={`flex flex-col justify-between w-8 h-6 border-none cursor-pointer z-[999] md:hidden ${
 					menuOpen ? "active" : ""
 				}`}
 				aria-label="Toggle navigation"
 				onClick={toggleMenu}
 			>
 				<span
-					className={`block w-full h-[3px] rounded transition-transform ${
+					className={`block w-full h-[3px] bg-white rounded transition-transform origin-center ${
 						menuOpen ? "transform translate-y-[11px] rotate-45" : ""
-					} ${isScrolled ? "bg-black" : "bg-white"}`}
+					} `}
 				></span>
 				<span
-					className={`block w-full h-[3px] rounded transition-opacity ${
+					className={`block w-full h-[3px] bg-white rounded transition-opacity ${
 						menuOpen ? "opacity-0" : ""
-					} ${isScrolled ? "bg-black" : "bg-white"}`}
+					} `}
 				></span>
 				<span
-					className={`block w-full h-[3px] rounded transition-transform ${
+					className={`block w-full h-[3px] bg-white rounded transition-transform origin-center ${
 						menuOpen ? "transform translate-y-[-11px] -rotate-45" : ""
-					} ${isScrolled ? "bg-black" : "bg-white"}`}
+					} `}
 				></span>
 			</button>
 
@@ -78,33 +86,25 @@ const Header = () => {
 			>
 				<Link
 					href="/"
-					className={`md:text-2xl text-xl hover:text-[#b30000] font-montserrat font-semibold ${
-						isScrolled && !menuOpen ? "text-black" : "text-white"
-					}`}
+					className="md:text-2xl text-xl hover:text-[#b30000] font-montserrat font-semibold text-white"
 				>
 					Home
 				</Link>
 				<Link
 					href="/committee"
-					className={`md:text-2xl text-xl hover:text-[#b30000] font-montserrat font-semibold ${
-						isScrolled && !menuOpen ? "text-black" : "text-white"
-					}`}
+					className="md:text-2xl text-xl hover:text-[#b30000] font-montserrat font-semibold text-white"
 				>
 					Committee
 				</Link>
 				<Link
 					href="/events"
-					className={`md:text-2xl text-xl hover:text-[#b30000] font-montserrat font-semibold ${
-						isScrolled && !menuOpen ? "text-black" : "text-white"
-					}`}
+					className="md:text-2xl text-xl hover:text-[#b30000] font-montserrat font-semibold text-white"
 				>
 					Events
 				</Link>
 				<Link
 					href="/faq"
-					className={`md:text-2xl text-xl hover:text-[#b30000] font-montserrat font-semibold ${
-						isScrolled && !menuOpen ? "text-black" : "text-white"
-					}`}
+					className="md:text-2xl text-xl hover:text-[#b30000] font-montserrat font-semibold text-white"
 				>
 					FAQ
 				</Link>

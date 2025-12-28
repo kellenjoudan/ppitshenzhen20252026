@@ -1,10 +1,24 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import {useState, useEffect } from "react";
 import Header from "../Components/Header";
+import LoadingScreen from "../../app/Components/LoadingScreen";
 
 export default function WithFooterLayout({ children }) {
+  const [loadingFinished, setLoadingFinished] = useState(false);
+
   return (
     <>
+      {/* Loading screen overlay */}
+      {!loadingFinished && (
+        <LoadingScreen
+          logoSrc="/ppitsz2526_whitelogo.webp"
+          text="PPIT SHENZHEN"
+          onFinish={() => setLoadingFinished(true)}
+        />
+      )}
+      
       <Header />
       {children}
       <div className="FOOTER bg-gray-100 md:py-6 py-4 lg:px-16 md:px-12 sm:px-8 px-6">
