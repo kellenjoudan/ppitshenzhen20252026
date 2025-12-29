@@ -111,14 +111,12 @@ export default function Home() {
 			<div className="relative w-full" style={{ marginTop: "-1px" }}>
 				{/* Left repeating background */}
 				<div
-					className="absolute left-0 inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik.webp')] bg-repeat-y z-0"
-					style={{ width: "230px" }}
+					className="absolute bottom-0 bg-[url('/Home/BATIK.webp')] bg-repeat-y bg-[position:0_100px] z-0 w-[230px] h-[100px] -left-20 sm:left-0"
 				/>
 
 				{/* Right repeating background */}
 				<div
-					className="absolute right-0 inset-y-0 bg-[url('/Home/motif_batik.webp')] bg-repeat-y z-0"
-					style={{ width: "230px" }}
+					className="absolute bottom-0 scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y bg-[position:0_100px] z-0 w-[230px] h-[100px] -right-20 sm:right-0"
 				/>
 
 				<svg
@@ -143,13 +141,13 @@ export default function Home() {
 			>
 			{/* Left repeating background */}
 			<div
-				className="absolute left-0 inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik.webp')] bg-repeat-y z-0"
+				className="absolute inset-y-0 bg-[url('/Home/BATIK.webp')] bg-repeat-y z-0 -left-20 sm:left-0"
 				style={{ width: "230px" }}
 			/>
 
 			{/* Right repeating background */}
 			<div
-				className="absolute right-0 inset-y-0 bg-[url('/Home/motif_batik.webp')] bg-repeat-y z-0"
+				className="absolute inset-y-0 scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y z-0 -right-20 sm:right-0"
 				style={{ width: "230px" }}
 			/>
 			{/* Center */}
