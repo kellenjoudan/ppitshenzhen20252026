@@ -25,27 +25,21 @@ export default function Home() {
 	const universities = [
 		{
 			name: "Peking University Shenzhen Graduate School",
-			ranking: "#14 QS World Rankings 2026",
 		},
 		{
 			name: "Tsinghua Shenzhen International Graduate School",
-			ranking: "#17 QS World Rankings 2026",
 		},
 		{
 			name: "The Chinese University of Hong Kong, Shenzhen",
-			ranking: "#32 QS World Rankings 2026",
 		},
 		{
 			name: "Harbin Institute of Technology Shenzhen",
-			ranking: "#256 QS World Rankings 2026",
 		},
 		{
 			name: "Southern University of Science and Technology",
-			ranking: "#343 QS World Rankings 2026",
 		},
 		{
 			name: "Shenzhen University",
-			ranking: "#452 QS World Rankings 2026",
 		},
 	];
 
