@@ -174,7 +174,7 @@ export default function Home() {
 			</section>
 
 			{/* Vision & Mission */}
-			<section className="bg-[#81191A] pt-12 pb-20 px-4 md:px-8">
+			<section className="bg-[#7E0C0E] pt-12 pb-20 px-4 md:px-8">
 				<div className="max-w-[90rem] mx-auto flex flex-col md:flex-row text-white">
 					<div className="ml-4">
 						<div className="flex flex-col md:flex-row">
