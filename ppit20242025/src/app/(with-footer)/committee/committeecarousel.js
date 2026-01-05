@@ -161,7 +161,7 @@ export default function CommitteeCarousel({ input }) {
 				{/* Banner Section */}
 				<div className="relative h-[50vh] xl:h-screen w-full mb-[2%] ">
 					<Image
-						src="/BANNER_CMT_FULL/cropped.png"
+						src="/BANNER_CMT_FULL/banner.png"
 						alt="Banner Background"
 						fill
 						className="object-cover opacity-70"
