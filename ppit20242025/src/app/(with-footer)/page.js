@@ -24,28 +24,34 @@ export default function Home() {
 
 	const universities = [
 		{
-			name: "Peking University Shenzhen Graduate School",
+			name: "Peking University Shenzhen Graduate School", 
 			ranking: "#14 QS World Rankings 2026",
+			color: "#F00000"
 		},
 		{
 			name: "Tsinghua Shenzhen International Graduate School",
 			ranking: "#17 QS World Rankings 2026",
+			color: "#F8650C"
 		},
 		{
 			name: "The Chinese University of Hong Kong, Shenzhen",
 			ranking: "#32 QS World Rankings 2026",
+			color: "#FFC917"
 		},
 		{
 			name: "Harbin Institute of Technology Shenzhen",
 			ranking: "#256 QS World Rankings 2026",
+			color: "#FFC917"
 		},
 		{
 			name: "Southern University of Science and Technology",
 			ranking: "#343 QS World Rankings 2026",
+			color: "#F8650C"
 		},
 		{
 			name: "Shenzhen University",
 			ranking: "#452 QS World Rankings 2026",
+			color: "#F00000"
 		},
 	];
 
@@ -325,7 +331,7 @@ export default function Home() {
 				<div className="max-w-7xl mx-auto">
 					{/* Centered Heading */}
 					<div className="flex justify-center">
-						<h2 className="text-lg md:text-3xl sm:text-xl font-bold mb-12 text-white bg-red-700 inline-block py-3 md:py-4 px-6 rounded-lg font-montserrat">
+						<h2 className="text-lg md:text-3xl sm:text-xl font-bold mb-12 text-red-800 bg-white inline-block py-3 md:py-4 px-6 rounded-lg font-montserrat">
 							UNIVERSITIES IN SHENZHEN
 						</h2>
 					</div>
@@ -336,19 +342,21 @@ export default function Home() {
 							{universities.map((uni, index) => (
 								<div key={index} className="flex items-center gap-6 relative">
 									{/* Circle */}
-									<div className="w-6 h-6 rounded-full border-[3px] border-red-700 bg-white relative z-10"></div>
-
+									<div className="w-6 h-6 rounded-full border-[3px] border-white relative z-10"
+									style={{backgroundColor	: uni.color}}
+									></div>
+									
 									{/* Vertical Line (except for the last item) */}
 									{index < universities.length - 1 && (
-										<div className="absolute left-[0.6rem] top-6 h-[calc(100%+3rem)] w-1 bg-red-700 z-0"></div>
+										<div className="absolute left-[0.6rem] top-6 h-[calc(100%+3rem)] w-1 bg-white z-0"></div>
 									)}
 
 									{/* University Details */}
 									<div>
-										<h3 className="md:text-xl sm:text-md text-sm font-semibold">
-											{uni.name}
-										</h3>
-										<p className="md:text-xl sm:text-md text-sm text-gray-700">
+										<h3 className="md:text-xl sm:text-md text-sm text-white font-semibold font-cinzel">
+										{uni.name}
+									</h3>
+										<p className="md:text-xl sm:text-md text-sm text-white">
 											{uni.ranking}
 										</p>
 									</div>
@@ -357,6 +365,7 @@ export default function Home() {
 						</div>
 					</div>
 				</div>
+			</section>
 			</section>
 		</>
 	);
