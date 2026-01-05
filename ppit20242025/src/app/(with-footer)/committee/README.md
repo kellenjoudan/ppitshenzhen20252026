@@ -2,7 +2,7 @@ Documentation of COMMITTEE PAGE'S CODE:
 +++ Everything is dynamically updated using algorithm
 
 
-To update the top page's background: simply change the file and keeping the file's name in the path BANNER_CMT_FULL/cropped.png (!! must be .png !!)
+To update the top page's background: simply change the file and keeping the file's name in the path BANNER_CMT_FULL/banner.png (!! must be .png !!)
 
 
 To update the committee's pictures AND division's name or add/remove any divisions:
