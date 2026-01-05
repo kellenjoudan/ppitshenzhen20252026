@@ -174,11 +174,15 @@ export default function Home() {
 			</section>
 
 			{/* Vision & Mission */}
-			<section className="bg-[#7E0C0E] pt-12 pb-20 px-4 md:px-8">
-				<div className="max-w-[90rem] mx-auto flex flex-col md:flex-row text-white">
+			<section className="bg-gray-50 py-20 px-4 md:px-8">
+				<div className="max-w-[90rem] mx-auto flex flex-col md:flex-row">
 					<div className="ml-4">
+						<h2 className="text-2xl lg:text-4xl font-bold mb-12 font-montserrat">
+							VISI DAN MISI
+						</h2>
 						<div className="flex flex-col md:flex-row">
 							<div className="flex-1 pr-4 mb-8 md:mb-0">
+
 								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
 									VISI
 								</h2>
@@ -189,8 +193,9 @@ export default function Home() {
 									dalam kehidupan perkuliahan, serta berkembang 
 									secara pribadi dan kolektif. 
 									
+
 								</p>
-								{/* <div className="flex items-center justify-center">
+								<div className="flex items-center justify-center">
 									<Image
 										src={Vision}
 										className="mt-6 md:mt-12 w-[25%] h-auto object-cover"
@@ -198,10 +203,11 @@ export default function Home() {
 										height={200}
 										alt="Vision"
 									/>
-								</div> */}
+								</div>
 							</div>
 							<div className="md:border-l-2 border-gray-300 mx-4" />
 							<div className="flex-1 md:pl-4 mb-8 md:mb-0">
+
 								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
 									MISI
 								</h2>
@@ -221,6 +227,7 @@ export default function Home() {
 									</ul>
 				
 								{/* <div className="flex items-center justify-center">
+
 									<Image
 										src={Mission}
 										className="mt-6 md:mt-12 w-[25%] h-auto object-cover"
@@ -228,7 +235,7 @@ export default function Home() {
 										height={200}
 										alt="Mission"
 									/>
-								</div> */}
+								</div>
 							</div>
 						</div>
 					</div>
