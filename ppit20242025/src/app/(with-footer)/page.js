@@ -222,15 +222,21 @@ export default function Home() {
 						<div className="flex flex-col md:flex-row">
 							<div className="flex-1 pr-4 mb-8 md:mb-0">
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> parent of 5fc470e (visimisi)
 								<h3 className="text-2xl lg:text-3xl font-bold font-montserrat text-red-600 mb-4 flex items-center">
 									<span className="text-red-600 mr-2">►</span>
 									Visi
 								</h3>
 								<p className="text-gray-700 text-xl lg:text-2xl font-montserrat font-medium">
 									Menjadikan PPIT Shenzhen sebagai wadah yang hangat, inklusif, dan membangun, di mana setiap pelajar Indonesia dapat merasakan kebersamaan, menemukan kebahagiaan dalam kehidupan perkuliahan, serta berkembang secara pribadi dan kolektif.<br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+=======
+<<<<<<< HEAD
+>>>>>>> parent of 5fc470e (visimisi)
 =======
 >>>>>>> parent of 5fc470e (visimisi)
 								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
@@ -244,7 +250,11 @@ export default function Home() {
 									secara pribadi dan kolektif. 
 									
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> jennickel
+>>>>>>> parent of 5fc470e (visimisi)
 =======
 >>>>>>> jennickel
 >>>>>>> parent of 5fc470e (visimisi)
@@ -262,9 +272,12 @@ export default function Home() {
 							<div className="md:border-l-2 border-gray-300 mx-4" />
 							<div className="flex-1 md:pl-4 mb-8 md:mb-0">
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> parent of 5fc470e (visimisi)
 								<h3 className="text-2xl lg:text-3xl font-bold font-montserrat text-red-600 mb-4 flex items-center">
 									<span className="text-red-600 mr-2 font-montserrat font-bold">
 										►
@@ -275,6 +288,9 @@ export default function Home() {
 									Mendorong pengembangan diri mahasiswa melalui kegiatan edukatif, kreatif, dan kolaboratif yang membentuk pribadi tangguh dan berdaya saing; menciptakan lingkungan yang menyenangkan melalui berbagai program yang membangun suasana positif, sehat, dan penuh tawa; menumbuhkan budaya keterbukaan, komunikasi dua arah, dan kolaborasi antarranggota demi terciptanya organisasi yang responsif dan adaptif; serta memperkuat rasa kekeluargaan antar pelajar Indonesia di Shenzhen agar setiap individu merasa diterima, didengar, dan dihargai.
 								</p>
 								<div className="flex items-center justify-center">
+=======
+<<<<<<< HEAD
+>>>>>>> parent of 5fc470e (visimisi)
 =======
 >>>>>>> parent of 5fc470e (visimisi)
 								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
@@ -297,7 +313,11 @@ export default function Home() {
 				
 								{/* <div className="flex items-center justify-center">
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> jennickel
+>>>>>>> parent of 5fc470e (visimisi)
 =======
 >>>>>>> jennickel
 >>>>>>> parent of 5fc470e (visimisi)
