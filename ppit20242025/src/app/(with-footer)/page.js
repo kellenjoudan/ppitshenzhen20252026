@@ -213,32 +213,11 @@ export default function Home() {
 			</section>
 
 			{/* Vision & Mission */}
-			<section className="bg-gray-50 py-20 px-4 md:px-8">
-				<div className="max-w-[90rem] mx-auto flex flex-col md:flex-row">
+			<section className="bg-[#7E0C0E] pt-12 pb-20 px-4 md:px-8">
+				<div className="max-w-[90rem] mx-auto flex flex-col md:flex-row text-white">
 					<div className="ml-4">
-						<h2 className="text-2xl lg:text-4xl font-bold mb-12 font-montserrat">
-							VISI DAN MISI
-						</h2>
 						<div className="flex flex-col md:flex-row">
 							<div className="flex-1 pr-4 mb-8 md:mb-0">
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-=======
->>>>>>> parent of 5fc470e (visimisi)
-								<h3 className="text-2xl lg:text-3xl font-bold font-montserrat text-red-600 mb-4 flex items-center">
-									<span className="text-red-600 mr-2">►</span>
-									Visi
-								</h3>
-								<p className="text-gray-700 text-xl lg:text-2xl font-montserrat font-medium">
-									Menjadikan PPIT Shenzhen sebagai wadah yang hangat, inklusif, dan membangun, di mana setiap pelajar Indonesia dapat merasakan kebersamaan, menemukan kebahagiaan dalam kehidupan perkuliahan, serta berkembang secara pribadi dan kolektif.<br></br><br></br><br></br><br></br><br></br><br></br><br></br>
-=======
-<<<<<<< HEAD
->>>>>>> parent of 5fc470e (visimisi)
-=======
->>>>>>> parent of 5fc470e (visimisi)
 								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
 									VISI
 								</h2>
@@ -249,17 +228,8 @@ export default function Home() {
 									dalam kehidupan perkuliahan, serta berkembang 
 									secara pribadi dan kolektif. 
 									
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> jennickel
->>>>>>> parent of 5fc470e (visimisi)
-=======
->>>>>>> jennickel
->>>>>>> parent of 5fc470e (visimisi)
 								</p>
-								<div className="flex items-center justify-center">
+								{/* <div className="flex items-center justify-center">
 									<Image
 										src={Vision}
 										className="mt-6 md:mt-12 w-[25%] h-auto object-cover"
@@ -267,32 +237,10 @@ export default function Home() {
 										height={200}
 										alt="Vision"
 									/>
-								</div>
+								</div> */}
 							</div>
 							<div className="md:border-l-2 border-gray-300 mx-4" />
 							<div className="flex-1 md:pl-4 mb-8 md:mb-0">
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-=======
->>>>>>> parent of 5fc470e (visimisi)
-								<h3 className="text-2xl lg:text-3xl font-bold font-montserrat text-red-600 mb-4 flex items-center">
-									<span className="text-red-600 mr-2 font-montserrat font-bold">
-										►
-									</span>
-									Misi
-								</h3>
-								<p className="text-gray-700 text-xl lg:text-2xl font-montserrat font-medium">
-									Mendorong pengembangan diri mahasiswa melalui kegiatan edukatif, kreatif, dan kolaboratif yang membentuk pribadi tangguh dan berdaya saing; menciptakan lingkungan yang menyenangkan melalui berbagai program yang membangun suasana positif, sehat, dan penuh tawa; menumbuhkan budaya keterbukaan, komunikasi dua arah, dan kolaborasi antarranggota demi terciptanya organisasi yang responsif dan adaptif; serta memperkuat rasa kekeluargaan antar pelajar Indonesia di Shenzhen agar setiap individu merasa diterima, didengar, dan dihargai.
-								</p>
-								<div className="flex items-center justify-center">
-=======
-<<<<<<< HEAD
->>>>>>> parent of 5fc470e (visimisi)
-=======
->>>>>>> parent of 5fc470e (visimisi)
 								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
 									MISI
 								</h2>
@@ -312,15 +260,6 @@ export default function Home() {
 									</ul>
 				
 								{/* <div className="flex items-center justify-center">
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> jennickel
->>>>>>> parent of 5fc470e (visimisi)
-=======
->>>>>>> jennickel
->>>>>>> parent of 5fc470e (visimisi)
 									<Image
 										src={Mission}
 										className="mt-6 md:mt-12 w-[25%] h-auto object-cover"
@@ -328,7 +267,7 @@ export default function Home() {
 										height={200}
 										alt="Mission"
 									/>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>
@@ -336,7 +275,7 @@ export default function Home() {
 			</section>
 
 			{/* Merchandise Section */}
-			<section className="grid grid-cols-1 lg:grid-cols-8">
+			{/* <section className="grid grid-cols-1 lg:grid-cols-8">
 				<div className="col-span-3 md:col-span-3">
 					<div className="h-full lg:w-full sm:w-[65%] w-full mx-auto">
 						<Image
@@ -394,7 +333,7 @@ export default function Home() {
 						))}
 					</div>
 				</div>
-			</section>
+			</section> */}
 
 			<hr className="w-full border-t-2 border-gray-200 font-montserrat mt-10" />
 			{/* Universities Section */}
@@ -436,7 +375,6 @@ export default function Home() {
 						</div>
 					</div>
 				</div>
-			</section>
 			</section>
 		</>
 	);
