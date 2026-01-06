@@ -335,7 +335,7 @@ export default function Home() {
 				</div>
 			</section> */}
 
-			<hr className="w-full border-t-2 border-gray-200 font-montserrat mt-10" />
+			{/* <hr className="w-full border-t-2 border-gray-200 font-montserrat mt-10" /> */}
 			{/* Universities Section */}
 			<section className="py-16 px-4 md:px-8">
 				<div className="max-w-7xl mx-auto">
@@ -366,7 +366,7 @@ export default function Home() {
 										<h3 className="md:text-xl sm:text-md text-sm text-white font-semibold font-cinzel">
 										{uni.name}
 									</h3>
-										<p className="md:text-xl sm:text-md text-sm text-white">
+										<p className="md:text-xl sm:text-md text-sm">
 											{uni.ranking}
 										</p>
 									</div>
