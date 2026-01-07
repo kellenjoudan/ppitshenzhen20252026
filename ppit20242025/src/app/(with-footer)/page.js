@@ -143,7 +143,7 @@ export default function Home() {
 			{/* About Section */}
 			<section
 				id="about-us"
-				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto"
+				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-white"
 			>
 			{/* Left repeating background */}
 			<div
