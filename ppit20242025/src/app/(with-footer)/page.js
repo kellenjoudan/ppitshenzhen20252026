@@ -337,7 +337,7 @@ export default function Home() {
 
 			{/* <hr className="w-full border-t-2 border-gray-200 font-montserrat mt-10" /> */}
 			{/* Universities Section */}
-			<section className="py-16 px-4 md:px-8">
+			<section className="bg-[#7E0C0E] py-16 px-4 md:px-8">
 				<div className="max-w-7xl mx-auto">
 					{/* Centered Heading */}
 					<div className="flex justify-center">
@@ -363,10 +363,10 @@ export default function Home() {
 
 									{/* University Details */}
 									<div>
-										<h3 className="md:text-xl sm:text-md text-sm text-white font-semibold font-cinzel">
+										<h3 className="md:text-xl sm:text-md text-sm text-white font-semibold font-montserrat">
 										{uni.name}
 									</h3>
-										<p className="md:text-xl sm:text-md text-sm">
+										<p className="md:text-xl sm:text-md text-sm text-white font-montserrat">
 											{uni.ranking}
 										</p>
 									</div>
