@@ -26,7 +26,7 @@ export default function CommitteeCarousel({ input }) {
             id: i,
             title: input[0][i],
             description: input[1][i],
-            image: `/BANNER_CMT_FULL/Full/${input[0][i]}.png`, //FORMAT FILE FOTO DIVISI: "NAMA_DIVISI.png" (in caps, sesuai dgn nama yg ada di folder)
+            image: `/BANNER_CMT_FULL/Full/${input[0][i]}.webp`, //FORMAT FILE FOTO DIVISI: "NAMA_DIVISI.webp" (in caps, sesuai dgn nama yg ada di folder)
         })
 
         //for members and departmentlayouts
@@ -161,7 +161,7 @@ export default function CommitteeCarousel({ input }) {
 				{/* Banner Section */}
 				<div className="relative h-[50vh] xl:h-screen w-full mb-[2%] bg-black">
 					<Image
-						src="/BANNER_CMT_FULL/banner.png"
+						src="/BANNER_CMT_FULL/banner.webp"
 						alt="Banner Background"
 						fill
 						className="object-cover opacity-70"
