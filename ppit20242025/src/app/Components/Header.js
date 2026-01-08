@@ -6,6 +6,12 @@ const Header = () => {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
 	const toggleMenu = () => setMenuOpen((prev) => !prev);
+	const [eventsOpen, setEventsOpen] = useState(false);
+
+	const EVENTS = [
+		{ name: "PPITSZ 2024-2025", slug: "2425" },
+		{ name: "PPITSZ 2025-2026", slug: "2526" },
+	];
 	
 	useEffect(() => {
 		const handleScroll = () => {
@@ -150,18 +156,46 @@ const Header = () => {
 				>
 					Committee
 				</Link>
-				<Link
-					href="/events"
-					className={`md:text-2xl text-xl hover:text-[#8C0000] font-montserrat font-semibold ${
-						isScrolled && !menuOpen
-							? "text-[#8C0000]"
-							: menuOpen
-							? "text-[#8C0000]"
-							: "text-white"
+
+				<div className="relative group">
+				{/* Trigger */}
+				<span
+					className={`md:text-2xl text-xl font-montserrat font-semibold cursor-pointer hover:text-[#8C0000] ${
+					isScrolled && !menuOpen
+						? "text-[#8C0000]"
+						: menuOpen
+						? "text-[#8C0000]"
+						: "text-white"
 					}`}
 				>
 					Events
-				</Link>
+				</span>
+
+				{/* Dropdown */}
+				<div
+					className="
+					absolute left-0 top-full
+					hidden group-hover:block
+					z-[999]
+					bg-white
+					shadow-lg
+					rounded-lg
+					min-w-[220px]
+					overflow-hidden
+					"
+				>
+					{EVENTS.map((event) => (
+					<Link
+						key={event.slug}
+						href={`/events/${event.slug}/Welcoming-Party`}
+						className="block px-6 py-3 text-[#8C0000] hover:bg-gray-100 whitespace-nowrap"
+					>
+						{event.name}
+					</Link>
+					))}
+				</div>
+				</div>
+
 				<Link
 					href="/faq"
 					className={`md:text-2xl text-xl hover:text-[#8C0000] font-montserrat font-semibold ${
