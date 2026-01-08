@@ -126,7 +126,7 @@ const Header = () => {
 
 			{/* Navigation menu */}
 			<nav
-				className={`md:flex gap-9 ${
+				className={`md:flex gap-14 ${
 					menuOpen
 						? "flex flex-col absolute top-[70px] right-0 w-[43%] p-5 text-[#8C0000] shadow-lg z-[999]"
 						: "hidden"
@@ -157,10 +157,10 @@ const Header = () => {
 					Committee
 				</Link>
 
-				<div className="relative group">
+				<div className="group">
 				{/* Trigger */}
 				<span
-					className={`md:text-2xl text-xl font-montserrat font-semibold cursor-pointer hover:text-[#8C0000] ${
+					className={`inline-block md:text-2xl text-xl font-montserrat font-semibold cursor-pointer hover:text-[#8C0000] ${
 					isScrolled && !menuOpen
 						? "text-[#8C0000]"
 						: menuOpen
@@ -171,30 +171,43 @@ const Header = () => {
 					Events
 				</span>
 
+				{/* Hover buffer (ACTIVE but invisible) */}
+				<div
+					className="
+					absolute top-15
+					h-10 w-full
+					opacity-0
+					pointer-events-auto
+					"
+				/>
+
 				{/* Dropdown */}
 				<div
 					className="
-					absolute left-0 top-full
-					hidden group-hover:block
+					absolute top-full
 					z-[999]
 					bg-white
 					shadow-lg
-					rounded-lg
-					min-w-[220px]
 					overflow-hidden
+					opacity-0 pointer-events-none
+					transition-opacity duration-150 ease-out
+					group-hover:opacity-100
+					group-hover:pointer-events-auto
 					"
 				>
 					{EVENTS.map((event) => (
 					<Link
 						key={event.slug}
 						href={`/events/${event.slug}/Welcoming-Party`}
-						className="block px-6 py-3 text-[#8C0000] hover:bg-gray-100 whitespace-nowrap"
+						className="block px-4 py-3 text-[#8C0000] font-montserrat font-semibold hover:bg-gray-200 whitespace-nowrap"
 					>
 						{event.name}
 					</Link>
 					))}
 				</div>
 				</div>
+
+
 
 				<Link
 					href="/faq"
