@@ -126,7 +126,7 @@ const Header = () => {
 
 			{/* Navigation menu */}
 			<nav
-				className={`md:flex gap-14 ${
+				className={`md:flex gap-10 ${
 					menuOpen
 						? "flex flex-col absolute top-[70px] right-0 w-[43%] p-5 text-[#8C0000] shadow-lg z-[999]"
 						: "hidden"
@@ -157,7 +157,8 @@ const Header = () => {
 					Committee
 				</Link>
 
-				<div className="group">
+				{/* EVENTS – DESKTOP (hover) */}
+				<div className="hidden md:block group">
 				{/* Trigger */}
 				<span
 					className={`inline-block md:text-2xl text-xl font-montserrat font-semibold cursor-pointer hover:text-[#8C0000] ${
@@ -199,7 +200,7 @@ const Header = () => {
 					<Link
 						key={event.slug}
 						href={`/events/${event.slug}/Welcoming-Party`}
-						className="block px-4 py-3 text-[#8C0000] font-montserrat font-semibold hover:bg-gray-200 whitespace-nowrap"
+						className="block px-4 py-3 text-[#8C0000] text-lg font-montserrat font-semibold hover:bg-gray-200 whitespace-nowrap"
 					>
 						{event.name}
 					</Link>
@@ -207,6 +208,43 @@ const Header = () => {
 				</div>
 				</div>
 
+				{/* EVENTS – MOBILE (click) */}
+				<div className="md:hidden">
+				<button
+					onClick={() => setEventsOpen((v) => !v)}
+					className="flex items-center justify-between w-full md:text-2xl text-xl font-montserrat font-semibold text-[#8C0000]"
+				>
+					Events
+					<span
+					className={`transition-transform ${
+						eventsOpen ? "rotate-180" : ""
+					}`}
+					>
+					▼
+					</span>
+				</button>
+
+				{/* Mobile submenu */}
+				<div
+					className={`mt-3 pl-4 space-y-2 overflow-hidden transition-all duration-200 ${
+					eventsOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+					}`}
+				>
+					{EVENTS.map((event) => (
+					<Link
+						key={event.slug}
+						href={`/events/${event.slug}/Welcoming-Party`}
+						className="block text-lg font-montserrat text-[#8C0000]"
+						onClick={() => {
+						setMenuOpen(false);
+						setEventsOpen(false);
+						}}
+					>
+						{event.name}
+					</Link>
+					))}
+				</div>
+				</div>
 
 
 				<Link
