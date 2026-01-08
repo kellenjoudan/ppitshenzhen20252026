@@ -157,9 +157,9 @@ export default function CommitteeCarousel({ input }) {
 	return (
 		<div className="w-full overflow-x-hidden">
 			<Header menuOpen={menuOpen} toggleMenu={toggleMenu} />
-			<div className="bg-black text-white font-[500] font-montserrat">
+			<div className="bg-[#7E0C0E] text-white font-[500] font-montserrat">
 				{/* Banner Section */}
-				<div className="relative h-[50vh] xl:h-screen w-full mb-[2%] ">
+				<div className="relative h-[50vh] xl:h-screen w-full mb-[2%] bg-black">
 					<Image
 						src="/BANNER_CMT_FULL/banner.png"
 						alt="Banner Background"
@@ -189,8 +189,8 @@ export default function CommitteeCarousel({ input }) {
 						onClick={() => setActiveSection(index)}
 						className={`px-3 md:px-6 py-1 lg:text-xl md:text-lg sm:text-md text-sm rounded-full font-montserrat lg:pb-[-30px] md:pb-[-20px] pb-[-10px] font-semibold ${
 							activeSection === index
-							? "bg-black border-white border-[2px]"
-							: "bg-black hover:bg-white hover:text-black"
+							? "bg-white text-black border-white border-[2px]"
+							: "bg-red-500 text-white hover:bg-red-700 hover:text-white hover:scale-110 transition duration-300"
 						}`}
 						>
 							{section.title}
@@ -199,7 +199,7 @@ export default function CommitteeCarousel({ input }) {
 				</div>
 
 				{/* Main Content */}
-				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-12">
+				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-12 ">
 					<div className="relative h-[80vh] sm:h-[45vh] md:h-[50vh] lg:h-[65vh] xl:h-[80vh] overflow-hidden rounded-lg shadow-lg flex items-center justify-center xl:ml-auto xl:mr-0 mx-auto aspect-[4/5]">
 						{sections.map((section, index) => (
 							<Image

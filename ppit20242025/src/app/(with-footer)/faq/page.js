@@ -23,7 +23,7 @@ export default function Faq() {
 			id: 2,
 			category: "General",
 			question: "Who is the leader of PPITSZ in this period?",
-			answer: "Nicholas Andry, is the leader of PPITSZ in this period.",
+			answer: "Calvin Tiorence, is the leader of PPITSZ in this period (as of 2025/2026).",
 			svg: "/General.svg",
 		},
 		{
@@ -46,7 +46,7 @@ export default function Faq() {
 			category: "General",
 			question: "Does PPITSZ host events for cultural celebrations?",
 			answer:
-				"Yes we do! Cultural celebrations events are mainly organized by our Social and Budaya Team.",
+				"Yes we do! Cultural celebrations events are mainly organized by our Social and Budaya Department.",
 			svg: "/General.svg",
 		},
 		{
@@ -70,7 +70,7 @@ export default function Faq() {
 			question:
 				"What universities in Shenzhen have the most Indonesian students?",
 			answer:
-				"CUHK-Sz having over 300 Indonesian students is the university in Shenzhen with the most Indonesian students.",
+				"CUHK-SZ having over 300 Indonesian students is the university in Shenzhen with the most Indonesian students.",
 			svg: "/General.svg",
 		},
 		{
@@ -182,7 +182,7 @@ export default function Faq() {
 	);
 
 	return (
-		<div className="bg-[#1f2023]">
+		<div className="bg-[#7E0C0E]">
 			<div className="w-full lg:pt-24 md:pt-20 pt-16">
 				<div className="w-full font-montserrat font-bold xl:text-4xl md:text-3xl sm:text-2xl text-2xl tracking-wide text-center mt-8 py-3 text-slate-100">
 					Frequently asked questions

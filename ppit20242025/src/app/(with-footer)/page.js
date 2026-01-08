@@ -157,7 +157,7 @@ export default function Home() {
 				style={{ width: "230px" }}
 			/>
 			{/* Center */}
-				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8">
+				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-black">
 					<div className="flex items-center justify-center lg:block">
 						<hr className="w-[20%] md:w-[10%] my-4 border-t-[3px] border-red-600" />
 					</div>
