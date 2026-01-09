@@ -41,7 +41,7 @@ export default function EventTabs({ slug, events }) {
             onClick={handleClick}
             className={`px-5 py-2 rounded-full whitespace-nowrap transition font-montserrat font-semibold ${
               active
-                ? "bg-gray-200"
+                ? "bg-gray-200 text-black"
                 : "bg-red-500 text-white hover:bg-gray-200 hover:text-black"
             }`}
           >

@@ -141,6 +141,9 @@ const Header = () => {
 							? "text-[#8C0000]"
 							: "text-white"
 					}`}
+					onClick={() => {
+						setMenuOpen(false);
+						}}
 				>
 					Home
 				</Link>
@@ -153,6 +156,9 @@ const Header = () => {
 							? "text-[#8C0000]"
 							: "text-white"
 					}`}
+					onClick={() => {
+						setMenuOpen(false);
+						}}
 				>
 					Committee
 				</Link>
