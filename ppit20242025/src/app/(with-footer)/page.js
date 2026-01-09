@@ -143,7 +143,7 @@ export default function Home() {
 			{/* About Section */}
 			<section
 				id="about-us"
-				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-white"
+				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-[#7E0C0E]"
 			>
 			{/* Left repeating background */}
 			<div
@@ -157,12 +157,12 @@ export default function Home() {
 				style={{ width: "230px" }}
 			/>
 			{/* Center */}
-				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-black">
+				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-white">
 					<div className="flex items-center justify-center lg:block">
-						<hr className="w-[20%] md:w-[10%] my-4 border-t-[3px] border-red-600" />
+						<hr className="w-[20%] md:w-[10%] my-4 border-t-[3px] border-white" />
 					</div>
 
-					<h2 className="text-center lg:text-left sm:text-4xl text-3xl font-bold mb-4 text-red-600 font-montserrat">
+					<h2 className="text-center lg:text-left sm:text-4xl text-3xl font-bold mb-4 text-white font-montserrat">
 						ABOUT US
 					</h2>
 					<div className="grid grid-row-4 md:grid-cols-8 md:grid-rows-1 gap-8">
@@ -184,18 +184,18 @@ export default function Home() {
 							{/* New Statistics Section */}
 							<div className="mt-8 flex space-x-16">
 								<div className="flex flex-col items-start">
-									<div className="lg:text-5xl md:text-4xl text-3xl text-red-600 font-montserrat font-[420]">
+									<div className="lg:text-5xl md:text-4xl text-3xl text-white font-montserrat font-[420]">
 										7+
 									</div>
-									<div className="text-gray-600 font-montserrat">
+									<div className="text-white font-montserrat">
 										Tahun Berdiri
 									</div>
 								</div>
 								<div className="flex flex-col items-start">
-									<div className="lg:text-5xl md:text-4xl text-3xl text-red-600 font-montserrat font-[420]">
+									<div className="lg:text-5xl md:text-4xl text-3xl text-white font-montserrat font-[420]">
 										500+
 									</div>
-									<div className="text-gray-600 font-montserrat">
+									<div className="text-white font-montserrat">
 										Mahasiswa di Shenzhen
 									</div>
 								</div>
