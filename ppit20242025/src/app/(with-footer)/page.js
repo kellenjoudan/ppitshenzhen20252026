@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
-import PPIT from "../../../public/Home/foto bareng.png";
-import PPITTablet from "../../../public/Home/foto bareng.png";
-import PPITMobile from "../../../public/Home/foto bareng.png";
+import PPIT from "../../../public/Home/foto bareng.webp";
+import PPITTablet from "../../../public/Home/foto bareng.webp";
+import PPITMobile from "../../../public/Home/foto bareng.webp";
 import AboutImage from "../../../public/Home/3D_Logo.webp";
 import Vision from "../../../public/Home/vision.webp";
 import Mission from "../../../public/Home/mission.webp";
