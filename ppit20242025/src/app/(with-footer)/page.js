@@ -58,8 +58,8 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<div className="relative font-montserrat">
-				<div className="relative md:h-[100vh] h-[90vh] overflow-hidden">
+			<div className="relative font-montserrat overflow-hidden">
+				<div className="relative h-[110vh] -top-10">
 					<Image
 						src={PPITMobile}
 						alt="PPIT Hero"
@@ -81,10 +81,10 @@ export default function Home() {
 						quality={75}
 					/>
 
-					<div className="absolute inset-x-0 bottom-0 flex flex-col items-center  md:mb-[-10px]">
+					<div className="absolute inset-x-0 bottom-10 flex flex-col items-center z-10">
 						<Link
 							href="#about-us"
-							className="text-white text-4xl font-light tracking-wider mb-6 drop-shadow-lg"
+							className="text-white text-4xl font-light shadow-2xl shadow-black tracking-wider mb-3 drop-shadow-lg"
 						>
 							find out more
 						</Link>
@@ -109,13 +109,15 @@ export default function Home() {
 							</svg>
 						</Link>
 					</div>
+					</div>
+					
 					{/* Red wave transition */}
-					<div className="absolute bottom-0 left-0 w-full h-[80px] pointer-events-none">
+					<div className="absolute bottom-0 left-0 w-full h-[150px] pointer-events-none overflow-hidden">
 					{/* Batik left */}
-					<div className="absolute inset-y-0 left-0 w-[230px] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -left-20 sm:left-0" />
+					<div className="absolute bottom-0 w-[230px] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -left-20 sm:left-0" />
 
 					{/* Batik right (mirrored) */}
-					<div className="absolute inset-y-0 right-0 w-[230px] scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -right-20 sm:right-0" />
+					<div className="absolute bottom-0 w-[230px] scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -right-20 sm:right-0" />
 
 					{/* Wave */}
 					<svg
@@ -126,28 +128,19 @@ export default function Home() {
 					>
 						{/* wavy top edge + red fill below */}
 						<path
-						d="
-							M0,215
-							C160,235 260,255 380,240
-							C520,220 620,170 760,155
-							C900,140 1080,175 1220,200
-							C1320,215 1380,220 1440,215
-							L1440,320
-							L0,320
-							Z
-						"
+						d="M0 96L48 106.7C96 117 192 139 288 160C384 181 480 181 576 160C672 139 768 96 864 80C960 64 1056 75 1152 96C1248 117 1344 149 1392 165.3L1440 181V320H1392C1344 320 1248 320 1152 320C1056 320 960 320 864 320C768 320 672 320 576 320C480 320 384 320 288 320C192 320 96 320 48 320H0V96Z"
 						fill="#7E0C0E"
 						/>
 					</svg>
 					</div>
 				</div>
-			</div>
+			
 
 
 			{/* About Section */}
 			<section
 				id="about-us"
-				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-[#7E0C0E]"
+				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-[#7E0C0E] overflow-hidden"
 			>
 			{/* Left repeating background */}
 			<div
