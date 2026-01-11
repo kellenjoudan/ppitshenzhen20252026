@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
-import PPIT from "../../../public/Home/foto bareng.png";
-import PPITTablet from "../../../public/Home/foto bareng.png";
-import PPITMobile from "../../../public/Home/foto bareng.png";
+import PPIT from "../../../public/Home/foto bareng.webp";
+import PPITTablet from "../../../public/Home/foto bareng.webp";
+import PPITMobile from "../../../public/Home/foto bareng.webp";
 import AboutImage from "../../../public/Home/3D_Logo.webp";
 import Vision from "../../../public/Home/vision.webp";
 import Mission from "../../../public/Home/mission.webp";
@@ -58,8 +58,8 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<div className="relative font-montserrat">
-				<div className="relative md:h-[100vh] h-[90vh] overflow-hidden">
+			<div className="relative font-montserrat overflow-hidden">
+				<div className="relative h-[110vh] -top-10">
 					<Image
 						src={PPITMobile}
 						alt="PPIT Hero"
@@ -80,12 +80,11 @@ export default function Home() {
 						className="lg:hidden sm:block hidden w-full h-full object-cover "
 						quality={75}
 					/>
-					<div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/100 via-black/30 to-transparent" />
 
-					<div className="absolute inset-x-0 bottom-0 flex flex-col items-center  md:mb-[-10px]">
+					<div className="absolute inset-x-0 bottom-10 flex flex-col items-center z-10">
 						<Link
 							href="#about-us"
-							className="text-white text-4xl font-light tracking-wider mb-6 drop-shadow-lg"
+							className="text-white text-4xl font-light shadow-2xl shadow-black tracking-wider mb-3 drop-shadow-lg"
 						>
 							find out more
 						</Link>
@@ -110,40 +109,38 @@ export default function Home() {
 							</svg>
 						</Link>
 					</div>
-				</div>
-			</div>
+					</div>
+					
+					{/* Red wave transition */}
+					<div className="absolute bottom-0 left-0 w-full h-[150px] pointer-events-none overflow-hidden">
+					{/* Batik left */}
+					<div className="absolute bottom-0 w-[230px] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -left-20 sm:left-0" />
 
-			{/* Inverted Black Wave */}
-			<div className="relative w-full" style={{ marginTop: "-1px" }}>
-				{/* Left repeating background */}
-				<div
-					className="absolute bottom-0 bg-[url('/Home/BATIK.webp')] bg-repeat-y bg-[position:0_100px] z-0 w-[230px] h-[100px] -left-20 sm:left-0"
-				/>
+					{/* Batik right (mirrored) */}
+					<div className="absolute bottom-0 w-[230px] scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -right-20 sm:right-0" />
 
-				{/* Right repeating background */}
-				<div
-					className="absolute bottom-0 scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y bg-[position:0_100px] z-0 w-[230px] h-[100px] -right-20 sm:right-0"
-				/>
-
-				<svg
-					viewBox="0 0 1440 320"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-					className="w-full z-10"
-					preserveAspectRatio="none"
-					style={{ height: "200px", transform: "rotate(180deg)" }}
-				>
-					<path
+					{/* Wave */}
+					<svg
+						viewBox="0 0 1440 320"
+						preserveAspectRatio="none"
+						xmlns="http://www.w3.org/2000/svg"
+						className="absolute bottom-0 left-0 w-full h-full"
+					>
+						{/* wavy top edge + red fill below */}
+						<path
 						d="M0 96L48 106.7C96 117 192 139 288 160C384 181 480 181 576 160C672 139 768 96 864 80C960 64 1056 75 1152 96C1248 117 1344 149 1392 165.3L1440 181V320H1392C1344 320 1248 320 1152 320C1056 320 960 320 864 320C768 320 672 320 576 320C480 320 384 320 288 320C192 320 96 320 48 320H0V96Z"
-						fill="black"
-					/>
-				</svg>
-			</div>
+						fill="#7E0C0E"
+						/>
+					</svg>
+					</div>
+				</div>
+			
+
 
 			{/* About Section */}
 			<section
 				id="about-us"
-				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-white"
+				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-[#7E0C0E] overflow-hidden"
 			>
 			{/* Left repeating background */}
 			<div
@@ -157,12 +154,12 @@ export default function Home() {
 				style={{ width: "230px" }}
 			/>
 			{/* Center */}
-				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-black">
+				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-white">
 					<div className="flex items-center justify-center lg:block">
-						<hr className="w-[20%] md:w-[10%] my-4 border-t-[3px] border-red-600" />
+						<hr className="w-[20%] md:w-[10%] my-4 border-t-[3px] border-white" />
 					</div>
 
-					<h2 className="text-center lg:text-left sm:text-4xl text-3xl font-bold mb-4 text-red-600 font-montserrat">
+					<h2 className="text-center lg:text-left sm:text-4xl text-3xl font-bold mb-4 text-white font-montserrat">
 						ABOUT US
 					</h2>
 					<div className="grid grid-row-4 md:grid-cols-8 md:grid-rows-1 gap-8">
@@ -184,18 +181,18 @@ export default function Home() {
 							{/* New Statistics Section */}
 							<div className="mt-8 flex space-x-16">
 								<div className="flex flex-col items-start">
-									<div className="lg:text-5xl md:text-4xl text-3xl text-red-600 font-montserrat font-[420]">
+									<div className="lg:text-5xl md:text-4xl text-3xl text-white font-montserrat font-[420]">
 										7+
 									</div>
-									<div className="text-gray-600 font-montserrat">
+									<div className="text-white font-montserrat">
 										Tahun Berdiri
 									</div>
 								</div>
 								<div className="flex flex-col items-start">
-									<div className="lg:text-5xl md:text-4xl text-3xl text-red-600 font-montserrat font-[420]">
+									<div className="lg:text-5xl md:text-4xl text-3xl text-white font-montserrat font-[420]">
 										500+
 									</div>
-									<div className="text-gray-600 font-montserrat">
+									<div className="text-white font-montserrat">
 										Mahasiswa di Shenzhen
 									</div>
 								</div>
