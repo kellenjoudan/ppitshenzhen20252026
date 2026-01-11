@@ -262,6 +262,9 @@ const Header = () => {
 							? "text-[#8C0000]"
 							: "text-white"
 					}`}
+					onClick={() => {
+						setMenuOpen(false);
+					}}
 				>
 					FAQ
 				</Link>
