@@ -80,7 +80,6 @@ export default function Home() {
 						className="lg:hidden sm:block hidden w-full h-full object-cover "
 						quality={75}
 					/>
-					<div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/100 via-black/30 to-transparent" />
 
 					<div className="absolute inset-x-0 bottom-0 flex flex-col items-center  md:mb-[-10px]">
 						<Link
@@ -110,35 +109,40 @@ export default function Home() {
 							</svg>
 						</Link>
 					</div>
+					{/* Red wave transition */}
+					<div className="absolute bottom-0 left-0 w-full h-[80px] pointer-events-none">
+					{/* Batik left */}
+					<div className="absolute inset-y-0 left-0 w-[230px] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -left-20 sm:left-0" />
+
+					{/* Batik right (mirrored) */}
+					<div className="absolute inset-y-0 right-0 w-[230px] scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -right-20 sm:right-0" />
+
+					{/* Wave */}
+					<svg
+						viewBox="0 0 1440 320"
+						preserveAspectRatio="none"
+						xmlns="http://www.w3.org/2000/svg"
+						className="absolute bottom-0 left-0 w-full h-full"
+					>
+						{/* wavy top edge + red fill below */}
+						<path
+						d="
+							M0,215
+							C160,235 260,255 380,240
+							C520,220 620,170 760,155
+							C900,140 1080,175 1220,200
+							C1320,215 1380,220 1440,215
+							L1440,320
+							L0,320
+							Z
+						"
+						fill="#7E0C0E"
+						/>
+					</svg>
+					</div>
 				</div>
 			</div>
 
-			{/* Inverted Black Wave */}
-			<div className="relative w-full" style={{ marginTop: "-1px" }}>
-				{/* Left repeating background */}
-				<div
-					className="absolute bottom-0 bg-[url('/Home/BATIK.webp')] bg-repeat-y bg-[position:0_100px] z-0 w-[230px] h-[100px] -left-20 sm:left-0"
-				/>
-
-				{/* Right repeating background */}
-				<div
-					className="absolute bottom-0 scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y bg-[position:0_100px] z-0 w-[230px] h-[100px] -right-20 sm:right-0"
-				/>
-
-				<svg
-					viewBox="0 0 1440 320"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-					className="w-full z-10"
-					preserveAspectRatio="none"
-					style={{ height: "200px", transform: "rotate(180deg)" }}
-				>
-					<path
-						d="M0 96L48 106.7C96 117 192 139 288 160C384 181 480 181 576 160C672 139 768 96 864 80C960 64 1056 75 1152 96C1248 117 1344 149 1392 165.3L1440 181V320H1392C1344 320 1248 320 1152 320C1056 320 960 320 864 320C768 320 672 320 576 320C480 320 384 320 288 320C192 320 96 320 48 320H0V96Z"
-						fill="black"
-					/>
-				</svg>
-			</div>
 
 			{/* About Section */}
 			<section
