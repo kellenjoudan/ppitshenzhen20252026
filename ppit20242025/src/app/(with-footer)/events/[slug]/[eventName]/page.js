@@ -15,9 +15,19 @@ export default async function EventPage({ params }) {
   }
 
   return (
-    <div className="pt-32 bg-[#7E0C0E]">
+    <div className="pt-32 bg-[#7E0C0E] relative overflow-hidden">
+			{/* Left repeating background */}
+			<div
+				className="absolute w-[230px] h-full inset-y-0 bg-[url('/Home/motif_batik.png')] opacity-10 bg-repeat-y z-0 -right-1 bg-[length:230px_auto]"
+			/>
+
+			{/* Right repeating background */}
+			<div
+				className="absolute w-[230px] h-full inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik.png')] opacity-10 bg-repeat-y z-0 -left-1 bg-[length:230px_auto]"
+			/>
+
       {/* EVENT HEADER */}
-      <section className="max-w-6xl mx-3 px-6 pb-10">
+      <section className="max-w-6xl mx-3 px-6 pb-10 z-10">
         <h1 className="text-4xl md:text-5xl font-bold font-cinzel mb-6 text-white">
           Event Highlights
         </h1>
@@ -57,10 +67,10 @@ export default async function EventPage({ params }) {
       </p>
       </section>
 
-      <EventTabs slug={slug} events={events} />
-
-      {/* IMAGES LOAD AFTER PAGE RENDERS */}
-      <EventsGallery folder={`events/${slug}/${eventName}`} />
+      <div className="relative z-10">
+        <EventTabs slug={slug} events={events} />
+        <EventsGallery folder={`events/${slug}/${eventName}`} />
+      </div>
     </div>
   );
 }

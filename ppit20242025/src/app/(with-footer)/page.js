@@ -3,7 +3,7 @@ import Image from "next/image";
 import PPIT from "../../../public/Home/foto bareng.webp";
 import PPITTablet from "../../../public/Home/foto bareng.webp";
 import PPITMobile from "../../../public/Home/foto bareng.webp";
-import AboutImage from "../../../public/Home/3D_Logo.webp";
+import AboutImage from "../../../public/Home/3D_logo.png";
 import Vision from "../../../public/Home/vision.webp";
 import Mission from "../../../public/Home/mission.webp";
 import BestSeller from "../../../public/Home/merch.webp";
@@ -58,7 +58,7 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<div className="relative font-montserrat overflow-hidden">
+			<div className="relative font-montserrat">
 				<div className="relative h-[110vh] -top-10">
 					<Image
 						src={PPITMobile}
@@ -109,16 +109,10 @@ export default function Home() {
 							</svg>
 						</Link>
 					</div>
-					</div>
-					
-					{/* Red wave transition */}
-					<div className="absolute bottom-0 left-0 w-full h-[150px] pointer-events-none overflow-hidden">
-					{/* Batik left */}
-					<div className="absolute bottom-0 w-[230px] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -left-20 sm:left-0" />
-
-					{/* Batik right (mirrored) */}
-					<div className="absolute bottom-0 w-[230px] scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -right-20 sm:right-0" />
-
+				</div>
+				
+				{/* Red wave transition */}
+				<div className="absolute bottom-0 left-0 w-full h-[150px] pointer-events-none overflow-hidden">
 					{/* Wave */}
 					<svg
 						viewBox="0 0 1440 320"
@@ -132,27 +126,25 @@ export default function Home() {
 						fill="#7E0C0E"
 						/>
 					</svg>
-					</div>
 				</div>
+			</div>
 			
-
-
-			{/* About Section */}
-			<section
-				id="about-us"
-				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-[#7E0C0E] overflow-hidden"
-			>
+			<div className="relative overflow-hidden">
 			{/* Left repeating background */}
 			<div
-				className="absolute inset-y-0 bg-[url('/Home/BATIK.webp')] bg-repeat-y z-0 -left-20 sm:left-0"
-				style={{ width: "230px" }}
+				className="absolute w-[230px] h-full inset-y-0 bg-[url('/Home/motif_batik.png')] opacity-10 bg-repeat-y z-10 -right-1 bg-[length:230px_auto]"
 			/>
 
 			{/* Right repeating background */}
 			<div
-				className="absolute inset-y-0 scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y z-0 -right-20 sm:right-0"
-				style={{ width: "230px" }}
+				className="absolute w-[230px] h-full inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik.png')] opacity-10 bg-repeat-y z-10 -left-1 bg-[length:230px_auto]"
 			/>
+
+			{/* About Section */}
+			<section
+				id="about-us"
+				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-[#7E0C0E]"
+			>
 			{/* Center */}
 				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-white">
 					<div className="flex items-center justify-center lg:block">
@@ -198,7 +190,7 @@ export default function Home() {
 								</div>
 							</div>
 						</div>
-						<div className="md:col-span-3 lg:col-span-2 md:h-full z-10">
+						<div className="md:col-span-3 lg:col-span-2 md:h-full z-30">
 							<Image
 								src={AboutImage}
 								alt="About Us Image"
@@ -373,6 +365,7 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
+		</div>
 		</>
 	);
 }
