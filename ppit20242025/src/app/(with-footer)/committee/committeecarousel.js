@@ -71,13 +71,13 @@ export default function CommitteeCarousel({ input }) {
 				return (
 					<div className="grid grid-rows-2 justify-center gap-2 md:gap-6">
 						{/* First row: 3 cards */}
-						<div className="gap-0 md:gap-4 flex flex-row justify-center">
+						<div className="gap-2 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[0]} />
 							<MemberCard member={members[1]} />
 							<MemberCard member={members[2]} />
 						</div>
 						{/* Second row: 3 cards */}
-						<div className=" gap-0 md:gap-4 flex flex-row justify-center">
+						<div className=" gap-2 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[3]} />
 							<MemberCard member={members[4]} />
 							<MemberCard member={members[5]} />
@@ -87,7 +87,7 @@ export default function CommitteeCarousel({ input }) {
 			case "5":
 				if (members.length !== 5) return <div>Invalid member count</div>;
 				return (
-					<div className="grid grid-rows-2 justify-center gap-2 md:gap-8">
+					<div className="grid grid-rows-2 justify-center gap-2 md:gap-6">
 						{/* First row: 3 cards */}
 						<div className="gap-2 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[0]} />
@@ -105,16 +105,16 @@ export default function CommitteeCarousel({ input }) {
 			case "7":
 				if (members.length !== 7) return <div>Invalid member count</div>;
 				return (
-					<div className="grid grid-rows-2 justify-center gap-0 md:gap-4">
+					<div className="grid grid-rows-2 justify-center gap-2 md:gap-6">
 						{/* First row: 4 cards */}
-						<div className="gap-0 md:gap-8 flex flex-row justify-center">
+						<div className="gap-1 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[0]} />
 							<MemberCard member={members[1]} />
 							<MemberCard member={members[2]} />
 							<MemberCard member={members[3]} />
 						</div>
 						{/* Second row: 3 cards */}
-						<div className=" px-8 md:px:0 gap-0 md:gap-8 flex flex-row justify-center">
+						<div className=" px-8 md:px:0 gap-1 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[4]} />
 							<MemberCard member={members[5]} />
 							<MemberCard member={members[6]} />
@@ -124,7 +124,7 @@ export default function CommitteeCarousel({ input }) {
 			case "8":
 				if (members.length !== 8) return <div>Invalid member count</div>;
 				return (
-					<div className="grid grid-rows-2 justify-center gap-4">
+					<div className="grid grid-rows-2 justify-center gap-2 md:gap-8">
 						{/* First row: 4 cards */}
 						<div className="flex-nowrap gap-1 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[0]} />
