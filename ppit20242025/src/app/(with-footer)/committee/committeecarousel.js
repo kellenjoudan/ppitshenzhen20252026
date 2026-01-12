@@ -199,22 +199,22 @@ export default function CommitteeCarousel({ input }) {
 				</div>
 
 				{/* Main Content */}
-				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-8 ">
-					<div className="relative h-[80vh] sm:h-[45vh] md:h-[50vh] lg:h-[65vh] xl:h-[80vh] overflow-hidden rounded-lg shadow-lg flex items-center justify-center xl:ml-auto xl:mr-0 mx-auto aspect-[4/5]">
+				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-8">
+					<div className="relative h-[55vh] sm:h-[60vh] lg:h-[80vh] overflow-hidden rounded-lg shadow-lg flex items-center justify-center xl:ml-auto xl:mr-0 mx-auto aspect-[4/5]">
 						{sections.map((section, index) => (
 							<Image
 							key={section.id}
 							src={section.image}
 							alt={`Image for ${section.description}`}
 							fill
-							className={`w-full max-h-[60vh] lg:max-h-[80vh] object-contain lg:px-8 transition-opacity duration-400 ease-in-out ${
+							className={`w-full object-contain lg:px-8 transition-opacity duration-400 ease-in-out ${
 								activeSection === index ? "opacity-100" : "opacity-0"
 							}`}
 							quality={100}
 							/>
 						))}
 					</div>
-					<div className="flex flex-col items-center justify-center xl:items-start md:w-[50%] w-[85%] space-y-4 pl-8 sm:mt-4 lg:pl-16 pr-8">
+					<div className="flex flex-col items-center justify-center xl:items-start md:w-[50%] w-[85%] space-y-4 pl-8 mt-4 lg:mt-0 lg:pl-16 pr-8">
 						<h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-6xl font-bold text-center xl:text-left leading-tight w-full">
 							{sections[activeSection].description}
 						</h2>
