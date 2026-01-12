@@ -112,7 +112,7 @@ export default function Home() {
 					</div>
 					
 					{/* Red wave transition */}
-					<div className="absolute bottom-0 left-0 w-full h-[150px] pointer-events-none overflow-hidden">
+					<div className="absolute bottom-0 left-0 w-full h-[152px] pointer-events-none overflow-hidden">
 					{/* Batik left */}
 					<div className="absolute bottom-0 w-[230px] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -left-20 sm:left-0" />
 

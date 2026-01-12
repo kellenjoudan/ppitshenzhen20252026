@@ -187,7 +187,7 @@ export default function CommitteeCarousel({ input }) {
 						<button
 						key={section.id}
 						onClick={() => setActiveSection(index)}
-						className={`px-3 md:px-6 py-1 lg:text-xl md:text-lg sm:text-md text-sm rounded-full font-montserrat lg:pb-[-30px] md:pb-[-20px] pb-[-10px] font-semibold ${
+						className={`mb-2 px-4 md:px-6 py-1.5 lg:text-lg md:text-base sm:text-md text-sm rounded-full font-montserrat font-semibold ${
 							activeSection === index
 							? "bg-white text-black border-white border-[2px]"
 							: "bg-red-500 text-white hover:bg-red-700 hover:text-white hover:scale-110 transition duration-300"
@@ -199,7 +199,7 @@ export default function CommitteeCarousel({ input }) {
 				</div>
 
 				{/* Main Content */}
-				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-12 ">
+				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-8 ">
 					<div className="relative h-[80vh] sm:h-[45vh] md:h-[50vh] lg:h-[65vh] xl:h-[80vh] overflow-hidden rounded-lg shadow-lg flex items-center justify-center xl:ml-auto xl:mr-0 mx-auto aspect-[4/5]">
 						{sections.map((section, index) => (
 							<Image
@@ -207,14 +207,14 @@ export default function CommitteeCarousel({ input }) {
 							src={section.image}
 							alt={`Image for ${section.description}`}
 							fill
-							className={`object-contain pl-8 pr-8 transition-opacity duration-400 ease-in-out ${
+							className={`w-full max-h-[60vh] lg:max-h-[80vh] object-contain lg:px-8 transition-opacity duration-400 ease-in-out ${
 								activeSection === index ? "opacity-100" : "opacity-0"
 							}`}
 							quality={100}
 							/>
 						))}
 					</div>
-					<div className="flex flex-col items-center justify-center xl:items-start md:w-[50%] w-[85%] space-y-4 pl-16 pr-8">
+					<div className="flex flex-col items-center justify-center xl:items-start md:w-[50%] w-[85%] space-y-4 pl-8 sm:mt-4 lg:pl-16 pr-8">
 						<h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-6xl font-bold text-center xl:text-left leading-tight w-full">
 							{sections[activeSection].description}
 						</h2>
