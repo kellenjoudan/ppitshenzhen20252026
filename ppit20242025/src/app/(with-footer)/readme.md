@@ -2,6 +2,7 @@ REGISTRATION FORM PAGE PLAN
 
 
 DIRECTORY FORMAT
+===
 forms/{formId} { //ACCESSIBLE FOR EVERYONE
   title: str,
   description: str,
