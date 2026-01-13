@@ -1,7 +1,8 @@
 REGISTRATION FORM PAGE PLAN
 
-DIRECTORY
-forms/{formId} {
+
+DIRECTORY FORMAT
+forms/{formId} { //ACCESSIBLE FOR EVERYONE
   title: str,
   description: str,
   questions: [
@@ -18,7 +19,7 @@ forms/{formId} {
   createdAt: timestamp
 }
 
-responses/{responseId} {
+responses/{responseId} { //ONLY ACCESSIBLE BY ADMIN (REQUIRES LOG IN)
   formId: str,
   answers: {
     [questionId]: str | str[]
@@ -26,7 +27,7 @@ responses/{responseId} {
   submittedAt: timestamp
 }
 
-QUESTION JSON
+QUESTION JSON FORMAT (to be sent to firestore db)
 Question = {
   id: str,
   label: str,
@@ -34,6 +35,9 @@ Question = {
   required: bool,
   options?: str[]
 }
+
+(!!!) FLOW :
+Admin creates → Firestore stores → User fills → Firestore stores → Admin reads
 
 
 JOBDESK:
@@ -48,4 +52,22 @@ Aldo - User form renderer/UI --> fetch form from db through formID, display titl
 Jennickel - UI/UX design --> similar to the previous project, create an illustration using figma to give a big picture of the website, determine color palette, typography, button styles, and input styles (looks-wise).
 
 
-REF: https://github.com/hachln/Investsync_EventHelper
+DEADLINES:
+===DEVELOPMENT PHASE===
+- 18 Jan => Jennickel UI Design for form layout, admin layout, and components styles (figma)
+- 31 Jan => Each members' jobdesk (everything should be set by now); tolerance: design and mobile compatibility not finalized (not part of the main goal)
+===TESTING & DEPLOYMENT PHASE===
+- 5 Feb => Finish testing for the forms and admin page; note down every improvements that can be made (TEST MOBILE COMPATIBILITY)
+- 8 Feb => Finalization of code (ensure everything is written properly and corrrectly + firebase is working smoothly)
+- 9 Feb => Deployment
+
+
+!!! NAMING CONVENTIONS (keep it the same across files): !!!
+- Function names: createForm(formData), getFormById(formId), submitResponse(formId, response)
+
+
+REPO REFERENCE: https://github.com/hachln/Investsync_EventHelper
+FIREBASE YOUTUBE TUTORIAL: 
+- https://firebase.google.com/codelabs/firebase-nextjs#0
+- https://www.youtube.com/watch?v=Zj8z-UaD6fo (Firestore realtime update)
+- https://www.youtube.com/watch?v=awd_oYcmrRA (skip to 8:07)
