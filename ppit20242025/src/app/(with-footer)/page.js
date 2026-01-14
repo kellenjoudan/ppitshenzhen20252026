@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
-import PPIT from "../../../public/Home/PPIT.webp";
-import PPITTablet from "../../../public/Home/PPITtablet.webp";
-import PPITMobile from "../../../public/Home/PPITmobile.webp";
-import AboutImage from "../../../public/Home/about-image.webp";
+import PPIT from "../../../public/Home/foto bareng.webp";
+import PPITTablet from "../../../public/Home/foto bareng.webp";
+import PPITMobile from "../../../public/Home/foto bareng.webp";
+import AboutImage from "../../../public/Home/3D_Logo.webp";
 import Vision from "../../../public/Home/vision.webp";
 import Mission from "../../../public/Home/mission.webp";
 import BestSeller from "../../../public/Home/merch.webp";
@@ -24,28 +24,42 @@ export default function Home() {
 
 	const universities = [
 		{
+			name: "Peking University Shenzhen Graduate School", 
+			ranking: "#14 QS World Rankings 2026",
+			color: "#F00000"
+		},
+		{
+			name: "Tsinghua Shenzhen International Graduate School",
+			ranking: "#17 QS World Rankings 2026",
+			color: "#F8650C"
+		},
+		{
 			name: "The Chinese University of Hong Kong, Shenzhen",
 			ranking: "#32 QS World Rankings 2026",
+			color: "#FFC917"
 		},
 		{
 			name: "Harbin Institute of Technology Shenzhen",
 			ranking: "#256 QS World Rankings 2026",
+			color: "#FFC917"
 		},
 		{
 			name: "Southern University of Science and Technology",
 			ranking: "#343 QS World Rankings 2026",
+			color: "#F8650C"
 		},
 		{
 			name: "Shenzhen University",
 			ranking: "#452 QS World Rankings 2026",
+			color: "#F00000"
 		},
 	];
 
 	return (
 		<>
 			{/* Hero Section */}
-			<div className="relative font-montserrat">
-				<div className="relative md:h-[100vh] h-[90vh] overflow-hidden">
+			<div className="relative font-montserrat overflow-hidden">
+				<div className="relative h-[110vh] -top-10">
 					<Image
 						src={PPITMobile}
 						alt="PPIT Hero"
@@ -66,12 +80,11 @@ export default function Home() {
 						className="lg:hidden sm:block hidden w-full h-full object-cover "
 						quality={75}
 					/>
-					<div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
-					<div className="absolute inset-x-0 bottom-0 flex flex-col items-center  md:mb-[-10px]">
+					<div className="absolute inset-x-0 bottom-10 flex flex-col items-center z-10">
 						<Link
 							href="#about-us"
-							className="text-white text-4xl font-light tracking-wider mb-6 drop-shadow-lg"
+							className="text-white text-4xl font-light shadow-2xl shadow-black tracking-wider mb-3 drop-shadow-lg"
 						>
 							find out more
 						</Link>
@@ -96,79 +109,102 @@ export default function Home() {
 							</svg>
 						</Link>
 					</div>
-				</div>
-			</div>
+					</div>
+					
+					{/* Red wave transition */}
+					<div className="absolute bottom-0 left-0 w-full h-[152px] pointer-events-none overflow-hidden">
+					{/* Batik left */}
+					<div className="absolute bottom-0 w-[230px] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -left-20 sm:left-0" />
 
-			{/* Inverted Black Wave */}
-			<div className="relative w-full" style={{ marginTop: "-1px" }}>
-				<svg
-					viewBox="0 0 1440 320"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-					className="w-full"
-					preserveAspectRatio="none"
-					style={{ height: "200px", transform: "rotate(180deg)" }}
-				>
-					<path
+					{/* Batik right (mirrored) */}
+					<div className="absolute bottom-0 w-[230px] scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -right-20 sm:right-0" />
+
+					{/* Wave */}
+					<svg
+						viewBox="0 0 1440 320"
+						preserveAspectRatio="none"
+						xmlns="http://www.w3.org/2000/svg"
+						className="absolute bottom-0 left-0 w-full h-full"
+					>
+						{/* wavy top edge + red fill below */}
+						<path
 						d="M0 96L48 106.7C96 117 192 139 288 160C384 181 480 181 576 160C672 139 768 96 864 80C960 64 1056 75 1152 96C1248 117 1344 149 1392 165.3L1440 181V320H1392C1344 320 1248 320 1152 320C1056 320 960 320 864 320C768 320 672 320 576 320C480 320 384 320 288 320C192 320 96 320 48 320H0V96Z"
-						fill="black"
-					/>
-				</svg>
-			</div>
+						fill="#7E0C0E"
+						/>
+					</svg>
+					</div>
+				</div>
+			
+
 
 			{/* About Section */}
 			<section
 				id="about-us"
-				className="py-20 md:px-12 px-8 lg:px-8 max-w-[90rem] mx-auto"
+				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-[#7E0C0E] overflow-hidden"
 			>
-				<div className="flex items-center justify-center lg:block">
-					<hr className="w-[20%] md:w-[10%] my-4 border-t-[3px] border-red-600" />
-				</div>
-				<h2 className="text-center lg:text-left sm:text-4xl text-3xl font-bold mb-4 text-red-600 font-montserrat">
-					ABOUT US
-				</h2>
-				<div className="grid grid-row-4 md:grid-cols-8 md:grid-rows-1 gap-8">
-					<div className="row-start-2 md:row-start-1 md:col-span-5 lg:col-span-6">
-						<div className="text-2xl md:text-xl lg:text-3xl font-[530] text-center md:text-left font-montserrat">
-							Keinginan pelajar-pelajar Indonesia di Kota Shenzhen untuk berdiri
-							mandiri sebagai sebuah organisasi bermula pada tahun 2018.
-						</div>
-						<div className="text-lg md:text-base lg:text-xl mt-4 font-montserrat">
-							Di tahun yang sama, Perhimpunan Pelajar Indonesia di Tiongkok
-							ranting Shenzhen (PPITSZ) resmi berdiri sebagai ranting dari
-							cabang Guangzhou. Kepengurusan pertama PPITSZ dipimpin oleh
-							Saudara Ivan Prawira Limanauwyang juga merupakan salah satu
-							inisiator berdirinya organisasi ini. Setelah melewati satu periode
-							kepengerusan, PPITSZ akhirnya disahkan sebagai cabang pada tahun
-							2019. Saat ini, PPITSZ menaungi lebih dari 200 pelajar aktif yang
-							tersebar di 4 lembaga pendidikan di Kota Shenzhen.
-						</div>
-						{/* New Statistics Section */}
-						<div className="mt-8 flex space-x-16">
-							<div className="flex flex-col items-start">
-								<div className="lg:text-5xl md:text-4xl text-3xl font-montserrat font-[420]">
-									6+
-								</div>
-								<div className="text-gray-600 font-montserrat">
-									Tahun Berdiri
-								</div>
-							</div>
-							<div className="flex flex-col items-start">
-								<div className="lg:text-5xl md:text-4xl text-3xl font-montserrat font-[420]">
-									450+
-								</div>
-								<div className="text-gray-600 font-montserrat">
-									Mahasiswa di Shenzhen
-								</div>
-							</div>
-						</div>
+			{/* Left repeating background */}
+			<div
+				className="absolute inset-y-0 bg-[url('/Home/BATIK.webp')] bg-repeat-y z-0 -left-20 sm:left-0"
+				style={{ width: "230px" }}
+			/>
+
+			{/* Right repeating background */}
+			<div
+				className="absolute inset-y-0 scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y z-0 -right-20 sm:right-0"
+				style={{ width: "230px" }}
+			/>
+			{/* Center */}
+				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-white">
+					<div className="flex items-center justify-center lg:block">
+						<hr className="w-[20%] md:w-[10%] my-4 border-t-[3px] border-white" />
 					</div>
-					<div className="md:col-span-3 lg:col-span-2 md:h-full">
-						<Image
-							src={AboutImage}
-							alt="About Us Image"
-							className="rounded-none md:w-full sm:w-[65%] w-[75%] mx-auto h-auto max-w-[1000px] shadow-lg"
-						/>
+
+					<h2 className="text-center lg:text-left sm:text-4xl text-3xl font-bold mb-4 text-white font-montserrat">
+						ABOUT US
+					</h2>
+					<div className="grid grid-row-4 md:grid-cols-8 md:grid-rows-1 gap-8">
+						<div className="row-start-2 md:row-start-1 md:col-span-5 lg:col-span-6">
+							<div className="text-2xl md:text-xl lg:text-3xl font-[530] text-center md:text-left font-montserrat">
+								Keinginan pelajar-pelajar Indonesia di Kota Shenzhen untuk berdiri
+								mandiri sebagai sebuah organisasi bermula pada tahun 2018.
+							</div>
+							<div className="text-lg md:text-base lg:text-xl mt-4 font-montserrat">
+								Di tahun yang sama, Perhimpunan Pelajar Indonesia di Tiongkok
+								ranting Shenzhen (PPITSZ) resmi berdiri sebagai ranting dari
+								cabang Guangzhou. Kepengurusan pertama PPITSZ dipimpin oleh
+								Saudara Ivan Prawira Limanauwyang juga merupakan salah satu
+								inisiator berdirinya organisasi ini. Setelah melewati satu periode
+								kepengerusan, PPITSZ akhirnya disahkan sebagai cabang pada tahun
+								2019. Saat ini, PPITSZ menaungi lebih dari 500 pelajar aktif yang
+								tersebar di 4 lembaga pendidikan di Kota Shenzhen.
+							</div>
+							{/* New Statistics Section */}
+							<div className="mt-8 flex space-x-16">
+								<div className="flex flex-col items-start">
+									<div className="lg:text-5xl md:text-4xl text-3xl text-white font-montserrat font-[420]">
+										7+
+									</div>
+									<div className="text-white font-montserrat">
+										Tahun Berdiri
+									</div>
+								</div>
+								<div className="flex flex-col items-start">
+									<div className="lg:text-5xl md:text-4xl text-3xl text-white font-montserrat font-[420]">
+										500+
+									</div>
+									<div className="text-white font-montserrat">
+										Mahasiswa di Shenzhen
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className="md:col-span-3 lg:col-span-2 md:h-full z-10">
+							<Image
+								src={AboutImage}
+								alt="About Us Image"
+								className="rounded-none"
+							/>
+						</div>
 					</div>
 				</div>
 			</section>
@@ -182,7 +218,7 @@ export default function Home() {
 								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
 									VISI
 								</h2>
-								<p className="text-xl lg:text-2xl font-montserrat font-small">
+								<p className="text-xl lg:text-2xl font-montserrat font-small text-justify">
 									Menjadikan PPIT Shenzhen wadah yang 
 									hangat, inklusif, dan membangun, dimana setiap
 									pelajar Indonesia dapat merasakan kebersamaan 
@@ -236,7 +272,7 @@ export default function Home() {
 			</section>
 
 			{/* Merchandise Section */}
-			<section className="grid grid-cols-1 lg:grid-cols-8">
+			{/* <section className="grid grid-cols-1 lg:grid-cols-8">
 				<div className="col-span-3 md:col-span-3">
 					<div className="h-full lg:w-full sm:w-[65%] w-full mx-auto">
 						<Image
@@ -294,15 +330,15 @@ export default function Home() {
 						))}
 					</div>
 				</div>
-			</section>
+			</section> */}
 
-			<hr className="w-full border-t-2 border-gray-200 font-montserrat mt-10" />
+			{/* <hr className="w-full border-t-2 border-gray-200 font-montserrat mt-10" /> */}
 			{/* Universities Section */}
-			<section className="py-16 px-4 md:px-8">
+			<section className="bg-[#7E0C0E] py-16 px-4 md:px-8">
 				<div className="max-w-7xl mx-auto">
 					{/* Centered Heading */}
 					<div className="flex justify-center">
-						<h2 className="text-lg md:text-3xl sm:text-xl font-bold mb-12 text-white bg-red-700 inline-block py-3 md:py-4 px-6 rounded-lg font-montserrat">
+						<h2 className="text-lg md:text-3xl sm:text-xl font-bold mb-12 text-red-800 bg-white inline-block py-3 md:py-4 px-6 rounded-lg font-montserrat">
 							UNIVERSITIES IN SHENZHEN
 						</h2>
 					</div>
@@ -313,19 +349,21 @@ export default function Home() {
 							{universities.map((uni, index) => (
 								<div key={index} className="flex items-center gap-6 relative">
 									{/* Circle */}
-									<div className="w-6 h-6 rounded-full border-[3px] border-red-700 bg-white relative z-10"></div>
-
+									<div className="w-6 h-6 rounded-full border-[3px] border-white relative z-10"
+									style={{backgroundColor	: uni.color}}
+									></div>
+									
 									{/* Vertical Line (except for the last item) */}
 									{index < universities.length - 1 && (
-										<div className="absolute left-[0.6rem] top-6 h-[calc(100%+3rem)] w-1 bg-red-700 z-0"></div>
+										<div className="absolute left-[0.6rem] top-6 h-[calc(100%+3rem)] w-1 bg-white z-0"></div>
 									)}
 
 									{/* University Details */}
 									<div>
-										<h3 className="md:text-xl sm:text-md text-sm font-semibold">
-											{uni.name}
-										</h3>
-										<p className="md:text-xl sm:text-md text-sm text-gray-700">
+										<h3 className="md:text-xl sm:text-md text-sm text-white font-semibold font-montserrat">
+										{uni.name}
+									</h3>
+										<p className="md:text-xl sm:text-md text-sm text-white font-montserrat">
 											{uni.ranking}
 										</p>
 									</div>
