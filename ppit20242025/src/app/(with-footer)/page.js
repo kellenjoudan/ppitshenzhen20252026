@@ -3,7 +3,7 @@ import Image from "next/image";
 import PPIT from "../../../public/Home/foto bareng.webp";
 import PPITTablet from "../../../public/Home/foto bareng.webp";
 import PPITMobile from "../../../public/Home/foto bareng.webp";
-import AboutImage from "../../../public/Home/3D_logo.webp";
+import AboutImage from "../../../public/Home/3D_Logo.webp";
 import Vision from "../../../public/Home/vision.webp";
 import Mission from "../../../public/Home/mission.webp";
 import BestSeller from "../../../public/Home/merch.webp";
@@ -84,7 +84,7 @@ export default function Home() {
 					<div className="absolute inset-x-0 bottom-10 flex flex-col items-center z-10">
 						<Link
 							href="#about-us"
-							className="text-white text-4xl font-light shadow-2xl shadow-black tracking-wider mb-3 drop-shadow-lg"
+							className="text-white text-4xl font-light tracking-wider mb-3 drop-shadow-lg"
 						>
 							find out more
 						</Link>
@@ -112,30 +112,28 @@ export default function Home() {
 				</div>
 				
 				{/* Red wave transition */}
-				<div className="absolute bottom-0 left-0 w-full h-[150px] pointer-events-none overflow-hidden">
-					{/* Wave */}
-					<svg
-						viewBox="0 0 1440 320"
-						preserveAspectRatio="none"
-						xmlns="http://www.w3.org/2000/svg"
-						className="absolute bottom-0 left-0 w-full h-full"
-					>
-						{/* wavy top edge + red fill below */}
-						<path
-						d="M0 96L48 106.7C96 117 192 139 288 160C384 181 480 181 576 160C672 139 768 96 864 80C960 64 1056 75 1152 96C1248 117 1344 149 1392 165.3L1440 181V320H1392C1344 320 1248 320 1152 320C1056 320 960 320 864 320C768 320 672 320 576 320C480 320 384 320 288 320C192 320 96 320 48 320H0V96Z"
-						fill="#7E0C0E"
-						/>
-					</svg>
+				<div className="absolute -bottom-1 left-0 w-full h-[150px] pointer-events-none overflow-hidden">
+				<svg
+					viewBox="0 0 1440 320"
+					preserveAspectRatio="none"
+					className="w-full h-full"
+				>
+					{/* Base red wave */}
+					<path
+					d="M0 96L48 106.7C96 117 192 139 288 160C384 181 480 181 576 160C672 139 768 96 864 80C960 64 1056 75 1152 96C1248 117 1344 149 1392 165.3L1440 181V320H0V96Z"
+					fill="#7E0C0E"
+					/>
+				</svg>
 				</div>
 			</div>
 			
 			<div className="relative overflow-hidden">
-			{/* Left repeating background */}
+			{/* Right repeating background */}
 			<div
 				className="absolute w-[230px] h-full inset-y-0 bg-[url('/Home/motif_batik.png')] opacity-10 bg-repeat-y z-10 -right-1 bg-[length:230px_auto]"
 			/>
 
-			{/* Right repeating background */}
+			{/* Left repeating background */}
 			<div
 				className="absolute w-[230px] h-full inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik.png')] opacity-10 bg-repeat-y z-10 -left-1 bg-[length:230px_auto]"
 			/>
