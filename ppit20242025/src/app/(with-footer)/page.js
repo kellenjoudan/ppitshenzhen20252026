@@ -112,7 +112,7 @@ export default function Home() {
 					</div>
 					
 					{/* Red wave transition */}
-					<div className="absolute bottom-0 left-0 w-full h-[150px] pointer-events-none overflow-hidden">
+					<div className="absolute bottom-0 left-0 w-full h-[152px] pointer-events-none overflow-hidden">
 					{/* Batik left */}
 					<div className="absolute bottom-0 w-[230px] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -left-20 sm:left-0" />
 
@@ -218,7 +218,7 @@ export default function Home() {
 								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
 									VISI
 								</h2>
-								<p className="text-xl lg:text-2xl font-montserrat font-small">
+								<p className="text-xl lg:text-2xl font-montserrat font-small text-justify">
 									Menjadikan PPIT Shenzhen wadah yang 
 									hangat, inklusif, dan membangun, dimana setiap
 									pelajar Indonesia dapat merasakan kebersamaan 

@@ -5,7 +5,6 @@ import { EVENTS_BY_YEAR } from "../../../../../lib/events";
 export const revalidate = 3600;
 
 export default async function EventPage({ params }) {
-  // ✅ KEEP await — this is correct
   const { slug, eventName } = await params;
 
   const events = EVENTS_BY_YEAR[slug] || [];
@@ -17,21 +16,21 @@ export default async function EventPage({ params }) {
 
   return (
     <div className="pt-32 bg-[#7E0C0E]">
-      {/* EVENT HEADER — INSTANT */}
+      {/* EVENT HEADER */}
       <section className="max-w-6xl mx-3 px-6 pb-10">
-        <h1 className="text-4xl md:text-5xl font-bold font-cinzel mb-2 text-white">
+        <h1 className="text-4xl md:text-5xl font-bold font-cinzel mb-6 text-white">
           Event Highlights
         </h1>
 
-        <h2 className="text-xl font-montserrat text-white mb-4">
+        <h2 className="text-3xl font-semibold font-cinzel text-white mb-2">
           {event.title}
         </h2>
 
-        <p className="font-montserrat text-white max-w-3xl mb-4">
+        <p className="font-montserrat text-white max-w-3xl mb-1">
           {event.description}
         </p>
 
-        <p className="text-white font-montserrat">
+        <p className="text-white font-montserrat italic text-sm">
         Download full photos here:{" "}
         <a
           href={event.downloadLink}

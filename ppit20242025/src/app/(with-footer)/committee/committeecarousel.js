@@ -26,7 +26,7 @@ export default function CommitteeCarousel({ input }) {
             id: i,
             title: input[0][i],
             description: input[1][i],
-            image: `/BANNER_CMT_FULL/Full/${input[0][i]}.png`, //FORMAT FILE FOTO DIVISI: "NAMA_DIVISI.png" (in caps, sesuai dgn nama yg ada di folder)
+            image: `/BANNER_CMT_FULL/Full/${input[0][i]}.webp`, //FORMAT FILE FOTO DIVISI: "NAMA_DIVISI.webp" (in caps, sesuai dgn nama yg ada di folder)
         })
 
         //for members and departmentlayouts
@@ -71,13 +71,13 @@ export default function CommitteeCarousel({ input }) {
 				return (
 					<div className="grid grid-rows-2 justify-center gap-2 md:gap-6">
 						{/* First row: 3 cards */}
-						<div className="gap-0 md:gap-4 flex flex-row justify-center">
+						<div className="gap-2 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[0]} />
 							<MemberCard member={members[1]} />
 							<MemberCard member={members[2]} />
 						</div>
 						{/* Second row: 3 cards */}
-						<div className=" gap-0 md:gap-4 flex flex-row justify-center">
+						<div className=" gap-2 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[3]} />
 							<MemberCard member={members[4]} />
 							<MemberCard member={members[5]} />
@@ -87,7 +87,7 @@ export default function CommitteeCarousel({ input }) {
 			case "5":
 				if (members.length !== 5) return <div>Invalid member count</div>;
 				return (
-					<div className="grid grid-rows-2 justify-center gap-2 md:gap-8">
+					<div className="grid grid-rows-2 justify-center gap-2 md:gap-6">
 						{/* First row: 3 cards */}
 						<div className="gap-2 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[0]} />
@@ -105,16 +105,16 @@ export default function CommitteeCarousel({ input }) {
 			case "7":
 				if (members.length !== 7) return <div>Invalid member count</div>;
 				return (
-					<div className="grid grid-rows-2 justify-center gap-0 md:gap-4">
+					<div className="grid grid-rows-2 justify-center gap-2 md:gap-6">
 						{/* First row: 4 cards */}
-						<div className="gap-0 md:gap-8 flex flex-row justify-center">
+						<div className="gap-1 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[0]} />
 							<MemberCard member={members[1]} />
 							<MemberCard member={members[2]} />
 							<MemberCard member={members[3]} />
 						</div>
 						{/* Second row: 3 cards */}
-						<div className=" px-8 md:px:0 gap-0 md:gap-8 flex flex-row justify-center">
+						<div className=" px-8 md:px:0 gap-1 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[4]} />
 							<MemberCard member={members[5]} />
 							<MemberCard member={members[6]} />
@@ -124,7 +124,7 @@ export default function CommitteeCarousel({ input }) {
 			case "8":
 				if (members.length !== 8) return <div>Invalid member count</div>;
 				return (
-					<div className="grid grid-rows-2 justify-center gap-4">
+					<div className="grid grid-rows-2 justify-center gap-2 md:gap-8">
 						{/* First row: 4 cards */}
 						<div className="flex-nowrap gap-1 md:gap-8 flex flex-row justify-center">
 							<MemberCard member={members[0]} />
@@ -161,7 +161,7 @@ export default function CommitteeCarousel({ input }) {
 				{/* Banner Section */}
 				<div className="relative h-[50vh] xl:h-screen w-full mb-[2%] bg-black">
 					<Image
-						src="/BANNER_CMT_FULL/banner.png"
+						src="/BANNER_CMT_FULL/banner.webp"
 						alt="Banner Background"
 						fill
 						className="object-cover opacity-70"
@@ -187,7 +187,7 @@ export default function CommitteeCarousel({ input }) {
 						<button
 						key={section.id}
 						onClick={() => setActiveSection(index)}
-						className={`px-3 md:px-6 py-1 lg:text-xl md:text-lg sm:text-md text-sm rounded-full font-montserrat lg:pb-[-30px] md:pb-[-20px] pb-[-10px] font-semibold ${
+						className={`mb-2 px-4 md:px-6 py-1.5 lg:text-lg md:text-base sm:text-md text-sm rounded-full font-montserrat font-semibold ${
 							activeSection === index
 							? "bg-white text-black border-white border-[2px]"
 							: "bg-red-500 text-white hover:bg-red-700 hover:text-white hover:scale-110 transition duration-300"
@@ -199,22 +199,22 @@ export default function CommitteeCarousel({ input }) {
 				</div>
 
 				{/* Main Content */}
-				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-12 ">
-					<div className="relative h-[80vh] sm:h-[45vh] md:h-[50vh] lg:h-[65vh] xl:h-[80vh] overflow-hidden rounded-lg shadow-lg flex items-center justify-center xl:ml-auto xl:mr-0 mx-auto aspect-[4/5]">
+				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-8">
+					<div className="relative h-[55vh] sm:h-[60vh] lg:h-[80vh] overflow-hidden rounded-lg shadow-lg flex items-center justify-center xl:ml-auto xl:mr-0 mx-auto aspect-[4/5]">
 						{sections.map((section, index) => (
 							<Image
 							key={section.id}
 							src={section.image}
 							alt={`Image for ${section.description}`}
 							fill
-							className={`object-contain pl-8 pr-8 transition-opacity duration-400 ease-in-out ${
+							className={`w-full object-contain lg:px-8 transition-opacity duration-400 ease-in-out ${
 								activeSection === index ? "opacity-100" : "opacity-0"
 							}`}
 							quality={100}
 							/>
 						))}
 					</div>
-					<div className="flex flex-col items-center justify-center xl:items-start md:w-[50%] w-[85%] space-y-4 pl-16 pr-8">
+					<div className="flex flex-col items-center justify-center xl:items-start md:w-[50%] w-[85%] space-y-4 pl-8 mt-4 lg:mt-0 lg:pl-16 pr-8">
 						<h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-6xl font-bold text-center xl:text-left leading-tight w-full">
 							{sections[activeSection].description}
 						</h2>
