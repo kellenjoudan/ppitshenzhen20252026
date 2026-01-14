@@ -16,14 +16,14 @@ export default async function EventPage({ params }) {
 
   return (
     <div className="pt-32 bg-[#7E0C0E] relative overflow-hidden">
-			{/* Left repeating background */}
+			{/* Right repeating batik */}
 			<div
-				className="absolute w-[230px] h-full inset-y-0 bg-[url('/Home/motif_batik.png')] opacity-10 bg-repeat-y z-0 -right-1 bg-[length:230px_auto]"
+				className="absolute w-[120px] sm:w-[230px] h-full inset-y-0 bg-[url('/Home/motif_batik_hp.webp')] sm:bg-[url('/Home/motif_batik.webp')] opacity-10 bg-repeat-y z-10 right-0 bg-[length:120px_auto] sm:bg-[length:230px_auto]"
 			/>
 
-			{/* Right repeating background */}
+			{/* Left repeating batik */}
 			<div
-				className="absolute w-[230px] h-full inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik.png')] opacity-10 bg-repeat-y z-0 -left-1 bg-[length:230px_auto]"
+				className="absolute w-[120px] sm:w-[230px] h-full inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik_hp.webp')] sm:bg-[url('/Home/motif_batik.webp')] opacity-10 bg-repeat-y z-10 left-0 bg-[length:120px_auto]  sm:bg-[length:230px_auto]"
 			/>
 
       {/* EVENT HEADER */}
@@ -48,10 +48,10 @@ export default async function EventPage({ params }) {
           rel="noopener noreferrer"
           className="text-blue-400 hover:underline"
         >
-          Click here
+          First Link
         </a>
 
-        {eventName === "Shenzhen-Cup" && (
+        {eventName === "Riang-Ria-Nusantara" && (
           <>
             {" "} |{" "}
             <a
@@ -60,7 +60,21 @@ export default async function EventPage({ params }) {
               rel="noopener noreferrer"
               className="text-blue-400 hover:underline"
             >
-              Alternative link
+              Second link
+            </a>
+          </>
+        )}
+
+        {eventName === "Riang-Ria-Nusantara" && (
+          <>
+            {" "} |{" "}
+            <a
+              href={event.thirdDownloadLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:underline"
+            >
+              Third link
             </a>
           </>
         )}

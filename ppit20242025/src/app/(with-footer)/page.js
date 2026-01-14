@@ -128,14 +128,14 @@ export default function Home() {
 			</div>
 			
 			<div className="relative overflow-hidden">
-			{/* Right repeating background */}
+			{/* Right repeating batik */}
 			<div
-				className="absolute w-[230px] h-full inset-y-0 bg-[url('/Home/motif_batik.png')] opacity-10 bg-repeat-y z-10 -right-1 bg-[length:230px_auto]"
+				className="absolute w-[120px] sm:w-[230px] h-full inset-y-0 bg-[url('/Home/motif_batik_hp.webp')] sm:bg-[url('/Home/motif_batik.webp')] opacity-10 bg-repeat-y z-10 right-0 bg-[length:120px_auto] sm:bg-[length:230px_auto]"
 			/>
 
-			{/* Left repeating background */}
+			{/* Left repeating batik */}
 			<div
-				className="absolute w-[230px] h-full inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik.png')] opacity-10 bg-repeat-y z-10 -left-1 bg-[length:230px_auto]"
+				className="absolute w-[120px] sm:w-[230px] h-full inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik_hp.webp')] sm:bg-[url('/Home/motif_batik.webp')] opacity-10 bg-repeat-y z-10 left-0 bg-[length:120px_auto]  sm:bg-[length:230px_auto]"
 			/>
 
 			{/* About Section */}
