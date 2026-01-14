@@ -3,7 +3,7 @@ import Image from "next/image";
 import PPIT from "../../../public/Home/foto bareng.webp";
 import PPITTablet from "../../../public/Home/foto bareng.webp";
 import PPITMobile from "../../../public/Home/foto bareng.webp";
-import AboutImage from "../../../public/Home/3D_logo.png";
+import AboutImage from "../../../public/Home/3D_logo.webp";
 import Vision from "../../../public/Home/vision.webp";
 import Mission from "../../../public/Home/mission.webp";
 import BestSeller from "../../../public/Home/merch.webp";
