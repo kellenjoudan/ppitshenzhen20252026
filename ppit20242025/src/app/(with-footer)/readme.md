@@ -49,15 +49,15 @@ Admin creates → Firestore stores → User fills → Firestore stores → Admin
 ##
 
 ## JOBDESK:
-* Michael - Create firestore scheme/structure, create {question, forms, response} JSON format, monitor progress on design and backend, build HTML and help with PostCSS for the design, maintain mobile responsiveness --> accessibility for mobile phones. Additional: create a diagram of the firestore scheme as well as process flow.
+* Michael - Create firestore scheme/structure, create {question, forms, response} JSON format, monitor progress on design and backend, build HTML and help with PostCSS for the design, maintain mobile responsiveness --> accessibility for mobile phones. Additional: create a diagram of the firestore scheme as well as process flow. **ADD: Create the page.js for /form directory (list of active forms).**
 
-* Kellen - Create firebase project (enable firestore), create firebase.js and export it, create functions (form creation, fetch forms, and submit response). Additional: validation on required fields and prevent empty submissions; create designs on loading screens (during suubmission process/form loading process)
+* Kellen - Create firebase project (enable firestore), create firebase.js and export it, create functions (form creation, fetch forms, and submit response). Additional: validation on required fields and prevent empty submissions; create designs on loading screens (during suubmission process/form loading process). **ADD: Help by [1]. Making a function to retrieve ALL forms data (no params) and [2]. Establish Google auth for Google login to identify user or admin in page.js of /form directory.**
 
 * Miquel - Admin form builder (form creation; basically make the formData) --> create form title input, desc. input, add/remove questions (include question types), toggle required, options input (radio/checkbox --> OPTIONAL TO DO), and call createForm(formData) created by kellen. Additional: validate questions before saving (make sure there is no illegal inputs) and display form link after successful creation. (**NOTE: ONLY NEED TO EDIT 'page.js' in form/[formId]**)
 
 * Aldo - User form renderer/UI --> fetch form from db through formID, display title & desc., display input fields based on their type (use if/else and display according to their type property; e.g. question1.type == "MCQ".....), create indicators for required fields (use * for required), collect answers by calling submit response function created by kellen (post/send answers to db and save them). Additional: Validate required questions; ignore optional ones, send success/error messages (**NOTE: ONLY NEED TO EDIT 'FormClient.js' in form/[formId]**)
 
-* Jennickel - UI/UX design --> similar to the previous project, create an illustration using figma to give a big picture of the website, determine color palette, typography, button styles, and input styles (looks-wise).
+* Jennickel - UI/UX design --> similar to the previous project, create an illustration using figma to give a big picture of the website, determine color palette, typography, button styles, and input styles (looks-wise). **ADD: Help by designing using postcss/any frontend changes of all the pages (every page that is in /form directory).**
 
 
 ## DEADLINES:
