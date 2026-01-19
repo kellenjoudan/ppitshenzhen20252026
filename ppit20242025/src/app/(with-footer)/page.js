@@ -58,7 +58,7 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<div className="relative font-montserrat overflow-hidden">
+			<div className="relative font-montserrat">
 				<div className="relative h-[110vh] -top-10">
 					<Image
 						src={PPITMobile}
@@ -84,7 +84,7 @@ export default function Home() {
 					<div className="absolute inset-x-0 bottom-10 flex flex-col items-center z-10">
 						<Link
 							href="#about-us"
-							className="text-white text-4xl font-light shadow-2xl shadow-black tracking-wider mb-3 drop-shadow-lg"
+							className="text-white text-4xl font-light tracking-wider mb-3 drop-shadow-lg"
 						>
 							find out more
 						</Link>
@@ -109,50 +109,40 @@ export default function Home() {
 							</svg>
 						</Link>
 					</div>
-					</div>
-					
-					{/* Red wave transition */}
-					<div className="absolute bottom-0 left-0 w-full h-[152px] pointer-events-none overflow-hidden">
-					{/* Batik left */}
-					<div className="absolute bottom-0 w-[230px] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -left-20 sm:left-0" />
-
-					{/* Batik right (mirrored) */}
-					<div className="absolute bottom-0 w-[230px] scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y opacity-30 -right-20 sm:right-0" />
-
-					{/* Wave */}
-					<svg
-						viewBox="0 0 1440 320"
-						preserveAspectRatio="none"
-						xmlns="http://www.w3.org/2000/svg"
-						className="absolute bottom-0 left-0 w-full h-full"
-					>
-						{/* wavy top edge + red fill below */}
-						<path
-						d="M0 96L48 106.7C96 117 192 139 288 160C384 181 480 181 576 160C672 139 768 96 864 80C960 64 1056 75 1152 96C1248 117 1344 149 1392 165.3L1440 181V320H1392C1344 320 1248 320 1152 320C1056 320 960 320 864 320C768 320 672 320 576 320C480 320 384 320 288 320C192 320 96 320 48 320H0V96Z"
-						fill="#7E0C0E"
-						/>
-					</svg>
-					</div>
 				</div>
+				
+				{/* Red wave transition */}
+				<div className="absolute -bottom-1 left-0 w-full h-[150px] pointer-events-none overflow-hidden">
+				<svg
+					viewBox="0 0 1440 320"
+					preserveAspectRatio="none"
+					className="w-full h-full"
+				>
+					{/* Base red wave */}
+					<path
+					d="M0 96L48 106.7C96 117 192 139 288 160C384 181 480 181 576 160C672 139 768 96 864 80C960 64 1056 75 1152 96C1248 117 1344 149 1392 165.3L1440 181V320H0V96Z"
+					fill="#7E0C0E"
+					/>
+				</svg>
+				</div>
+			</div>
 			
+			<div className="relative overflow-hidden">
+			{/* Right repeating batik */}
+			<div
+				className="absolute w-[120px] sm:w-[230px] h-full inset-y-0 bg-[url('/Home/motif_batik_hp.webp')] sm:bg-[url('/Home/motif_batik.webp')] opacity-10 bg-repeat-y z-10 right-0 bg-[length:120px_auto] sm:bg-[length:230px_auto]"
+			/>
 
+			{/* Left repeating batik */}
+			<div
+				className="absolute w-[120px] sm:w-[230px] h-full inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik_hp.webp')] sm:bg-[url('/Home/motif_batik.webp')] opacity-10 bg-repeat-y z-10 left-0 bg-[length:120px_auto]  sm:bg-[length:230px_auto]"
+			/>
 
 			{/* About Section */}
 			<section
 				id="about-us"
-				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-[#7E0C0E] overflow-hidden"
+				className="relative py-20 md:px-12 px-8 lg:px-8 w-full mx-auto bg-[#7E0C0E]"
 			>
-			{/* Left repeating background */}
-			<div
-				className="absolute inset-y-0 bg-[url('/Home/BATIK.webp')] bg-repeat-y z-0 -left-20 sm:left-0"
-				style={{ width: "230px" }}
-			/>
-
-			{/* Right repeating background */}
-			<div
-				className="absolute inset-y-0 scale-x-[-1] bg-[url('/Home/BATIK.webp')] bg-repeat-y z-0 -right-20 sm:right-0"
-				style={{ width: "230px" }}
-			/>
 			{/* Center */}
 				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-white">
 					<div className="flex items-center justify-center lg:block">
@@ -198,7 +188,7 @@ export default function Home() {
 								</div>
 							</div>
 						</div>
-						<div className="md:col-span-3 lg:col-span-2 md:h-full z-10">
+						<div className="md:col-span-3 lg:col-span-2 md:h-full z-30">
 							<Image
 								src={AboutImage}
 								alt="About Us Image"
@@ -373,6 +363,7 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
+		</div>
 		</>
 	);
 }
