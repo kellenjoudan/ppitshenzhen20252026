@@ -9,7 +9,6 @@ const Header = () => {
 	const [eventsOpen, setEventsOpen] = useState(false);
 
 	const EVENTS = [
-		{ name: "PPITSZ 2024-2025", slug: "2425" },
 		{ name: "PPITSZ 2025-2026", slug: "2526" },
 	];
 	
