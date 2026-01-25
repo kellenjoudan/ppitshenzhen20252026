@@ -267,6 +267,22 @@ const Header = () => {
 				>
 					FAQ
 				</Link>
+
+				<Link
+					href="/form"
+					className={`md:text-2xl text-xl hover:text-[#8C0000] font-montserrat font-semibold ${
+						isScrolled && !menuOpen
+							? "text-[#8C0000]"
+							: menuOpen
+							? "text-[#8C0000]"
+							: "text-white"
+					}`}
+					onClick={() => {
+						setMenuOpen(false);
+					}}
+				>
+					Forms
+				</Link>
 			</nav>
 		</header>
 	);
