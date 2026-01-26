@@ -1,13 +1,10 @@
-// src/app/formadmin/page.js
 "use client";
 
 import { useState, useEffect } from "react";
 
-// Stable initial ID (same on server + client for first render)
 const INITIAL_QUESTION_ID = "initial-question-1";
 const INITIAL_FORM_ID = "initial-form-1";
 
-// Client-side ID generator (only runs after hydration)
 let clientIdCounter = 1;
 const generateClientId = () => {
   const id = `client-id-${clientIdCounter}`;
@@ -16,7 +13,6 @@ const generateClientId = () => {
 };
 
 export default function FormAdminBuilder() {
-  // Stable initial state (removed media-related fields)
   const [form, setForm] = useState({
     id: INITIAL_FORM_ID,
     title: "Untitled Form",
@@ -30,13 +26,9 @@ export default function FormAdminBuilder() {
     ],
   });
 
-  // Confirmation states for Publish/Delete
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // --------------------------
-  // Fix: Ensure IDs are unique AFTER hydration
-  // --------------------------
   useEffect(() => {
     if (form.id === INITIAL_FORM_ID) {
       setForm((prev) => ({
@@ -47,22 +39,15 @@ export default function FormAdminBuilder() {
     }
   }, []);
 
-  // --------------------------
-  // Form Metadata Editing
-  // --------------------------
   const updateFormMeta = (field, value) => {
     setForm({ ...form, [field]: value });
   };
 
-  // --------------------------
-  // Question Management
-  // --------------------------
-  // Add NEW question (single button)
   const addNewQuestion = () => {
     const newQuestion = {
       id: generateClientId(),
-      type: "text", // Default type (Short Answer)
-      label: "Untitled Question",
+      type: "text", // (Short Answer)
+      label: "Type Question",
       required: false,
       options: [],
     };
@@ -70,7 +55,6 @@ export default function FormAdminBuilder() {
     setForm({ ...form, questions: [...form.questions, newQuestion] });
   };
 
-  // Delete a question
   const deleteQuestion = (questionId) => {
     setForm({
       ...form,
@@ -78,7 +62,6 @@ export default function FormAdminBuilder() {
     });
   };
 
-  // Update question properties
   const updateQuestion = (questionId, field, value) => {
     setForm({
       ...form,
@@ -88,13 +71,11 @@ export default function FormAdminBuilder() {
     });
   };
 
-  // Change question type (dropdown on right of question)
   const changeQuestionType = (questionId, newType) => {
     setForm({
       ...form,
       questions: form.questions.map((q) => {
         if (q.id !== questionId) return q;
-        // Reset options based on new type
         let newOptions = q.options;
         if (["text", "textarea", "file"].includes(newType)) newOptions = [];
         else if (["radio", "checkbox"].includes(newType)) newOptions = ["Option 1"];
@@ -103,9 +84,6 @@ export default function FormAdminBuilder() {
     });
   };
 
-  // --------------------------
-  // Option Management (only for radio/checkbox)
-  // --------------------------
   const addOption = (questionId) => {
     setForm({
       ...form,
@@ -139,9 +117,6 @@ export default function FormAdminBuilder() {
     });
   };
 
-  // --------------------------
-  // Publish/Delete Actions
-  // --------------------------
   const publishForm = () => {
     if (showPublishConfirm) {
       console.log("Form Published:", form);
@@ -159,7 +134,7 @@ export default function FormAdminBuilder() {
         id: generateClientId(),
         title: "Untitled Form",
         questions: [
-          { id: generateClientId(), type: "text", label: "Untitled Question", required: false, options: [] },
+          { id: generateClientId(), type: "text", label: "Type Question", required: false, options: [] },
         ],
       });
       alert("Form deleted successfully! A new blank form has been created.");
@@ -175,13 +150,12 @@ export default function FormAdminBuilder() {
     setShowDeleteConfirm(false);
   };
 
-  // Question Types (File Upload kept, media removed)
   const questionTypes = [
     { value: "text", label: "Short Answer" },
     { value: "textarea", label: "Paragraph" },
     { value: "radio", label: "Multiple Choice" },
     { value: "checkbox", label: "Checkboxes" },
-    { value: "file", label: "File Upload" }, // File Upload kept
+    { value: "file", label: "File Upload" }, // File Upload User
   ];
 
   return (
@@ -445,7 +419,6 @@ export default function FormAdminBuilder() {
                 </select>
               </div>
 
-              {/* Short Answer Preview */}
               {question.type === "text" && (
                 <input
                   type="text"
@@ -463,7 +436,6 @@ export default function FormAdminBuilder() {
                 />
               )}
 
-              {/* Paragraph Preview */}
               {question.type === "textarea" && (
                 <textarea
                   placeholder="Respondent's paragraph answer"
@@ -482,7 +454,6 @@ export default function FormAdminBuilder() {
                 />
               )}
 
-              {/* Multiple Choice/Checkboxes Options */}
               {["radio", "checkbox"].includes(question.type) && (
                 <div style={{
                   marginBottom: "1rem",
@@ -588,7 +559,6 @@ export default function FormAdminBuilder() {
                 </div>
               )}
 
-              {/* Bottom Controls: Required Toggle + Delete Question */}
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -644,7 +614,6 @@ export default function FormAdminBuilder() {
           ))}
         </div>
 
-        {/* Add Question Button */}
         <button
           onClick={addNewQuestion}
           style={{
