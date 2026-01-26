@@ -3,6 +3,9 @@ import {
   addDoc,
   doc,
   getDoc,
+  getDocs,
+  query,
+  where,
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
@@ -52,6 +55,33 @@ export async function getFormById(formId) {
   };
 }
 
+/* =========================
+   GET ALL ACTIVE FORMS (PUBLIC)
+========================= */
+export async function getAllForms() {
+  const q = query(
+    collection(db, "forms"),
+    where("isActive", "==", true)
+  );
+
+  const snap = await getDocs(q);
+
+  return snap.docs.map((doc) => {
+    const data = doc.data();
+
+    return {
+      id: doc.id,
+      title: data.title,
+      description: data.description,
+      questions: data.questions,
+      isActive: data.isActive,
+      createdBy: data.createdBy,
+      createdAt: data.createdAt
+        ? data.createdAt.toMillis()
+        : null,
+    };
+  });
+}
 
 /* =========================
    SUBMIT RESPONSE (USER)
