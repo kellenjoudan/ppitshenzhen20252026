@@ -3,7 +3,10 @@ import {
   addDoc,
   doc,
   getDoc,
+  getDocs,
   serverTimestamp,
+  query,
+  where
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
@@ -82,4 +85,30 @@ export async function submitResponse(formId, questions, answers) {
     answers,
     submittedAt: serverTimestamp(),
   });
+}
+
+
+/* =========================
+   LOAD ALL FORMS (SERVERSIDE)
+========================= */
+export async function getAllForms() {
+    const q = query(
+        collection(db, "forms"),
+        where("isActive", "==", true)
+    );
+
+    const snap = await getDocs(q);
+
+    const formList = snap.docs.map(docSnap => {
+        const data = docSnap.data();
+        return {
+            id: docSnap.id,
+            title: data.title,
+            description: data.description,
+            createdBy: data.createdBy,
+            createdAt: data.createdAt ? data.createdAt.toMillis() : null,
+        };
+    });
+
+    return formList;
 }
