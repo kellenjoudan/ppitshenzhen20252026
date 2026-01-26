@@ -88,6 +88,7 @@ Admin creates → Firestore stores → User fills → Firestore stores → Admin
 PROBLEMS:
 - batik design on home page
 - events button hover area larger than its supposed to be
+- CREATE AUTH CHECK BEFORE SHOWING THE LIST OF FORMS (redirect to withfooter/login)
 - miquel: add form.coverImage and form.headerColor (modify it in forms.js too in both createform and getallforms)
 - kellen: update forms.js to fetch auth, save the responses with their respective emails
 - after that, make the form.status work (page.js in form/ line 64-74)
