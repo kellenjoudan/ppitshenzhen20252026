@@ -6,34 +6,32 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
 export default function FormPage() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(undefined);
   const router = useRouter();
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
         router.replace("/login");
-      } else {
-        setUser(currentUser);
+        return;
       }
-      setLoading(false);
+
+      setUser(currentUser);
     });
 
     return () => unsub();
   }, [router]);
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    router.replace("/login");
-  };
-
-  if (loading) return <p className="text-white p-10">Loading...</p>;
+  if (user === undefined) {
+    return (
+      <div className="min-h-screen bg-[#7E0C0E] text-white flex items-center justify-center">
+        <p>Loading session…</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#7E0C0E] text-white p-10">
-      
-      {/* Header */}
       <div className="flex justify-between items-center mt-10 mb-6">
         <div>
           <p className="text-sm text-gray-400">Logged in as</p>
@@ -41,7 +39,10 @@ export default function FormPage() {
         </div>
 
         <button
-          onClick={handleLogout}
+          onClick={async () => {
+            await signOut(auth);
+            router.replace("/login");
+          }}
           className="px-4 py-2 border border-red-500 text-red-400 rounded-full text-sm hover:bg-red-500/10 transition"
         >
           Log out
@@ -53,3 +54,4 @@ export default function FormPage() {
     </div>
   );
 }
+
