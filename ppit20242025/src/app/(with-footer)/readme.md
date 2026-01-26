@@ -63,7 +63,7 @@ Admin creates → Firestore stores → User fills → Firestore stores → Admin
 ## DEADLINES:
 >**===DEVELOPMENT PHASE===**
 - 18 Jan => Jennickel UI Design for form layout, admin layout, and components styles (figma) & Kellen finishing firebase config (code as well) ✅
-- 24 Jan => Each members' draft design and algorithms (additional tasks to be done)
+- 24 Jan => Each members' draft design and algorithms (additional tasks to be done) ✅
 - 31 Jan => Each members' jobdesk (everything should be set by now); tolerance: design and mobile compatibility not finalized (not part of the main goal)
 
 >**===TESTING & DEPLOYMENT PHASE===**
