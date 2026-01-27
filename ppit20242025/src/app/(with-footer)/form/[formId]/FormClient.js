@@ -36,81 +36,117 @@ export default function FormClient({ form }) {
   };
 
   return (
-    <div className="mt-[150px]">
-      <h1>{form.title}</h1>
-      <p>{form.description}</p>
+    <div className="min-h-screen bg-[#7A1E1E] flex justify-center pt-[140px] pb-20">
+      <div className="w-full max-w-2xl px-6 text-white">
+        <h1 className="text-2xl font-semibold text-center uppercase">
+          {form.title}
+        </h1>
 
-      {form.questions.map((q) => (
-        <div key={q.id} className="mb-6 space-y-2">
-          <label>
-            {q.label} {q.required && "*"}
-          </label>
+        <p className="text-sm text-center text-gray-200 mt-2 mb-10">
+          {form.description}
+        </p>
 
-          {/* TEXT */}
-          {q.type === "text" && (
-            <input
-              className="border p-2 w-full"
-              value={answers[q.id] || ""}
-              onChange={(e) =>
-                setAnswers({ ...answers, [q.id]: e.target.value })
-              }
-            />
-          )}
+        {form.questions.map((q) => (
+          <div key={q.id} className="mb-8">
+            <label className="block mb-2 text-sm font-medium">
+              {q.label} {q.required && "*"}
+            </label>
 
-          {/* RADIO */}
-          {q.type === "radio" &&
-            q.options?.map((opt) => (
-              <label key={opt} className="flex gap-2">
-                <input
-                  type="radio"
-                  name={q.id}
-                  value={opt}
-                  checked={answers[q.id] === opt}
-                  onChange={() =>
-                    setAnswers({ ...answers, [q.id]: opt })
-                  }
-                />
-                {opt}
-              </label>
-            ))}
+            {/* TEXTAREA (COMMENTS) */}
+            {q.type === "textarea" && (
+              <textarea
+                rows={4}
+                className="w-full rounded bg-[#B88C8C] px-3 py-2 text-black focus:outline-none resize-none"
+                value={answers[q.id] || ""}
+                onChange={(e) =>
+                  setAnswers({ ...answers, [q.id]: e.target.value })
+                }
+              />
+            )}
 
-          {/* CHECKBOX */}
-          {q.type === "checkbox" &&
-            q.options?.map((opt) => (
-              <label key={opt} className="flex gap-2">
-                <input
-                  type="checkbox"
-                  value={opt}
-                  checked={(answers[q.id] || []).includes(opt)}
-                  onChange={(e) => {
-                      setAnswers((prevAnswers) => {
-                      const prev = prevAnswers[q.id] || [];
-                      return {
-                        ...prevAnswers,
-                        [q.id]: e.target.checked
-                          ? [...prev, opt]
-                          : prev.filter((v) => v !== opt),
-                      };
-                    });
-                  }}
-                />
-                {opt}
-              </label>
-            ))}
+            {/* FILE UPLOAD */}
+            {q.type === "file" && (
+              <input
+                type="file"
+                className="block text-sm text-white
+                          file:mr-4 file:rounded
+                          file:border-0
+                          file:bg-[#B88C8C]
+                          file:px-4 file:py-2
+                          file:text-black
+                          hover:file:opacity-90"
+                onChange={(e) =>
+                  setAnswers({ ...answers, [q.id]: e.target.files[0] })
+                }
+              />
+            )}
 
-        </div>
-      ))}
+            {/* TEXT */}
+            {q.type === "text" && (
+              <input
+                className="w-full rounded bg-[#B88C8C] px-3 py-2 text-black focus:outline-none"
+                value={answers[q.id] || ""}
+                onChange={(e) =>
+                  setAnswers({ ...answers, [q.id]: e.target.value })
+                }
+              />
+            )}
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>Form submitted!</p>}
+            {/* RADIO */}
+            {q.type === "radio" &&
+              q.options?.map((opt) => (
+                <label key={opt} className="flex items-center gap-3 text-sm mb-1">
+                  <input
+                    type="radio"
+                    name={q.id}
+                    value={opt}
+                    checked={answers[q.id] === opt}
+                    onChange={() =>
+                      setAnswers({ ...answers, [q.id]: opt })
+                    }
+                  />
+                  {opt}
+                </label>
+              ))}
 
-      <button
-        onClick={handleSubmit}
-        disabled={success}
-      >
-        {success ? "Submitted" : "Submit"}
-      </button>
+            {/* CHECKBOX */}
+            {q.type === "checkbox" &&
+              q.options?.map((opt) => (
+                <label key={opt} className="flex items-center gap-3 text-sm mb-1">
+                  <input
+                    type="checkbox"
+                    value={opt}
+                    checked={(answers[q.id] || []).includes(opt)}
+                    onChange={(e) => {
+                        setAnswers((prevAnswers) => {
+                        const prev = prevAnswers[q.id] || [];
+                        return {
+                          ...prevAnswers,
+                          [q.id]: e.target.checked
+                            ? [...prev, opt]
+                            : prev.filter((v) => v !== opt),
+                        };
+                      });
+                    }}
+                  />
+                  {opt}
+                </label>
+              ))}
 
+          </div>
+        ))}
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        {success && <p style={{ color: "green" }}>Form submitted!</p>}
+
+        <button
+          onClick={handleSubmit}
+          disabled={success}
+          className="bg-white text-[#7A1E1E] px-8 py-2 rounded font-semibold hover:opacity-90 disabled:opacity-50"
+        >
+          {success ? "Submitted" : "Submit"}
+        </button>
+      </div>
     </div>
   );
 }
