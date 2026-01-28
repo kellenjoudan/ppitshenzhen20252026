@@ -63,7 +63,7 @@ Admin creates → Firestore stores → User fills → Firestore stores → Admin
 ## DEADLINES:
 >**===DEVELOPMENT PHASE===**
 - 18 Jan => Jennickel UI Design for form layout, admin layout, and components styles (figma) & Kellen finishing firebase config (code as well) ✅
-- 24 Jan => Each members' draft design and algorithms (additional tasks to be done)
+- 24 Jan => Each members' draft design and algorithms (additional tasks to be done) ✅
 - 31 Jan => Each members' jobdesk (everything should be set by now); tolerance: design and mobile compatibility not finalized (not part of the main goal)
 
 >**===TESTING & DEPLOYMENT PHASE===**
@@ -83,3 +83,12 @@ Admin creates → Firestore stores → User fills → Firestore stores → Admin
 - https://firebase.google.com/codelabs/firebase-nextjs#0
 - https://www.youtube.com/watch?v=Zj8z-UaD6fo (Firestore realtime update)
 - https://www.youtube.com/watch?v=awd_oYcmrRA (skip to 8:07)
+
+
+PROBLEMS:
+- batik design on home page
+- events button hover area larger than its supposed to be
+- CREATE AUTH CHECK BEFORE SHOWING THE LIST OF FORMS (redirect to withfooter/login)
+- miquel: add form.coverImage and form.headerColor (modify it in forms.js too in both createform and getallforms)
+- kellen: update forms.js to fetch auth, save the responses with their respective emails
+- after that, make the form.status work (page.js in form/ line 64-74)
