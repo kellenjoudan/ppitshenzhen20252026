@@ -27,7 +27,7 @@ export default function FormClient({ form }) {
   const handleSubmit = async () => {
     try {
       validateRequired();
-      await submitResponse(form.id, answers);
+      await submitResponse(form.id, form.questions, answers);
       setSuccess(true);
       setError("");
     } catch (err) {
@@ -36,7 +36,7 @@ export default function FormClient({ form }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#7A1E1E] flex justify-center pt-[140px] pb-20">
+    <div className="min-h-screen bg-[#7E0C0E] font-montserrat flex justify-center pt-[140px] pb-20">
       <div className="w-full max-w-2xl px-6 text-white">
         <h1 className="text-2xl font-semibold text-center uppercase">
           {form.title}
