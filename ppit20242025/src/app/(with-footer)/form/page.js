@@ -16,7 +16,9 @@ function isDark(color) {
 
 export default function loadAllFormsPage(){
     const [forms, setForms] = useState([]);
+    const [activeQr, setActiveQr] = useState(null);
     const [loading, setLoading] = useState(true);
+    const getQrUrl = (qrContent) => `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrContent)}`;
 
     useEffect(() => {
         async function fetchForms() {
@@ -30,14 +32,19 @@ export default function loadAllFormsPage(){
         fetchForms();
     }, []);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return (
+        <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0 }}>
+            <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>Loading, please wait...</div>
+        </div>
+
+    );
     // console.log(forms)
     // forms.pop()
 
     if (forms.length == 0) {
         return (
             <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0 }}>
-                <div style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>No Events to Register.</div>
+                <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3rem", fontWeight: "bolder" }}>No Events to Register At The Moment.</div>
             </div>
         )
     }
@@ -46,12 +53,34 @@ export default function loadAllFormsPage(){
         <div style={{ paddingTop: "6rem", minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0 }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, 30%)", gap: "2rem", padding: "2rem", justifyContent: "center", alignItems: "center" }}>
                 {forms.map((form) => (
-                    <div key={form.id} style={{ borderRadius: "14px", overflow: "hidden", boxShadow: "0 10px 30px rgba(0, 0, 0, 0.25)", background: "#000", }}>
-                        {/* <div style={{ background: `${headerColor}`, color: isDark(headerColor) ? "#FFF" : "#000", fontWeight: 600, textAlign: "center", padding: "0.75rem 1rem", fontSize: "1rem", }}> {form.title} </div> */}
-                        <div style={{ background: `${form.headerColor ?? "#5b2cff"}`, color: `${isDark(form.headerColor ?? "#5b2cff") ? "#FFF" : "#000"}`, fontWeight: 600, textAlign: "center", padding: "0.75rem 1rem", fontSize: "1rem", }}> {form.title} </div>
-
-                        <div style={{ position: "relative", height: "170px", backgroundSize: "cover", backgroundPosition: "center", display: "flex", alignItems: "flex-end", justifyContent: "center", backgroundImage: `url(${form.coverImage || "/placeholder.jpg"})`, }}>
+                    <div key={form.id} style={{ position: "relative", borderRadius: "14px", overflow: "hidden", backgroundSize: "cover", backgroundPosition: "center", boxShadow: "0 10px 30px rgba(0, 0, 0, 0.25)", backgroundImage: `url(/DefaultFormCardBackground.webp)`, }}>
+                        <div className="font-montserrat" style={{ background: `${form.headerColor ?? "#5b2cff"}`, color: `${isDark(form.headerColor ?? "#5b2cff") ? "#FFF" : "#000"}`, fontWeight: 600, textAlign: "center", padding: "0.75rem 1rem", fontSize: "1rem", }}> {form.title} </div>
+                        
+                        <div style={{ position: "relative", height: "30vh", display: "flex", alignItems: "flex-end", justifyContent: "center", }}>
                             <button
+                                onClick={() => setActiveQr(getQrUrl(`${form.id};${form.user}`))} // TODO: FETCH USER ID
+                                style={{
+                                    display:
+                                        form.status === "registered" || form.status === "attended" ? "flex" : "none",
+                                    position: "absolute",
+                                    top: "10px",
+                                    right: "10px",
+                                    width: "36px",
+                                    height: "36px",
+                                    borderRadius: "50%",
+                                    border: "none",
+                                    background: "rgba(0,0,0,0.65)",
+                                    color: "white",
+                                    cursor: "pointer",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    fontSize: "0.85rem",
+                                    zIndex: 2,
+                                    display: "flex"
+                                }}> QR
+                            </button>
+
+                            <button className="font-montserrat"
                                 style={{
                                     marginBottom: "1rem",
                                     padding: "0.45rem 1.4rem",
@@ -59,7 +88,14 @@ export default function loadAllFormsPage(){
                                     border: "none",
                                     fontWeight: 600,
                                     fontSize: "0.9rem",
-                                    cursor: "pointer",
+                                    cursor:
+                                    form.status === "registered" || form.status === "attended" ? "not-allowed" : "pointer",
+                                    opacity:
+                                    form.status === "registered" || form.status === "attended" ? 0.7 : 1,
+                                    pointerEvents:
+                                    form.status === "registered" || form.status === "attended"
+                                        ? "none"
+                                        : "auto",
                                     color:
                                     form.status === "registered"
                                         ? "#000"
@@ -70,7 +106,7 @@ export default function loadAllFormsPage(){
                                     form.status === "registered"
                                         ? "#fbbf24"
                                         : form.status === "attended"
-                                        ? "#7c3aed"
+                                        ? "#000"
                                         : "#6d28d9",
                             }}>
                             {form.status === "registered" ? "Registered" : form.status === "attended" ? "Attended" : "Register"}
@@ -78,6 +114,38 @@ export default function loadAllFormsPage(){
                         </div> 
                     </div>
                 ))}
+
+                {/* FADE ANIMATION FOR OVERLAY */}
+                <div onClick={() => setActiveQr(null)}
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        background: "rgba(0,0,0,0.6)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        opacity: activeQr ? 1 : 0,
+                        pointerEvents: activeQr ? "auto" : "none",
+                        transition: "opacity 0.3s ease",
+                        zIndex: 999,
+                    }}>
+                    <div
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                            background: "#fff",
+                            padding: "1.2rem",
+                            borderRadius: "14px",
+                            transform: activeQr ? "scale(1)" : "scale(0.95)",
+                            transition: "transform 0.3s ease",
+                            boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+                        }}>
+                        <img
+                            src={activeQr}
+                            alt="QR Code"
+                            style={{ width: "220px", height: "220px" }}
+                        />
+                    </div>
+                </div>
             </div> 
         </div>
     );
