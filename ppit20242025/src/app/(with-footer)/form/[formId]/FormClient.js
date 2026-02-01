@@ -152,7 +152,7 @@ export default function FormClient({ form }) {
 
         {form.questions.map((q) => (
           <div key={q.id} className="mb-8">
-            <label className="block mb-2 text-sm font-medium">
+            <label className="block mb-3 text-lg font-semibold">
               {q.label} {q.required && "*"}
             </label>
 
@@ -208,6 +208,7 @@ export default function FormClient({ form }) {
                     onChange={() =>
                       setAnswers({ ...answers, [q.id]: opt })
                     }
+                    className="accent-black"
                   />
                   {opt}
                 </label>
@@ -232,6 +233,7 @@ export default function FormClient({ form }) {
                         };
                       });
                     }}
+                    className="accent-black"
                   />
                   {opt}
                 </label>
