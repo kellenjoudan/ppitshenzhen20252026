@@ -10,6 +10,17 @@ import {
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
+function getLocalUser() {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = localStorage.getItem("user");
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
 /* =========================
    CREATE FORM (ADMIN)
 ========================= */
@@ -106,14 +117,26 @@ export async function submitResponse(formId, questions, answers) {
     }
   });
 
+  // GET USER FROM LOCALSTORAGE
+  const user = getLocalUser();
+
   // SAVE RESPONSE
   return await addDoc(collection(db, "responses"), {
     formId,
     answers,
+
+    // LOGIN INFO (NO AUTH)
+    submittedBy: user
+      ? {
+          uid: user.uid,
+          name: user.name,
+          email: user.email,
+        }
+      : null,
+
     submittedAt: serverTimestamp(),
   });
 }
-
 
 /* =========================
    LOAD ALL FORMS (SERVERSIDE)
