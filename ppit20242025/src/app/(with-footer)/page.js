@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
-import PPIT from "../../../public/Home/foto tangga.webp";
-import PPITTablet from "../../../public/Home/foto tangga.webp";
-import PPITMobile from "../../../public/Home/foto tangga.webp";
+import PPIT from "../../../public/Home/foto_tangga.webp";
+import PPITTablet from "../../../public/Home/foto_tangga.webp";
+import PPITMobile from "../../../public/Home/foto_tangga.webp";
 import AboutImage from "../../../public/Home/3D_Logo.webp";
 import Vision from "../../../public/Home/vision.webp";
 import Mission from "../../../public/Home/mission.webp";
