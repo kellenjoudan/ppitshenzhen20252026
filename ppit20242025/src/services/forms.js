@@ -117,7 +117,7 @@ export async function submitResponse(formId, questions, answers) {
 
 /* =========================
    LOAD ALL FORMS (SERVERSIDE)
-========================= */
+========================= 
 export async function getAllForms() {
     const q = query(
         collection(db, "forms"),
@@ -138,4 +138,4 @@ export async function getAllForms() {
     });
 
     return formList;
-}
+} */

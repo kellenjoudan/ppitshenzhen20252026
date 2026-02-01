@@ -1,4 +1,5 @@
-// use http://localhost:3000/form/YgJDVQi8Te6c6oHu1J4Z for testing
+// use http://localhost:3000/form/YgJDVQi8Te6c6oHu1J4Z for testing design
+// use http://localhost:3000/form/ibRFcVaV4KFNYleAhq6W for testing submit form
 
 "use client";
 
@@ -6,6 +7,7 @@ import { useState, useEffect } from "react";
 import { submitResponse } from "../../../../services/forms";
 import { auth } from "../../../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 export default function FormClient({ form }) {
   const [user, setUser] = useState(null);
@@ -13,6 +15,8 @@ export default function FormClient({ form }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
 
   /* Auth check */
   useEffect(() => {
@@ -29,6 +33,42 @@ export default function FormClient({ form }) {
 
   if (!user) {
     return <p>Please log in to submit this form.</p>;
+  }
+
+  if (submitting) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#7E0C0E] text-white">
+        <p className="text-lg font-semibold animate-pulse">
+          Submitting form…
+        </p>
+      </div>
+    );
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#7E0C0E] font-montserrat text-center px-6">
+        
+        <h1 className="text-3xl md:text-3xl font-semibold uppercase mb-1 text-white">
+          {form.title}
+        </h1>
+
+        <h2 className="text-2xl md:text-3xl font-semibold uppercase mb-8 text-white">
+          Registration Form
+        </h2>
+
+        <p className="text-base md:text-md mb-1 text-gray-300">
+          Thank you for your response.
+        </p>
+
+        <button
+          onClick={() => router.push("/form")}
+          className="underline hover:text-white text-md md:text-base text-gray-300"
+        >
+          Go back to forms page
+        </button>
+      </div>
+    );
   }
 
   /* Validation check */
@@ -50,12 +90,52 @@ export default function FormClient({ form }) {
   /* Submit */
   const handleSubmit = async () => {
     try {
+      setSubmitting(true);
       validateRequired();
-      await submitResponse(form.id, form.questions, answers);
+
+      const processedAnswers = { ...answers };
+
+      for (const q of form.questions) {
+        if (q.type === "file" && answers[q.id]) {
+          const file = answers[q.id];
+
+          if (file.size > 5 * 1024 * 1024) {
+            throw new Error("File must be under 5MB");
+          }
+
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append(
+            "upload_preset",
+            process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+          );
+          formData.append("folder", "Form");
+          formData.append("public_id", `${form.id}_${user.uid}`);
+          formData.append("overwrite", "true");
+
+          const res = await fetch(
+            `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+          if (!res.ok) throw new Error("Upload failed");
+
+          const data = await res.json();
+          processedAnswers[q.id] = data.secure_url;
+        }
+      }
+
+      await submitResponse(form.id, form.questions, processedAnswers);
+
       setSuccess(true);
       setError("");
     } catch (err) {
       setError(err.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -161,14 +241,14 @@ export default function FormClient({ form }) {
         ))}
 
         {error && <p style={{ color: "red" }}>{error}</p>}
-        {success && <p style={{ color: "green" }}>Form submitted!</p>}
 
         <button
           onClick={handleSubmit}
-          disabled={success}
-          className="bg-white text-[#7A1E1E] px-8 py-2 rounded font-semibold hover:opacity-90 disabled:opacity-50"
+          disabled={submitting || success}
+          className="bg-white text-[#7A1E1E] px-8 py-2 rounded font-semibold
+                    hover:opacity-90 disabled:opacity-50"
         >
-          {success ? "Submitted" : "Submit"}
+          {submitting ? "Submitting..." : success ? "Submitted" : "Submit"}
         </button>
       </div>
     </div>
