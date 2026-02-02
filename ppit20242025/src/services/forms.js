@@ -147,7 +147,7 @@ export async function getAllUsers() {
 /* =========================
    ADD A USER (SERVERSIDE)
 ========================= */
-export async function updateUser(uid, email) {
+export async function updateUser(uid, email, submittedForms = [], attendedForms = []) {
   const userRef = doc(db, "users", uid);
   const userSnap = await getDoc(userRef);
 
@@ -157,13 +157,19 @@ export async function updateUser(uid, email) {
       admin: false, //DEFAULT VALUE, CHANGE MANUALLY IN FIRESTORE DB!
       createdAt: serverTimestamp(),
       lastLogin: serverTimestamp(),
+      submittedForms: submittedForms,
+      attendedForms: attendedForms,
     });
   } else {
+    const snapData = userSnap.data();
+    submittedForms, attendedForms = snapData.submittedForms, snapData.attendedForms; //fetch current values to prevent them being changed if empty.
     await setDoc(
       userRef,
       {
         email: email,
         lastLogin: serverTimestamp(),
+        submittedForms: submittedForms,
+        attendedForms: attendedForms,
       },
       { merge: true }
     );
