@@ -1,4 +1,5 @@
-// use http://localhost:3000/form/YgJDVQi8Te6c6oHu1J4Z for testing
+// use http://localhost:3000/form/YgJDVQi8Te6c6oHu1J4Z for testing design
+// use http://localhost:3000/form/ibRFcVaV4KFNYleAhq6W for testing submit form
 
 "use client";
 
@@ -6,6 +7,7 @@ import { useState, useEffect } from "react";
 import { submitResponse } from "../../../../services/forms";
 import { auth } from "../../../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 export default function FormClient({ form }) {
   const [user, setUser] = useState(null);
@@ -13,6 +15,8 @@ export default function FormClient({ form }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
 
   /* Auth check */
   useEffect(() => {
@@ -29,6 +33,42 @@ export default function FormClient({ form }) {
 
   if (!user) {
     return <p>Please log in to submit this form.</p>;
+  }
+
+  if (submitting) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#7E0C0E] text-white">
+        <p className="text-lg font-semibold animate-pulse">
+          Submitting form…
+        </p>
+      </div>
+    );
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#7E0C0E] font-montserrat text-center px-6">
+        
+        <h1 className="text-3xl md:text-3xl font-semibold uppercase mb-1 text-white">
+          {form.title}
+        </h1>
+
+        <h2 className="text-2xl md:text-3xl font-semibold uppercase mb-8 text-white">
+          Registration Form
+        </h2>
+
+        <p className="text-base md:text-md mb-1 text-gray-300">
+          Thank you for your response.
+        </p>
+
+        <button
+          onClick={() => router.push("/form")}
+          className="underline hover:text-white text-md md:text-base text-gray-300"
+        >
+          Go back to forms page
+        </button>
+      </div>
+    );
   }
 
   /* Validation check */
@@ -50,90 +90,169 @@ export default function FormClient({ form }) {
   /* Submit */
   const handleSubmit = async () => {
     try {
+      setSubmitting(true);
       validateRequired();
-      await submitResponse(form.id, form.questions, answers);
+
+      const processedAnswers = { ...answers };
+
+      for (const q of form.questions) {
+        if (q.type === "file" && answers[q.id]) {
+          const file = answers[q.id];
+
+          if (file.size > 5 * 1024 * 1024) {
+            throw new Error("File must be under 5MB");
+          }
+
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append(
+            "upload_preset",
+            process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+          );
+          formData.append("folder", "Form");
+          formData.append("public_id", `${form.id}_${user.uid}`);
+          formData.append("overwrite", "true");
+
+          const res = await fetch(
+            `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+          if (!res.ok) throw new Error("Upload failed");
+
+          const data = await res.json();
+          processedAnswers[q.id] = data.secure_url;
+        }
+      }
+
+      await submitResponse(form.id, form.questions, processedAnswers);
+
       setSuccess(true);
       setError("");
     } catch (err) {
       setError(err.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="mt-[150px] max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-2">{form.title}</h1>
-      <p className="mb-6">{form.description}</p>
+    <div className="min-h-screen bg-[#7E0C0E] font-montserrat flex justify-center pt-[140px] pb-20">
+      <div className="w-full max-w-2xl px-6 text-white">
+        <h1 className="text-2xl font-semibold text-center uppercase">
+          {form.title}
+        </h1>
 
-      {form.questions.map((q) => (
-        <div key={q.id} className="mb-6 space-y-2">
-          <label className="font-medium">
-            {q.label} {q.required && <span className="text-red-500">*</span>}
-          </label>
+        <p className="text-sm text-center text-gray-200 mt-2 mb-10">
+          {form.description}
+        </p>
 
-          {/* TEXT */}
-          {q.type === "text" && (
-            <input
-              className="border p-2 w-full rounded"
-              value={answers[q.id] || ""}
-              onChange={(e) =>
-                setAnswers({ ...answers, [q.id]: e.target.value })
-              }
-            />
-          )}
+        {form.questions.map((q) => (
+          <div key={q.id} className="mb-8">
+            <label className="block mb-3 text-lg font-semibold">
+              {q.label} {q.required && "*"}
+            </label>
 
-          {/* RADIO */}
-          {q.type === "radio" &&
-            q.options?.map((opt) => (
-              <label key={opt} className="flex gap-2 items-center">
-                <input
-                  type="radio"
-                  name={q.id}
-                  value={opt}
-                  checked={answers[q.id] === opt}
-                  onChange={() =>
-                    setAnswers({ ...answers, [q.id]: opt })
-                  }
-                />
-                {opt}
-              </label>
-            ))}
+            {/* TEXTAREA (COMMENTS) */}
+            {q.type === "textarea" && (
+              <textarea
+                rows={4}
+                className="w-full rounded bg-[#B88C8C] px-3 py-2 text-black focus:outline-none resize-none"
+                value={answers[q.id] || ""}
+                onChange={(e) =>
+                  setAnswers({ ...answers, [q.id]: e.target.value })
+                }
+              />
+            )}
 
-          {/* CHECKBOX */}
-          {q.type === "checkbox" &&
-            q.options?.map((opt) => (
-              <label key={opt} className="flex gap-2 items-center">
-                <input
-                  type="checkbox"
-                  value={opt}
-                  checked={(answers[q.id] || []).includes(opt)}
-                  onChange={(e) => {
-                    setAnswers((prev) => {
-                      const prevArr = prev[q.id] || [];
-                      return {
-                        ...prev,
-                        [q.id]: e.target.checked
-                          ? [...prevArr, opt]
-                          : prevArr.filter((v) => v !== opt),
-                      };
-                    });
-                  }}
-                />
-                {opt}
-              </label>
-            ))}
-        </div>
-      ))}
+            {/* FILE UPLOAD */}
+            {q.type === "file" && (
+              <input
+                type="file"
+                className="block text-sm text-white
+                          file:mr-4 file:rounded
+                          file:border-0
+                          file:bg-[#B88C8C]
+                          file:px-4 file:py-2
+                          file:text-black
+                          hover:file:opacity-90"
+                onChange={(e) =>
+                  setAnswers({ ...answers, [q.id]: e.target.files[0] })
+                }
+              />
+            )}
 
-      {error && <p className="text-red-500 mb-3">{error}</p>}
-      {success && <p className="text-green-600 mb-3">Form submitted!</p>}
+            {/* TEXT */}
+            {q.type === "text" && (
+              <input
+                className="w-full rounded bg-[#B88C8C] px-3 py-2 text-black focus:outline-none"
+                value={answers[q.id] || ""}
+                onChange={(e) =>
+                  setAnswers({ ...answers, [q.id]: e.target.value })
+                }
+              />
+            )}
 
-      <button
-        onClick={handleSubmit}
-        disabled={success}
-        className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-      >
-        {success ? "Submitted" : "Submit"}
-      </button>
+            {/* RADIO */}
+            {q.type === "radio" &&
+              q.options?.map((opt) => (
+                <label key={opt} className="flex items-center gap-3 text-sm mb-1">
+                  <input
+                    type="radio"
+                    name={q.id}
+                    value={opt}
+                    checked={answers[q.id] === opt}
+                    onChange={() =>
+                      setAnswers({ ...answers, [q.id]: opt })
+                    }
+                    className="accent-black"
+                  />
+                  {opt}
+                </label>
+              ))}
+
+            {/* CHECKBOX */}
+            {q.type === "checkbox" &&
+              q.options?.map((opt) => (
+                <label key={opt} className="flex items-center gap-3 text-sm mb-1">
+                  <input
+                    type="checkbox"
+                    value={opt}
+                    checked={(answers[q.id] || []).includes(opt)}
+                    onChange={(e) => {
+                        setAnswers((prevAnswers) => {
+                        const prev = prevAnswers[q.id] || [];
+                        return {
+                          ...prevAnswers,
+                          [q.id]: e.target.checked
+                            ? [...prev, opt]
+                            : prev.filter((v) => v !== opt),
+                        };
+                      });
+                    }}
+                    className="accent-black"
+                  />
+                  {opt}
+                </label>
+              ))}
+
+          </div>
+        ))}
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <button
+          onClick={handleSubmit}
+          disabled={submitting || success}
+          className="bg-white text-[#7A1E1E] px-8 py-2 rounded font-semibold
+                    hover:opacity-90 disabled:opacity-50"
+        >
+          {submitting ? "Submitting..." : success ? "Submitted" : "Submit"}
+        </button>
+      </div>
     </div>
   );
 }

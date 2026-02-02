@@ -83,14 +83,20 @@ export async function submitResponse(formId, questions, answers) {
     }
   });
 
+  // GET USER FROM LOCALSTORAGE
+  const user = localStorage.getItem('user-id');
+
   // SAVE RESPONSE
   return await addDoc(collection(db, "responses"), {
     formId,
     answers,
+
+    // LOGIN INFO (NO AUTH)
+    submittedBy: user,
+    
     submittedAt: serverTimestamp(),
   });
 }
-
 
 /* =========================
    LOAD ALL FORMS (SERVERSIDE)
@@ -120,7 +126,7 @@ export async function getAllForms() {
 
 /* =========================
    LOAD ALL USERS (SERVERSIDE)
-========================= */
+ ========================= */
 export async function getAllUsers() {
     const q = query(
         collection(db, "users"),
@@ -146,7 +152,7 @@ export async function getAllUsers() {
 
 /* =========================
    UPDATE/ADD A USER (SERVERSIDE)
-========================= */
+ ========================= */
 export async function updateUser(uid, email = "", submittedForms = [], attendedForms = []) {
   const userRef = doc(db, "users", uid);
   const userSnap = await getDoc(userRef);
