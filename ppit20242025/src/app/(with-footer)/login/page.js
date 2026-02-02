@@ -4,24 +4,28 @@ import { auth, googleProvider } from "../../../lib/firebase";
 import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+// import usePreviousRoute from "../../../lib/trackPreviousRoute";
 
 export default function LoginPage() {
   const router = useRouter();
-
+  // const previousRoute = usePreviousRoute(3);
+  // const redirect = previousRoute || "/";
+  const redirect = "/";
+  
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.replace("/form"); // already logged in
+        router.replace(redirect); //already logged in
       }
     });
 
     return () => unsub();
-  }, [router]);
+  }, [router, redirect]);
 
   const handleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-      router.replace("/form");
+      router.replace(redirect);
     } catch (err) {
       console.error("Login failed", err);
     }

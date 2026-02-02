@@ -4,57 +4,6 @@ import { useEffect, useState } from "react";
 import { auth } from "../../../lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-
-export default function FormPage() {
-  const [user, setUser] = useState(undefined);
-  const router = useRouter();
-
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (currentUser) => {
-      if (!currentUser) {
-        router.replace("/login");
-        return;
-      }
-
-      setUser(currentUser);
-    });
-
-    return () => unsub();
-  }, [router]);
-
-  if (user === undefined) {
-    return (
-      <div className="min-h-screen bg-[#7E0C0E] text-white flex items-center justify-center">
-        <p>Loading session…</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-[#7E0C0E] text-white p-10">
-      <div className="flex justify-between items-center mt-10 mb-6">
-        <div>
-          <p className="text-sm text-gray-400">Logged in as</p>
-          <p className="font-semibold">{user.email}</p>
-        </div>
-
-        <button
-          onClick={async () => {
-            await signOut(auth);
-            router.replace("/login");
-          }}
-          className="px-4 py-2 border border-red-500 text-red-400 rounded-full text-sm hover:bg-red-500/10 transition"
-        >
-          Log out
-        </button>
-      </div>
-
-      {/* Form content */}
-      <h1 className="text-2xl font-bold">Form</h1>
-    </div>
-  );
-}
-
 import { getAllForms } from "../../../services/forms";
 
 function isDark(color) {
@@ -72,8 +21,11 @@ export default function loadAllFormsPage(){
     const [forms, setForms] = useState([]);
     const [activeQr, setActiveQr] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState(undefined);
+    const router = useRouter();
     const getQrUrl = (qrContent) => `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrContent)}`;
 
+    // GET USER AND FORMS DATA
     useEffect(() => {
         async function fetchForms() {
             try {
@@ -84,14 +36,32 @@ export default function loadAllFormsPage(){
             }
         };
         fetchForms();
-    }, []);
+
+        const unsub = onAuthStateChanged(auth, (currentUser) => {
+            if (!currentUser) {
+                router.replace("/login");
+                return;
+            }
+            setUser(currentUser);
+        });
+        return () => unsub();
+    }, [router]);
+    
+    if (user === undefined) {
+        return (
+        <div className="min-h-screen bg-[#7E0C0E] text-white flex items-center justify-center">
+             <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>Loading session...</div>
+        </div>
+        );
+    };
 
     if (loading) return (
-        <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0 }}>
-            <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>Loading, please wait...</div>
+        <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", margin: 0, padding: 0 }}>
+            <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>Fetching forms, please wait...</div>
         </div>
 
     );
+
     // console.log(forms)
     // forms.pop()
 
@@ -105,12 +75,44 @@ export default function loadAllFormsPage(){
 
     return (
         <div style={{ paddingTop: "6rem", minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0 }}>
+            {/* LOGIN INFO BODY */}
+            {/* <div className="fixed mt-16 top-6 right-6 flex items-center gap-6 text-right z-50">
+                <div>
+                    <p className="text-sm text-gray-400">Logged in as</p>
+                    <p className="font-semibold">{user.email}</p>
+                </div>
+
+                <button
+                    onClick={async () => {
+                    await signOut(auth);
+                    if (router.pathname === "/") {
+                        router.refresh();
+                    } else {
+                        router.replace("/");
+                    }}}
+                    className="
+                    px-4 py-2
+                    border border-red-500
+                    text-red-500
+                    rounded-full
+                    text-sm
+                    transition
+                    hover:bg-white
+                    hover:text-red-600
+                    "
+                >
+                Log out
+                </button>
+            </div> */}
+            
+            {/* FORM CONTENT */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, 30%)", gap: "2rem", padding: "2rem", justifyContent: "center", alignItems: "center" }}>
                 {forms.map((form) => (
                     <div key={form.id} style={{ position: "relative", borderRadius: "14px", overflow: "hidden", backgroundSize: "cover", backgroundPosition: "center", boxShadow: "0 10px 30px rgba(0, 0, 0, 0.25)", backgroundImage: `url(/DefaultFormCardBackground.webp)`, }}>
                         <div className="font-montserrat" style={{ background: `${form.headerColor ?? "#5b2cff"}`, color: `${isDark(form.headerColor ?? "#5b2cff") ? "#FFF" : "#000"}`, fontWeight: 600, textAlign: "center", padding: "0.75rem 1rem", fontSize: "1rem", }}> {form.title} </div>
                         
                         <div style={{ position: "relative", height: "30vh", display: "flex", alignItems: "flex-end", justifyContent: "center", }}>
+                            {/* QR BUTTON */}
                             <button
                                 onClick={() => setActiveQr(getQrUrl(`${form.id};${form.user}`))} // TODO: FETCH USER ID
                                 style={{
@@ -134,6 +136,7 @@ export default function loadAllFormsPage(){
                                 }}> QR
                             </button>
 
+                            {/* REGISTER BUTTON */}
                             <button className="font-montserrat"
                                 style={{
                                     marginBottom: "1rem",
