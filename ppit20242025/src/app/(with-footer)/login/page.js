@@ -4,6 +4,7 @@ import { auth, googleProvider } from "../../../lib/firebase";
 import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { updateUser } from "../../../services/forms";
 // import usePreviousRoute from "../../../lib/trackPreviousRoute";
 
 export default function LoginPage() {
@@ -11,10 +12,12 @@ export default function LoginPage() {
   // const previousRoute = usePreviousRoute(3);
   // const redirect = previousRoute || "/";
   const redirect = "/";
-  
+
+ 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        await updateUser(user.uid, user.email);
         router.replace(redirect); //already logged in
       }
     });

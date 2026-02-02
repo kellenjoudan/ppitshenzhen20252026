@@ -114,7 +114,7 @@ export default function loadAllFormsPage(){
                         <div style={{ position: "relative", height: "30vh", display: "flex", alignItems: "flex-end", justifyContent: "center", }}>
                             {/* QR BUTTON */}
                             <button
-                                onClick={() => setActiveQr(getQrUrl(`${form.id};${form.user}`))} // TODO: FETCH USER ID
+                                onClick={() => setActiveQr(getQrUrl(`${form.id};${user.uid}`))} // TODO: FETCH USER ID
                                 style={{
                                     display:
                                         form.status === "registered" || form.status === "attended" ? "flex" : "none",

@@ -1,6 +1,8 @@
 import {
   collection,
   addDoc,
+  setDoc,
+  updateDoc,
   doc,
   getDoc,
   getDocs,
@@ -113,4 +115,57 @@ export async function getAllForms() {
     });
 
     return formList;
+}
+
+
+/* =========================
+   LOAD ALL USERS (SERVERSIDE)
+========================= */
+export async function getAllUsers() {
+    const q = query(
+        collection(db, "users"),
+    );
+
+    const snap = await getDocs(q);
+    try {
+      const formList = snap.docs.map(docSnap => {
+          const data = docSnap.data();
+          return {
+              uid: docSnap.uid,
+              email: data.email,
+              adminStatus: data.admin, //bool
+          };
+      });
+      return formList;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+}
+
+
+/* =========================
+   ADD A USER (SERVERSIDE)
+========================= */
+export async function updateUser(uid, email) {
+  const userRef = doc(db, "users", uid);
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) {
+    await setDoc(userRef, {
+      email: email,
+      admin: false, //DEFAULT VALUE, CHANGE MANUALLY IN FIRESTORE DB!
+      createdAt: serverTimestamp(),
+      lastLogin: serverTimestamp(),
+    });
+  } else {
+    await setDoc(
+      userRef,
+      {
+        email: email,
+        lastLogin: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  }
 }
