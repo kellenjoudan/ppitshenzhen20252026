@@ -62,7 +62,7 @@ Admin creates → Firestore stores → User fills → Firestore stores → Admin
 
 * Aldo - When submitting, other than calling submitResponse(), also call the new function updateUser(uid, submittedForms=formID). Note: (1). uid can be obtained by calling localStorage.getItem("user-id"), (2). The format of updateUser above MUST be exact (include the submittedForms when typing in the parameters) and replace the formID with the actual formID that is being submitted (same variable as the one in submitResponse()).
 
-* Jennickel - Create a design of the page BarcodeScanner.js (in figma preferrably), and refer to the big image written in Kellen's task. Do final checks on the design of adminform and what user see when they open a form (formClient.js).
+* Jennickel - Create a design of the page BarcodeScanner.js (in figma preferrably), and refer to the big image written in Kellen's task. Do final checks on the design of adminform and what user see when they open a form (formClient.js). Fix the design flaw where in desktop, the hover hitbox for events tab in the header is too big (when you hover under forms tab/user-pfp tab, it still triggers the dropdown of the events tab when its not supposed to).
 
 
 ## DEADLINES:
