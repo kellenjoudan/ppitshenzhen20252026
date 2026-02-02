@@ -145,9 +145,9 @@ export async function getAllUsers() {
 
 
 /* =========================
-   ADD A USER (SERVERSIDE)
+   UPDATE/ADD A USER (SERVERSIDE)
 ========================= */
-export async function updateUser(uid, email, submittedForms = [], attendedForms = []) {
+export async function updateUser(uid, email = "", submittedForms = [], attendedForms = []) {
   const userRef = doc(db, "users", uid);
   const userSnap = await getDoc(userRef);
 
@@ -162,14 +162,14 @@ export async function updateUser(uid, email, submittedForms = [], attendedForms 
     });
   } else {
     const snapData = userSnap.data();
-    submittedForms, attendedForms = snapData.submittedForms, snapData.attendedForms; //fetch current values to prevent them being changed if empty.
+    const currentSubmittedForms = snapData.submittedForms;
+    const currentAttendedForms = snapData.attendedForms; //fetch current values to be appended to the new form list.
     await setDoc(
       userRef,
       {
-        email: email,
         lastLogin: serverTimestamp(),
-        submittedForms: submittedForms,
-        attendedForms: attendedForms,
+        submittedForms: currentSubmittedForms + submittedForms,
+        attendedForms: currentAttendedForms + attendedForms,
       },
       { merge: true }
     );

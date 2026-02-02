@@ -18,6 +18,7 @@ export default function LoginPage() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         await updateUser(user.uid, user.email);
+        localStorage.setItem("user-id", user.uid); //stores uid in localStorage to be accessible throughout the entire directory.
         router.replace(redirect); //already logged in
       }
     });

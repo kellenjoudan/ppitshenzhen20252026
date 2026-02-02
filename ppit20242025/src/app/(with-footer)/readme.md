@@ -41,6 +41,11 @@ Question = {
 }
 ```
 
+
+### IMPORTANT CHANGE:
+UID is stored in localStorage, reducing the need to call firestore everytime to fetch the UID.
+
+
 **(!!!) FLOW :
 Admin creates → Firestore stores → User fills → Firestore stores → Admin reads**
 **After pressing forms tab in the header, it will redirect to login. After login, the system detects if its admin or user.
@@ -48,23 +53,23 @@ Admin creates → Firestore stores → User fills → Firestore stores → Admin
 * If admin, then redirect to admin-only page (editable), SAVE LOGIN INFORMATION TEMPORARILY IN BROWSER CACHE (to be accessed later)!
 ##
 
-## JOBDESK:
-* Michael - Create firestore scheme/structure, create {question, forms, response} JSON format, monitor progress on design and backend, build HTML and help with PostCSS for the design, maintain mobile responsiveness --> accessibility for mobile phones. Additional: create a diagram of the firestore scheme as well as process flow. **ADD: Create the page.js for /form directory (list of active forms).**
+## UPDATED JOBDESK (3/2/26):
+* Michael - Create the admin version for the list of forms, hide QR code button if the status is not submitted or has attended, and ensure everything stay connected and all variable names are parallel.
 
-* Kellen - Create firebase project (enable firestore), create firebase.js and export it, create functions (form creation, fetch forms, and submit response). Additional: validation on required fields and prevent empty submissions; create designs on loading screens (during suubmission process/form loading process). **ADD: Help by [1]. Making a function to retrieve ALL forms data (no params) and [2]. Establish Google auth for Google login to identify user or admin in page.js of /form directory.**
+* Kellen - Fix the BarcodeScanner.js to this process flow: **in list of forms page** (admin logs in, admin presses a button that directs them to /barcodescanner) --> opens a web-based barcode scanner, scans the barcode shown by user (NOTE: THE FORMAT OF THE BARCODE IS: "formId;uid", e.g. "YgJDVQi8Te6c6oHu1J4Z;8SS3Va9o0ZZydTOM5Pp6ehXQPTw1) --> perform checks (in the response database, check whether the user has already filled the form (uid exists in response db)) --> call the function updateUser(uid, attendedForms=formID), replace uid and formID with the IDs from the string of the barcode respectively --> close the barcodescanner and display the status of check (successful/failure).
 
-* Miquel - Admin form builder (form creation; basically make the formData) --> create form title input, desc. input, add/remove questions (include question types), toggle required, options input (radio/checkbox --> OPTIONAL TO DO), and call createForm(formData) created by kellen. Additional: validate questions before saving (make sure there is no illegal inputs) and display form link after successful creation. (**NOTE: ONLY NEED TO EDIT 'page.js' in form/[formId]**)
+* Miquel - ADMIN FORM: update to add (1. form.headerColor (buat tampilan di list of forms), 2. form.coverImage (buat background card di list of forms, **request the image to be in .webp**)) also add it in the JSON object of createForm() and getFormById(). 
 
-* Aldo - User form renderer/UI --> fetch form from db through formID, display title & desc., display input fields based on their type (use if/else and display according to their type property; e.g. question1.type == "MCQ".....), create indicators for required fields (use * for required), collect answers by calling submit response function created by kellen (post/send answers to db and save them). Additional: Validate required questions; ignore optional ones, send success/error messages (**NOTE: ONLY NEED TO EDIT 'FormClient.js' in form/[formId]**)
+* Aldo - When submitting, other than calling submitResponse(), also call the new function updateUser(uid, submittedForms=formID). Note: (1). uid can be obtained by calling localStorage.getItem("user-id"), (2). The format of updateUser above MUST be exact (include the submittedForms when typing in the parameters) and replace the formID with the actual formID that is being submitted (same variable as the one in submitResponse()).
 
-* Jennickel - UI/UX design --> similar to the previous project, create an illustration using figma to give a big picture of the website, determine color palette, typography, button styles, and input styles (looks-wise). **ADD: Help by designing using postcss/any frontend changes of all the pages (every page that is in /form directory).**
+* Jennickel - Create a design of the page BarcodeScanner.js (in figma preferrably), and refer to the big image written in Kellen's task. Do final checks on the design of adminform and what user see when they open a form (formClient.js).
 
 
 ## DEADLINES:
 >**===DEVELOPMENT PHASE===**
 - 18 Jan => Jennickel UI Design for form layout, admin layout, and components styles (figma) & Kellen finishing firebase config (code as well) ✅
 - 24 Jan => Each members' draft design and algorithms (additional tasks to be done) ✅
-- 31 Jan => Each members' jobdesk (everything should be set by now); tolerance: design and mobile compatibility not finalized (not part of the main goal)
+- 31 Jan => Each members' jobdesk (everything should be set by now); tolerance: design and mobile compatibility not finalized (not part of the main goal) (DELAYED)
 
 >**===TESTING & DEPLOYMENT PHASE===**
 - 5 Feb => Finish testing for the forms and admin page; note down every improvements that can be made (TEST MOBILE COMPATIBILITY)
