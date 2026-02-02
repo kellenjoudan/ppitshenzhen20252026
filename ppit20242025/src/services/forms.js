@@ -1,6 +1,8 @@
 import {
   collection,
   addDoc,
+  setDoc,
+  updateDoc,
   doc,
   getDoc,
   getDocs,
@@ -10,16 +12,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
-function getLocalUser() {
-  if (typeof window === "undefined") return null;
-
-  try {
-    const raw = localStorage.getItem("user");
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
 
 /* =========================
    CREATE FORM (ADMIN)
@@ -38,6 +30,7 @@ export async function createForm(formData) {
     createdAt: serverTimestamp(),
   });
 }
+
 
 /* =========================
    GET FORM BY ID (PUBLIC)
@@ -66,33 +59,6 @@ export async function getFormById(formId) {
   };
 }
 
-/* =========================
-   GET ALL ACTIVE FORMS (PUBLIC)
-========================= */
-export async function getAllForms() {
-  const q = query(
-    collection(db, "forms"),
-    where("isActive", "==", true)
-  );
-
-  const snap = await getDocs(q);
-
-  return snap.docs.map((doc) => {
-    const data = doc.data();
-
-    return {
-      id: doc.id,
-      title: data.title,
-      description: data.description,
-      questions: data.questions,
-      isActive: data.isActive,
-      createdBy: data.createdBy,
-      createdAt: data.createdAt
-        ? data.createdAt.toMillis()
-        : null,
-    };
-  });
-}
 
 /* =========================
    SUBMIT RESPONSE (USER)
@@ -118,7 +84,7 @@ export async function submitResponse(formId, questions, answers) {
   });
 
   // GET USER FROM LOCALSTORAGE
-  const user = getLocalUser();
+  const user = localStorage.getItem('user-id');
 
   // SAVE RESPONSE
   return await addDoc(collection(db, "responses"), {
@@ -126,21 +92,15 @@ export async function submitResponse(formId, questions, answers) {
     answers,
 
     // LOGIN INFO (NO AUTH)
-    submittedBy: user
-      ? {
-          uid: user.uid,
-          name: user.name,
-          email: user.email,
-        }
-      : null,
-
+    submittedBy: user,
+    
     submittedAt: serverTimestamp(),
   });
 }
 
 /* =========================
    LOAD ALL FORMS (SERVERSIDE)
-========================= 
+========================= */
 export async function getAllForms() {
     const q = query(
         collection(db, "forms"),
@@ -161,4 +121,63 @@ export async function getAllForms() {
     });
 
     return formList;
-} */
+}
+
+
+/* =========================
+   LOAD ALL USERS (SERVERSIDE)
+ ========================= */
+export async function getAllUsers() {
+    const q = query(
+        collection(db, "users"),
+    );
+
+    const snap = await getDocs(q);
+    try {
+      const formList = snap.docs.map(docSnap => {
+          const data = docSnap.data();
+          return {
+              uid: docSnap.uid,
+              email: data.email,
+              adminStatus: data.admin, //bool
+          };
+      });
+      return formList;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+}
+
+
+/* =========================
+   UPDATE/ADD A USER (SERVERSIDE)
+ ========================= */
+export async function updateUser(uid, email = "", submittedForms = [], attendedForms = []) {
+  const userRef = doc(db, "users", uid);
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) {
+    await setDoc(userRef, {
+      email: email,
+      admin: false, //DEFAULT VALUE, CHANGE MANUALLY IN FIRESTORE DB!
+      createdAt: serverTimestamp(),
+      lastLogin: serverTimestamp(),
+      submittedForms: submittedForms,
+      attendedForms: attendedForms,
+    });
+  } else {
+    const snapData = userSnap.data();
+    const currentSubmittedForms = snapData.submittedForms;
+    const currentAttendedForms = snapData.attendedForms; //fetch current values to be appended to the new form list.
+    await setDoc(
+      userRef,
+      {
+        lastLogin: serverTimestamp(),
+        submittedForms: currentSubmittedForms + submittedForms,
+        attendedForms: currentAttendedForms + attendedForms,
+      },
+      { merge: true }
+    );
+  }
+}

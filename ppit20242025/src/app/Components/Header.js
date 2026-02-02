@@ -1,24 +1,45 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { auth } from "../../lib/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
 	const toggleMenu = () => setMenuOpen((prev) => !prev);
 	const [eventsOpen, setEventsOpen] = useState(false);
+	const [user, setUser] = useState(null);
+	const [sessionOpen, setSessionOpen] = useState(false);
+	const [loggingOut, setLoggingOut] = useState(false);
+	const dropdownRef = useRef	(null);
+	const router = useRouter();
 
 	const EVENTS = [
 		{ name: "PPITSZ 2025-2026", slug: "2526" },
 	];
 	
 	useEffect(() => {
+		function handleClickOutside(event) {
+			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+				setSessionOpen(false);
+			}
+		}
+
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 0);
 		};
 
+		const unsub = onAuthStateChanged(auth, (currentUser) => {
+    		setUser(currentUser);
+  		});
+
+		document.addEventListener('mousedown', handleClickOutside);
 		window.addEventListener("scroll", handleScroll);
 		return () => {
+			unsub();
+			document.removeEventListener('mousedown', handleClickOutside);
 			window.removeEventListener("scroll", handleScroll);
 		};
 	}, []);
@@ -283,6 +304,49 @@ const Header = () => {
 				>
 					Forms
 				</Link>
+
+				{/* LOGIN INFO – DESKTOP (click) */}
+				<div className="hidden relative flex items-center justify-between px-6 md:block group" ref={dropdownRef}>
+				<span
+					className={`
+						    absolute right-2 top-1/2 -translate-y-1/2 inline-block w-10 h-10 rounded-full bg-center bg-cover cursor-pointer border-2 border-white/70 hover:border-[#8C0000] transition
+						${isScrolled ? "border-[#8C0000]" : "bg-white"}
+						${menuOpen ? "border-[#8C0000]" : ""}
+					`}
+					style={{
+						backgroundImage: `url(${user?.photoURL || "/user-pfp.webp"})`,
+					}}
+					onClick={() => setSessionOpen(!sessionOpen)}
+				></span>
+
+				{/* Dropdown */}
+				{sessionOpen && (
+					<div className="absolute right-0 mt-14 max-w-64 bg-white shadow-lg rounded-lg border border-gray-200 p-4 z-50 overflow-auto">
+					<p className="text-sm text-gray-400">{user ? "Logged in as" : ""}</p>
+					<p className="text-sm text-gray-700 mb-2 break-words" style={{fontWeight: "bold"}}>{user ? `${user?.email}` : ""}</p>
+					<button
+						disabled={loggingOut}
+						onClick={async () => {
+							if (user) {
+								setLoggingOut(true);
+								setSessionOpen(false);
+								await signOut(auth);
+								router.replace("/");
+								setLoggingOut(false);
+							} else {
+								setLoggingOut(false);
+								setSessionOpen(false);
+								router.replace('/login');
+							}
+ 						}}
+						className={`w-full bg-red-600 text-white text-sm py-2 rounded hover:bg-red-700 transition ${ loggingOut ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 text-white hover:bg-red-700" }`}
+					> <span className="whitespace-nowrap px-4">
+						{user ? "Log Out" : "Log In"}
+					</span>
+					</button>
+					</div>
+				)}
+				</div>
 			</nav>
 		</header>
 	);
