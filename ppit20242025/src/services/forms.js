@@ -8,7 +8,8 @@ import {
   getDocs,
   serverTimestamp,
   query,
-  where
+  where,
+  arrayUnion
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
@@ -149,35 +150,45 @@ export async function getAllUsers() {
     }
 }
 
-
 /* =========================
    UPDATE/ADD A USER (SERVERSIDE)
  ========================= */
-export async function updateUser(uid, email = "", submittedForms = [], attendedForms = []) {
+export async function updateUser(
+  uid,
+  {
+    email = "",
+    submittedFormId = null,
+    attendedFormId = null,
+  } = {}
+) {
   const userRef = doc(db, "users", uid);
   const userSnap = await getDoc(userRef);
 
+  // Create user if not exists
   if (!userSnap.exists()) {
     await setDoc(userRef, {
-      email: email,
-      admin: false, //DEFAULT VALUE, CHANGE MANUALLY IN FIRESTORE DB!
+      email,
+      admin: false,
       createdAt: serverTimestamp(),
       lastLogin: serverTimestamp(),
-      submittedForms: submittedForms,
-      attendedForms: attendedForms,
+      submittedForms: submittedFormId ? [submittedFormId] : [],
+      attendedForms: attendedFormId ? [attendedFormId] : [],
     });
-  } else {
-    const snapData = userSnap.data();
-    const currentSubmittedForms = snapData.submittedForms;
-    const currentAttendedForms = snapData.attendedForms; //fetch current values to be appended to the new form list.
-    await setDoc(
-      userRef,
-      {
-        lastLogin: serverTimestamp(),
-        submittedForms: currentSubmittedForms + submittedForms,
-        attendedForms: currentAttendedForms + attendedForms,
-      },
-      { merge: true }
-    );
+    return;
   }
+
+  // Build update payload safely
+  const updateData = {
+    lastLogin: serverTimestamp(),
+  };
+
+  if (submittedFormId) {
+    updateData.submittedForms = arrayUnion(submittedFormId);
+  }
+
+  if (attendedFormId) {
+    updateData.attendedForms = arrayUnion(attendedFormId);
+  }
+
+  await updateDoc(userRef, updateData);
 }

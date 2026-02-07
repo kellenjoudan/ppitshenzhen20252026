@@ -6,9 +6,8 @@ import { db } from "../../lib/firebase";
 import {
   doc,
   getDoc,
-  updateDoc,
-  arrayUnion,
 } from "firebase/firestore";
+import { updateUser } from "../../services/forms";
 
 export default function BarcodeScanner() {
   const videoRef = useRef(null);
@@ -99,9 +98,7 @@ export default function BarcodeScanner() {
               }
 
               // ✅ Mark attendance
-              await updateDoc(userRef, {
-                attendedForms: arrayUnion(formId),
-              });
+              await updateUser(uid, { attendedFormId: formId });
 
               setResultStatus("success");
               setResultMessage("Attendance recorded successfully");
