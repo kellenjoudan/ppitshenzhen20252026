@@ -15,7 +15,8 @@ export default function FormClient({ form }) {
         if (
           value === undefined ||
           value === "" ||
-          (Array.isArray(value) && value.length === 0)
+          (Array.isArray(value) && value.length === 0)||
+          (value instanceof File && value.size === 0)
         ) {
           throw new Error(`Please fill required field: ${q.label}`);
         }
@@ -31,7 +32,7 @@ export default function FormClient({ form }) {
       setSuccess(true);
       setError("");
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : "Submission failed");
     }
   };
 
@@ -142,6 +143,7 @@ export default function FormClient({ form }) {
         {success && <p style={{ color: "green" }}>Form submitted!</p>}
 
         <button
+          type="button"
           onClick={handleSubmit}
           disabled={success}
           className="bg-white text-[#7A1E1E] px-8 py-2 rounded font-semibold hover:opacity-90 disabled:opacity-50"
