@@ -28,11 +28,19 @@ export default function FormClient({ form }) {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0 }}>
+        <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3rem", fontWeight: "bolder" }}>Loading...</div>
+      </div>
+    );
   }
 
   if (!user) {
-    return <p>Please log in to submit this form.</p>;
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0 }}>
+        <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3rem", fontWeight: "bolder" }}>Please log in to submit this form.</div>
+      </div>
+    );
   }
 
   if (submitting) {
@@ -79,7 +87,8 @@ export default function FormClient({ form }) {
         if (
           value === undefined ||
           value === "" ||
-          (Array.isArray(value) && value.length === 0)
+          (Array.isArray(value) && value.length === 0)||
+          (value instanceof File && value.size === 0)
         ) {
           throw new Error(`Please fill required field: ${q.label}`);
         }
@@ -133,7 +142,7 @@ export default function FormClient({ form }) {
       setSuccess(true);
       setError("");
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : "Submission failed");
     } finally {
       setSubmitting(false);
     }
@@ -245,6 +254,7 @@ export default function FormClient({ form }) {
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         <button
+          type="button"
           onClick={handleSubmit}
           disabled={submitting || success}
           className="bg-white text-[#7A1E1E] px-8 py-2 rounded font-semibold

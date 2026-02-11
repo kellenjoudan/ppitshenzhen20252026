@@ -62,7 +62,7 @@ Admin creates → Firestore stores → User fills → Firestore stores → Admin
 
 * Aldo - When submitting, other than calling submitResponse(), also call the new function updateUser(uid, submittedForms=formID). Note: (1). uid can be obtained by calling localStorage.getItem("user-id"), (2). The format of updateUser above MUST be exact (include the submittedForms when typing in the parameters) and replace the formID with the actual formID that is being submitted (same variable as the one in submitResponse()).
 
-* Jennickel - Create a design of the page BarcodeScanner.js (in figma preferrably), and refer to the big image written in Kellen's task. Do final checks on the design of adminform and what user see when they open a form (formClient.js).
+* Jennickel - Create a design of the page BarcodeScanner.js (in figma preferrably), and refer to the big image written in Kellen's task. Do final checks on the design of adminform and what user see when they open a form (formClient.js). Fix the design flaw where in desktop, the hover hitbox for events tab in the header is too big (when you hover under forms tab/user-pfp tab, it still triggers the dropdown of the events tab when its not supposed to).
 
 
 ## DEADLINES:
@@ -88,12 +88,3 @@ Admin creates → Firestore stores → User fills → Firestore stores → Admin
 - https://firebase.google.com/codelabs/firebase-nextjs#0
 - https://www.youtube.com/watch?v=Zj8z-UaD6fo (Firestore realtime update)
 - https://www.youtube.com/watch?v=awd_oYcmrRA (skip to 8:07)
-
-
-PROBLEMS:
-- batik design on home page
-- events button hover area larger than its supposed to be
-- CREATE AUTH CHECK BEFORE SHOWING THE LIST OF FORMS (redirect to withfooter/login)
-- miquel: add form.coverImage and form.headerColor (modify it in forms.js too in both createform and getallforms)
-- kellen: update forms.js to fetch auth, save the responses with their respective emails
-- after that, make the form.status work (page.js in form/ line 64-74)
