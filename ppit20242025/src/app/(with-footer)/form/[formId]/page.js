@@ -1,5 +1,3 @@
-//test page
-
 import FormClient from "./FormClient";
 import { getFormById } from "../../../../services/forms";
 
