@@ -5,6 +5,7 @@ import { auth } from "../../../lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { getAllForms } from "../../../services/forms";
+import { db } from "../../../lib/firebase";
 
 function isDark(color) {
   // convert hex to RGB
@@ -22,6 +23,9 @@ export default function loadAllFormsPage(){
     const [activeQr, setActiveQr] = useState(null);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(undefined);
+    const [admin, setAdmin] = useState(false);
+    const [attendedForms, setAttendedForms] = useState([]);
+    const [submittedForms, setSubmittedForms] = useState([]);
     const router = useRouter();
     const getQrUrl = (qrContent) => `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrContent)}`;
 
@@ -37,12 +41,23 @@ export default function loadAllFormsPage(){
         };
         fetchForms();
 
-        const unsub = onAuthStateChanged(auth, (currentUser) => {
+        const unsub = onAuthStateChanged(auth, async (currentUser) => {
             if (!currentUser) {
                 router.replace("/login");
                 return;
             }
             setUser(currentUser);
+            
+            //set user admin status
+            const userRef = doc(db, "users", currentUser.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (userSnap.exists()) { 
+                const userData = userSnap.data();
+                setAdmin(userData.admin || false);
+                setAttendedForms(userData.attendedForms);
+                setSubmittedForms(userData.submittedForms);
+            }
         });
         return () => unsub();
     }, [router]);
@@ -75,49 +90,45 @@ export default function loadAllFormsPage(){
 
     return (
         <div style={{ paddingTop: "6rem", minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0 }}>
-            {/* LOGIN INFO BODY */}
-            {/* <div className="fixed mt-16 top-6 right-6 flex items-center gap-6 text-right z-50">
-                <div>
-                    <p className="text-sm text-gray-400">Logged in as</p>
-                    <p className="font-semibold">{user.email}</p>
-                </div>
-
-                <button
-                    onClick={async () => {
-                    await signOut(auth);
-                    if (router.pathname === "/") {
-                        router.refresh();
-                    } else {
-                        router.replace("/");
-                    }}}
-                    className="
-                    px-4 py-2
-                    border border-red-500
-                    text-red-500
-                    rounded-full
-                    text-sm
-                    transition
-                    hover:bg-white
-                    hover:text-red-600
-                    "
-                >
-                Log out
-                </button>
-            </div> */}
-            
             {/* FORM CONTENT */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, 30%)", gap: "2rem", padding: "2rem", justifyContent: "center", alignItems: "center" }}>
-                {forms.map((form) => (
+                {forms.map((form) => {
+                    const status = attendedForms.includes(form.id) ? "attended" : submittedForms.includes(form.id) ? "submitted" : "open";
+
+                    const buttonDisabled = status != "open";
+                    const buttonStyle = {
+                        marginBottom: "1rem",
+                        padding: "0.45rem 1.4rem",
+                        borderRadius: "8px",
+                        border: "none",
+                        fontWeight: 600,
+                        fontSize: "0.9rem",
+                        cursor: buttonDisabled ? "not-allowed" : "pointer",
+                        opacity: buttonDisabled ? 0.7 : 1,
+                        pointerEvents: buttonDisabled ? "none" : "auto",
+                        color:
+                        status === "submitted"
+                            ? "#000"
+                            : "white",
+                        background:
+                        status === "submitted"
+                            ? "#fbbf24"
+                            : status === "attended"
+                            ? "#000"
+                            : "#6d28d9",
+                    }
+
+                return (
                     <div key={form.id} style={{ position: "relative", borderRadius: "14px", overflow: "hidden", backgroundSize: "cover", backgroundPosition: "center", boxShadow: "0 10px 30px rgba(0, 0, 0, 0.25)", backgroundImage: `url(/DefaultFormCardBackground.webp)`, }}>
                         <div className="font-montserrat" style={{ background: `${form.headerColor ?? "#5b2cff"}`, color: `${isDark(form.headerColor ?? "#5b2cff") ? "#FFF" : "#000"}`, fontWeight: 600, textAlign: "center", padding: "0.75rem 1rem", fontSize: "1rem", }}> {form.title} </div>
                         
                         <div style={{ position: "relative", height: "30vh", display: "flex", alignItems: "flex-end", justifyContent: "center", }}>
-                            {/* QR BUTTON */}
+                            {/* QR BUTTON (ONLY FOR ADMIN) */}
                             <button
                                 onClick={() => setActiveQr(getQrUrl(`${form.id};${user.uid}`))} // TODO: FETCH USER ID
                                 style={{
                                     display:
-                                        form.status === "registered" || form.status === "attended" ? "flex" : "none",
+                                        admin ? "flex" : "none",
                                     position: "absolute",
                                     top: "10px",
                                     right: "10px",
@@ -138,39 +149,12 @@ export default function loadAllFormsPage(){
 
                             {/* REGISTER BUTTON */}
                             <button className="font-montserrat"
-                                style={{
-                                    marginBottom: "1rem",
-                                    padding: "0.45rem 1.4rem",
-                                    borderRadius: "8px",
-                                    border: "none",
-                                    fontWeight: 600,
-                                    fontSize: "0.9rem",
-                                    cursor:
-                                    form.status === "registered" || form.status === "attended" ? "not-allowed" : "pointer",
-                                    opacity:
-                                    form.status === "registered" || form.status === "attended" ? 0.7 : 1,
-                                    pointerEvents:
-                                    form.status === "registered" || form.status === "attended"
-                                        ? "none"
-                                        : "auto",
-                                    color:
-                                    form.status === "registered"
-                                        ? "#000"
-                                        : form.status === "attended"
-                                        ? "white"
-                                        : "white",
-                                    background:
-                                    form.status === "registered"
-                                        ? "#fbbf24"
-                                        : form.status === "attended"
-                                        ? "#000"
-                                        : "#6d28d9",
-                            }}>
-                            {form.status === "registered" ? "Registered" : form.status === "attended" ? "Attended" : "Register"}
+                                style={ buttonStyle }>
+                            {status === "submitted" ? "Submitted" : status === "attended" ? "Attended" : "Register"}
                             </button>
                         </div> 
                     </div>
-                ))}
+                )})}
 
                 {/* FADE ANIMATION FOR OVERLAY */}
                 <div onClick={() => setActiveQr(null)}
