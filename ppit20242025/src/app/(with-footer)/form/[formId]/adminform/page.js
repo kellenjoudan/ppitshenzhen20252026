@@ -20,7 +20,6 @@ export default function FormAdminBuilder() {
       {
         id: INITIAL_QUESTION_ID,
         type: "text",
-        label: "Nama lengkap peserta", //Custom pertanyaan pertama
         required: false,
         options: [],
       },  
