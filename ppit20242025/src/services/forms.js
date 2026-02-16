@@ -26,8 +26,8 @@ export async function createForm(formData) {
     title: formData.title,
     description: formData.description,
     questions: formData.questions,
-    isActive: true,
-    createdBy: "admin", // replace with auth later
+    isActive: formData.published,
+    createdBy: formData.createdBy,
     createdAt: serverTimestamp(),
   });
 }

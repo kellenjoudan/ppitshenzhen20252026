@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { auth } from "../../../lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { getAllForms } from "../../../services/forms";
+import { getAllForms, createForm } from "../../../services/forms";
 import { db } from "../../../lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 function isDark(color) {
   // convert hex to RGB
@@ -143,18 +144,26 @@ export default function loadAllFormsPage(){
                                     justifyContent: "center",
                                     fontSize: "0.85rem",
                                     zIndex: 2,
-                                    display: "flex"
                                 }}> QR
                             </button>
 
                             {/* REGISTER BUTTON */}
                             <button className="font-montserrat"
-                                style={ buttonStyle }>
-                            {status === "submitted" ? "Submitted" : status === "attended" ? "Attended" : "Register"}
+                                style={ buttonStyle } 
+                                onClick={() => {
+                                    if (admin) {
+                                        router.push(`form/${form.id}/adminform`);
+                                    } else {
+                                        router.push(`form/${form.id}`)
+                                    }
+                                }}>
+                            {admin ? "Edit" : status === "submitted" ? "Submitted" : status === "attended" ? "Attended" : "Register"}
                             </button>
                         </div> 
                     </div>
                 )})}
+
+                
 
                 {/* FADE ANIMATION FOR OVERLAY */}
                 <div onClick={() => setActiveQr(null)}
@@ -188,6 +197,51 @@ export default function loadAllFormsPage(){
                     </div>
                 </div>
             </div> 
+
+            {/* Create New Form Button */}
+            {admin && (
+                <div style={{ marginTop: "2rem", textAlign: "center" }}>
+                    <button
+                    onClick={ async () => {
+                        try {
+                            const formData = {
+                                title: "Untitled Form",
+                                description: "Add Description",
+                                questions: [
+                                    {
+                                    id: "defaultNameQuestion",
+                                    label: "Name",
+                                    required: true,
+                                    type: "text",
+                                    },
+                                ],
+                                published: false,
+                                createdBy: user.uid,
+                            }
+                            const docRef = await createForm(formData);
+
+                            router.push(`/form/${docRef.id}/adminform`);
+
+                        } catch (error) {
+                            console.error(error);
+                        }
+                    }}
+                    style={{
+                        padding: "0.7rem 1.8rem",
+                        borderRadius: "10px",
+                        border: "none",
+                        fontWeight: 600,
+                        fontSize: "1rem",
+                        cursor: "pointer",
+                        background: "#16a34a",
+                        color: "white",
+                        margin: "2rem"
+                    }}>
+                    Create New Form
+                    </button>
+                </div>
+            )}
+
         </div>
     );
 }
