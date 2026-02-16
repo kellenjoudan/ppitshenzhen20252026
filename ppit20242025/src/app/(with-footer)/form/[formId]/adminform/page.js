@@ -20,9 +20,10 @@ export default function FormAdminBuilder() {
       {
         id: INITIAL_QUESTION_ID,
         type: "text",
+        label: "Nama lengkap peserta", //Custom pertanyaan pertama
         required: false,
         options: [],
-      },
+      },  
     ],
   });
 
@@ -46,8 +47,8 @@ export default function FormAdminBuilder() {
   const addNewQuestion = () => {
     const newQuestion = {
       id: generateClientId(),
-      type: "text", // (Short Answer)
-      label: "Type Question",
+      type: "text", 
+      label: "Untitled Question",
       required: false,
       options: [],
     };
@@ -134,7 +135,7 @@ export default function FormAdminBuilder() {
         id: generateClientId(),
         title: "Untitled Form",
         questions: [
-          { id: generateClientId(), type: "text", label: "Type Question", required: false, options: [] },
+          { id: generateClientId(), type: "text", label: "Untitled Question", required: false, options: [] },
         ],
       });
       alert("Form deleted successfully! A new blank form has been created.");
@@ -155,7 +156,7 @@ export default function FormAdminBuilder() {
     { value: "textarea", label: "Paragraph" },
     { value: "radio", label: "Multiple Choice" },
     { value: "checkbox", label: "Checkboxes" },
-    { value: "file", label: "File Upload" }, // File Upload User
+    { value: "file", label: "File Upload" }, 
   ];
 
   return (
@@ -172,7 +173,8 @@ export default function FormAdminBuilder() {
         padding: "1rem 1.5rem",
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
+        marginTop: "4rem" //header turun title ppit
       }}>
         <h1 style={{
           fontSize: "1.5rem",
@@ -419,6 +421,7 @@ export default function FormAdminBuilder() {
                 </select>
               </div>
 
+              {/* Short Answer Preview */}
               {question.type === "text" && (
                 <input
                   type="text"
@@ -436,6 +439,7 @@ export default function FormAdminBuilder() {
                 />
               )}
 
+              {/* Paragraph Preview */}
               {question.type === "textarea" && (
                 <textarea
                   placeholder="Respondent's paragraph answer"
@@ -454,6 +458,7 @@ export default function FormAdminBuilder() {
                 />
               )}
 
+              {/* Multiple Choice/Checkboxes Options */}
               {["radio", "checkbox"].includes(question.type) && (
                 <div style={{
                   marginBottom: "1rem",
@@ -559,6 +564,7 @@ export default function FormAdminBuilder() {
                 </div>
               )}
 
+              {/* Bottom Controls: Required Toggle + Delete Question */}
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -614,6 +620,7 @@ export default function FormAdminBuilder() {
           ))}
         </div>
 
+        {/* Add Question Button */}
         <button
           onClick={addNewQuestion}
           style={{
