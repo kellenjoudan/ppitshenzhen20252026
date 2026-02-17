@@ -242,6 +242,37 @@ export default function loadAllFormsPage(){
                 </div>
             )}
 
+            {/* BARCODE SCANNER BUTTON */}
+            {!admin && (
+                <div style={{ marginTop: "2rem", textAlign: "center" }}>
+                    <button
+                    onClick={() => router.push("Components/BarcodeScanner")}
+                    style={{
+                        alignItems: "center",
+                        gap: "0.6rem",
+                        padding: "0.8rem 1.6rem",
+                        margin: "2rem",
+                        borderRadius: "12px",
+                        border: "none",
+                        fontSize: "1rem",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        background: "linear-gradient(135deg, #0f172a, #1e293b)",
+                        color: "#22c55e",
+                        boxShadow: "0 4px 14px rgba(34,197,94,0.3)",
+                        transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.05)")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                    }>
+                    📷 Scan Barcode
+                    </button>
+                </div>
+            )}
+
         </div>
     );
 }
