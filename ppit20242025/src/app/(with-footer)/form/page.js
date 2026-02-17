@@ -120,12 +120,12 @@ export default function loadAllFormsPage(){
                             ? "#fbbf24"
                             : status === "attended"
                             ? "#000"
-                            : "#6d28d9",
+                            : "#e40000",
                     }
 
                 return (
                     <div key={form.id} style={{ position: "relative", borderRadius: "14px", overflow: "hidden", backgroundSize: "cover", backgroundPosition: "center", boxShadow: "0 10px 30px rgba(0, 0, 0, 0.25)", backgroundImage: `url(/DefaultFormCardBackground.webp)`, }}>
-                        <div className="font-montserrat" style={{ background: `${form.headerColor ?? "#5b2cff"}`, color: `${isDark(form.headerColor ?? "#5b2cff") ? "#FFF" : "#000"}`, fontWeight: 600, textAlign: "center", padding: "0.75rem 1rem", fontSize: "1rem", }}> {form.title} </div>
+                        <div className="font-montserrat" style={{ background: `${form.headerColor ?? "#bf3330"}`, color: `${isDark(form.headerColor ?? "#bf3330") ? "#FFF" : "#000"}`, fontWeight: 600, textAlign: "center", padding: "0.75rem 1rem", fontSize: "1rem", }}> {form.title} </div>
                         
                         <div style={{ position: "relative", height: "30vh", display: "flex", alignItems: "flex-end", justifyContent: "center", }}>
                             {/* QR BUTTON (ONLY FOR ADMIN) */}
@@ -250,7 +250,7 @@ export default function loadAllFormsPage(){
             {!admin && (
                 <div style={{ marginTop: "2rem", textAlign: "center" }}>
                     <button
-                    onClick={() => router.push()}
+                    onClick={() => router.push("scan")}
                     style={{
                         alignItems: "center",
                         gap: "0.6rem",
