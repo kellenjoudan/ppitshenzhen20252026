@@ -70,14 +70,14 @@ export default function loadAllFormsPage(){
     if (user === undefined) {
         return (
         <div className="min-h-screen bg-[#7E0C0E] text-white flex items-center justify-center">
-             <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>Loading session...</div>
+             <div className="font-montserrat text-white" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>Loading session...</div>
         </div>
         );
     };
 
     if (loading) return (
         <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", margin: 0, padding: 0 }}>
-            <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>Fetching forms, please wait...</div>
+            <div className="font-montserrat text-white" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>Fetching forms, please wait...</div>
         </div>
 
     );
@@ -130,7 +130,7 @@ export default function loadAllFormsPage(){
                         <div style={{ position: "relative", height: "30vh", display: "flex", alignItems: "flex-end", justifyContent: "center", }}>
                             {/* QR BUTTON (ONLY FOR ADMIN) */}
                             <button
-                                onClick={() => setActiveQr(getQrUrl(`${form.id};${user.uid}`))} // TODO: FETCH USER ID
+                                onClick={() => setActiveQr(getQrUrl(form.id))}
                                 style={{
                                     display:
                                         admin ? "flex" : "none",
