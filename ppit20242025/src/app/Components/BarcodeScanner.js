@@ -7,7 +7,8 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { updateUser } from "../../services/forms";
+import { updateUser, markAttendance } from "../../services/forms";
+import { auth } from "../../lib/firebase";
 
 export default function BarcodeScanner() {
   const videoRef = useRef(null);
@@ -56,18 +57,22 @@ export default function BarcodeScanner() {
             if (videoRef.current) videoRef.current.srcObject = null;
 
             try {
-              const text = result.text;
+               // Expected format: formId
+              const text = result.text.trim();
 
-              // Expected format: formId;uid
-              if (!text.includes(";")) {
-                throw new Error("Invalid barcode format");
+              if (!text) {
+                throw new Error("Invalid QR code");
               }
 
-              const [formId, uid] = text.split(";");
+              const formId = text;
 
-              if (!formId || !uid) {
-                throw new Error("Invalid barcode data");
+              const currentUser = auth.currentUser;
+
+              if (!currentUser) {
+                throw new Error("User not logged in");
               }
+
+              const uid = currentUser.uid;  
 
               // 🔍 Fetch user document
               const userRef = doc(db, "users", uid);
@@ -99,6 +104,7 @@ export default function BarcodeScanner() {
 
               // ✅ Mark attendance
               await updateUser(uid, { attendedFormId: formId });
+              await markAttendance(formId);
 
               setResultStatus("success");
               setResultMessage("Attendance recorded successfully");

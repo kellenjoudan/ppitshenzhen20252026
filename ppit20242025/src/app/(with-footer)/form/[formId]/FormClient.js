@@ -66,7 +66,7 @@ export default function FormClient({ form }) {
         </h2>
 
         <p className="text-base md:text-md mb-1 text-gray-300">
-          Thank you for your response.
+          Thank you for your registration.
         </p>
 
         <button
