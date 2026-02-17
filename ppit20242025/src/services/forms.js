@@ -85,18 +85,22 @@ export async function submitResponse(formId, questions, answers) {
   });
 
   // GET USER FROM LOCALSTORAGE
-  const user = localStorage.getItem('user-id');
+  const userId = localStorage.getItem('user-id');
 
   // SAVE RESPONSE
-  return await addDoc(collection(db, "responses"), {
+  const docRef = await addDoc(collection(db, "responses"), {
     formId,
     answers,
-
-    // LOGIN INFO (NO AUTH)
-    submittedBy: user,
-    
+    submittedBy: userId,
     submittedAt: serverTimestamp(),
   });
+
+  // UPDATE USER DOCUMENT
+  await updateUser(userId, {
+    submittedFormId: formId,
+  });
+
+  return docRef;
 }
 
 /* =========================

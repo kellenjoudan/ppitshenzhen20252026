@@ -202,7 +202,7 @@ const Header = () => {
 				<div
 					className="
 					absolute top-15
-					h-10 w-full
+					h-10 w-20
 					opacity-0
 					pointer-events-auto
 					"

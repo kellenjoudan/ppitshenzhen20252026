@@ -26,6 +26,7 @@ responses/{responseId} { //ONLY ACCESSIBLE BY ADMIN (REQUIRES LOG IN)
     [questionId]: str | str[]
   },
   submittedAt: timestamp
+  submittedBy: user ID
 }
 ```
 
