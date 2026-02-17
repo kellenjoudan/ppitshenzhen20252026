@@ -119,9 +119,15 @@ export default function Home() {
 					className="w-full h-full"
 				>
 					{/* Base red wave */}
+					<defs>
+						<linearGradient id="downGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+							<stop offset="0%" stopColor="#536b75" />					
+							<stop offset="100%" stopColor="#7E0C0E" />
+						</linearGradient>
+					</defs>
 					<path
 					d="M0 96L48 106.7C96 117 192 139 288 160C384 181 480 181 576 160C672 139 768 96 864 80C960 64 1056 75 1152 96C1248 117 1344 149 1392 165.3L1440 181V320H0V96Z"
-					fill="#7E0C0E"
+					fill="url(#downGradient)"
 					/>
 				</svg>
 				</div>

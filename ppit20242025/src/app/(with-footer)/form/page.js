@@ -120,12 +120,12 @@ export default function loadAllFormsPage(){
                             ? "#fbbf24"
                             : status === "attended"
                             ? "#000"
-                            : "#6d28d9",
+                            : "#e40000",
                     }
 
                 return (
                     <div key={form.id} style={{ position: "relative", borderRadius: "14px", overflow: "hidden", backgroundSize: "cover", backgroundPosition: "center", boxShadow: "0 10px 30px rgba(0, 0, 0, 0.25)", backgroundImage: `url(/DefaultFormCardBackground.webp)`, }}>
-                        <div className="font-montserrat" style={{ background: `${form.headerColor ?? "#5b2cff"}`, color: `${isDark(form.headerColor ?? "#5b2cff") ? "#FFF" : "#000"}`, fontWeight: 600, textAlign: "center", padding: "0.75rem 1rem", fontSize: "1rem", }}> {form.title} </div>
+                        <div className="font-montserrat" style={{ background: `${form.headerColor ?? "#bf3330"}`, color: `${isDark(form.headerColor ?? "#bf3330") ? "#FFF" : "#000"}`, fontWeight: 600, textAlign: "center", padding: "0.75rem 1rem", fontSize: "1rem", }}> {form.title} </div>
                         
                         <div style={{ position: "relative", height: "30vh", display: "flex", alignItems: "flex-end", justifyContent: "center", }}>
                             {/* QR BUTTON (ONLY FOR ADMIN) */}
@@ -242,6 +242,37 @@ export default function loadAllFormsPage(){
                         margin: "2rem"
                     }}>
                     Create New Form
+                    </button>
+                </div>
+            )}
+
+            {/* BARCODE SCANNER BUTTON */}
+            {!admin && (
+                <div style={{ marginTop: "2rem", textAlign: "center" }}>
+                    <button
+                    onClick={() => router.push("scan")}
+                    style={{
+                        alignItems: "center",
+                        gap: "0.6rem",
+                        padding: "0.8rem 1.6rem",
+                        margin: "2rem",
+                        borderRadius: "12px",
+                        border: "none",
+                        fontSize: "1rem",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        background: "#d43535",
+                        color: "white",
+                        boxShadow: "0 4px 14px rgba(21, 114, 55, 0.3)",
+                        transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.05)")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                    }>
+                    📷 Scan Barcode
                     </button>
                 </div>
             )}

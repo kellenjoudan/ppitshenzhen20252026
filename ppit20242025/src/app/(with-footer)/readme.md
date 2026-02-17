@@ -70,12 +70,13 @@ Admin creates → Firestore stores → User fills → Firestore stores → Admin
 >**===DEVELOPMENT PHASE===**
 - 18 Jan => Jennickel UI Design for form layout, admin layout, and components styles (figma) & Kellen finishing firebase config (code as well) ✅
 - 24 Jan => Each members' draft design and algorithms (additional tasks to be done) ✅
-- 31 Jan => Each members' jobdesk (everything should be set by now); tolerance: design and mobile compatibility not finalized (not part of the main goal) (DELAYED)
+- 31 Jan => Each members' jobdesk (everything should be set by now); tolerance: design and mobile compatibility not finalized (not part of the main goal) (DELAYED) ✅
 
 >**===TESTING & DEPLOYMENT PHASE===**
-- 5 Feb => Finish testing for the forms and admin page; note down every improvements that can be made (TEST MOBILE COMPATIBILITY)
-- 8 Feb => Finalization of code (ensure everything is written properly and corrrectly + firebase is working smoothly)
-- 9 Feb => Deployment
+- 5 Feb => Finish testing for the forms and admin page; note down every improvements that can be made (TEST MOBILE COMPATIBILITY) ✅
+- 8 Feb => Finalization of code (ensure everything is written properly and corrrectly + firebase is working smoothly) ✅ User-side Completed
+- 18 Feb => Test for form creation + id's match
+- 19 Feb => Deployment
 
 
 ## !!! NAMING CONVENTIONS (keep it the same across files): !!!
