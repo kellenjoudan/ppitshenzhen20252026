@@ -32,36 +32,40 @@ export default function loadAllFormsPage(){
 
     // GET USER AND FORMS DATA
     useEffect(() => {
-        async function fetchForms() {
-            try {
-                const data = await getAllForms();
-                setForms(data);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchForms();
-
         const unsub = onAuthStateChanged(auth, async (currentUser) => {
             if (!currentUser) {
                 router.replace("/login");
                 return;
             }
-            setUser(currentUser);
-            
-            //set user admin status
-            const userRef = doc(db, "users", currentUser.uid);
-            const userSnap = await getDoc(userRef);
 
-            if (userSnap.exists()) { 
-                const userData = userSnap.data();
-                setAdmin(userData.admin || false);
-                setAttendedForms(userData.attendedForms);
-                setSubmittedForms(userData.submittedForms);
+            setUser(currentUser);
+
+            try {
+                // 🔹 Fetch forms AFTER auth confirmed
+                const data = await getAllForms();
+                setForms(data);
+
+                // 🔹 Fetch user data
+                const userRef = doc(db, "users", currentUser.uid);
+                const userSnap = await getDoc(userRef);
+
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    setAdmin(userData.admin || false);
+                    setAttendedForms(userData.attendedForms || []);
+                    setSubmittedForms(userData.submittedForms || []);
+                }
+
+            } catch (error) {
+                console.error("Error loading data:", error);
+            } finally {
+                setLoading(false);
             }
         });
+
         return () => unsub();
     }, [router]);
+
     
     if (user === undefined) {
         return (
