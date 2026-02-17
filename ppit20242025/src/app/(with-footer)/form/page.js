@@ -250,7 +250,7 @@ export default function loadAllFormsPage(){
             {!admin && (
                 <div style={{ marginTop: "2rem", textAlign: "center" }}>
                     <button
-                    onClick={() => router.push("Components/BarcodeScanner")}
+                    onClick={() => router.push()}
                     style={{
                         alignItems: "center",
                         gap: "0.6rem",
@@ -261,9 +261,9 @@ export default function loadAllFormsPage(){
                         fontSize: "1rem",
                         fontWeight: 600,
                         cursor: "pointer",
-                        background: "linear-gradient(135deg, #0f172a, #1e293b)",
-                        color: "#22c55e",
-                        boxShadow: "0 4px 14px rgba(34,197,94,0.3)",
+                        background: "#d43535",
+                        color: "white",
+                        boxShadow: "0 4px 14px rgba(21, 114, 55, 0.3)",
                         transition: "all 0.2s ease",
                     }}
                     onMouseEnter={(e) =>
