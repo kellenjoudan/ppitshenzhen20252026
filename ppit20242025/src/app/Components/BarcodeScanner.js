@@ -107,7 +107,7 @@ export default function BarcodeScanner() {
               await markAttendance(formId);
 
               setResultStatus("success");
-              setResultMessage("Attendance recorded successfully");
+              setResultMessage("Attendance recorded successfully. Please show this page to our committee.");
             } catch (err) {
               setResultStatus("failure");
               setResultMessage(err.message);
