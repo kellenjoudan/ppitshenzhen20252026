@@ -1,6 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { auth, functions } from "../../../../../lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { httpsCallable } from "firebase/functions";
+
+const createForm = httpsCallable(functions, "createForm");
 
 const INITIAL_QUESTION_ID = "initial-question-1";
 const INITIAL_FORM_ID = "initial-form-1";
@@ -16,18 +21,26 @@ export default function FormAdminBuilder() {
   const [form, setForm] = useState({
     id: INITIAL_FORM_ID,
     title: "Untitled Form",
+    description: "",
+    headerColor: "#7E0C0E", 
+    coverImage: "", 
     questions: [
       {
         id: INITIAL_QUESTION_ID,
         type: "text",
+        label: "Type Question", 
         required: false,
         options: [],
-      },  
+      },
     ],
   });
 
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [coverImageError, setCoverImageError] = useState(""); 
+  const [user, setUser] = useState(null); 
+  const [isAdmin, setIsAdmin] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (form.id === INITIAL_FORM_ID) {
@@ -39,15 +52,49 @@ export default function FormAdminBuilder() {
     }
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        localStorage.setItem("uid", currentUser.uid);
+        
+        try {
+          const res = await fetch(`/api/check-admin?uid=${currentUser.uid}`);
+          const data = await res.json();
+          setIsAdmin(data.isAdmin);
+
+          if (!data.isAdmin) {
+            window.location.href = "/user-forms";
+          }
+        } catch (error) {
+          alert("Gagal memverifikasi status admin!");
+          setIsAdmin(false);
+        }
+      } else {
+        window.location.href = "/login";
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const updateFormMeta = (field, value) => {
+    if (field === "coverImage") {
+      if (value && !value.endsWith(".webp")) {
+        setCoverImageError("Cover image harus berformat .webp!");
+      } else {
+        setCoverImageError("");
+      }
+    }
     setForm({ ...form, [field]: value });
   };
 
+  // addNewQuestion
   const addNewQuestion = () => {
     const newQuestion = {
       id: generateClientId(),
-      type: "text", 
-      label: "Untitled Question",
+      type: "text",
+      label: "Type Question",
       required: false,
       options: [],
     };
@@ -55,6 +102,7 @@ export default function FormAdminBuilder() {
     setForm({ ...form, questions: [...form.questions, newQuestion] });
   };
 
+  // deleteQuestion
   const deleteQuestion = (questionId) => {
     setForm({
       ...form,
@@ -62,6 +110,7 @@ export default function FormAdminBuilder() {
     });
   };
 
+  // updateQuestion
   const updateQuestion = (questionId, field, value) => {
     setForm({
       ...form,
@@ -71,6 +120,7 @@ export default function FormAdminBuilder() {
     });
   };
 
+  // changeQuestionType
   const changeQuestionType = (questionId, newType) => {
     setForm({
       ...form,
@@ -84,6 +134,7 @@ export default function FormAdminBuilder() {
     });
   };
 
+  // addOption 
   const addOption = (questionId) => {
     setForm({
       ...form,
@@ -95,6 +146,7 @@ export default function FormAdminBuilder() {
     });
   };
 
+  // deleteOption
   const deleteOption = (questionId, optionIndex) => {
     setForm({
       ...form,
@@ -117,11 +169,41 @@ export default function FormAdminBuilder() {
     });
   };
 
-  const publishForm = () => {
+  const publishForm = async () => {
     if (showPublishConfirm) {
-      console.log("Form Published:", form);
-      alert("Form published successfully! It's now live for respondents.");
-      setShowPublishConfirm(false);
+      if (coverImageError) {
+        alert(coverImageError);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const response = await createForm({
+          title: form.title,
+          description: form.description,
+          questions: form.questions,
+          headerColor: form.headerColor,
+          coverImage: form.coverImage,
+        });
+
+        alert(`Form berhasil dipublikasi! Form ID: ${response.data.formId}`);
+        setShowPublishConfirm(false);
+
+        setForm({
+          id: generateClientId(),
+          title: "Untitled Form",
+          description: "",
+          headerColor: "#7E0C0E",
+          coverImage: "",
+          questions: [
+            { id: generateClientId(), type: "text", label: "Type Question", required: false, options: [] },
+          ],
+        });
+      } catch (error) {
+        alert(`Error: ${error.message}`);
+      } finally {
+        setLoading(false);
+      }
     } else {
       setShowPublishConfirm(true);
       setShowDeleteConfirm(false);
@@ -133,8 +215,11 @@ export default function FormAdminBuilder() {
       setForm({
         id: generateClientId(),
         title: "Untitled Form",
+        description: "",
+        headerColor: "#7E0C0E",
+        coverImage: "",
         questions: [
-          { id: generateClientId(), type: "text", label: "Untitled Question", required: false, options: [] },
+          { id: generateClientId(), type: "text", label: "Type Question", required: false, options: [] },
         ],
       });
       alert("Form deleted successfully! A new blank form has been created.");
@@ -155,13 +240,29 @@ export default function FormAdminBuilder() {
     { value: "textarea", label: "Paragraph" },
     { value: "radio", label: "Multiple Choice" },
     { value: "checkbox", label: "Checkboxes" },
-    { value: "file", label: "File Upload" }, 
+    { value: "file", label: "File Upload" },
   ];
+
+  if (!user) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
+        <p style={{ color: "white", fontSize: "1.2rem" }}>Loading...</p>
+      </div>
+    );
+  }
+
+  if (user && !isAdmin) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
+        <p style={{ color: "white", fontSize: "1.2rem" }}>Redirecting to user page...</p>
+      </div>
+    );
+  }
 
   return (
     <div style={{
       minHeight: "100vh",
-      backgroundColor: "#7E0C0E",
+      backgroundColor: form.headerColor, 
       fontFamily: "Arial, sans-serif",
       margin: 0,
       padding: 0
@@ -172,8 +273,7 @@ export default function FormAdminBuilder() {
         padding: "1rem 1.5rem",
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "4rem" //header turun title ppit
+        alignItems: "center"
       }}>
         <h1 style={{
           fontSize: "1.5rem",
@@ -247,35 +347,37 @@ export default function FormAdminBuilder() {
             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
               <button
                 onClick={publishForm}
+                disabled={loading}
                 style={{
                   backgroundColor: "#10b981",
                   color: "white",
                   padding: "0.5rem 1rem",
                   borderRadius: "0.375rem",
                   border: "none",
-                  cursor: "pointer",
+                  cursor: loading ? "not-allowed" : "pointer",
                   fontSize: "0.9rem",
                   transition: "background-color 0.2s"
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = "#059669"}
-                onMouseOut={(e) => e.target.style.backgroundColor = "#10b981"}
+                onMouseOver={(e) => !loading && (e.target.style.backgroundColor = "#059669")}
+                onMouseOut={(e) => !loading && (e.target.style.backgroundColor = "#10b981")}
               >
-                Confirm Publish
+                {loading ? "Publishing..." : "Confirm Publish"}
               </button>
               <button
                 onClick={cancelConfirmation}
+                disabled={loading}
                 style={{
                   backgroundColor: "#f3f4f6",
                   color: "#374151",
                   padding: "0.5rem 1rem",
                   borderRadius: "0.375rem",
                   border: "1px solid #e5e7eb",
-                  cursor: "pointer",
+                  cursor: loading ? "not-allowed" : "pointer",
                   fontSize: "0.9rem",
                   transition: "background-color 0.2s"
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = "#e5e7eb"}
-                onMouseOut={(e) => e.target.style.backgroundColor = "#f3f4f6"}
+                onMouseOver={(e) => !loading && (e.target.style.backgroundColor = "#e5e7eb")}
+                onMouseOut={(e) => !loading && (e.target.style.backgroundColor = "#f3f4f6")}
               >
                 Cancel
               </button>
@@ -356,6 +458,95 @@ export default function FormAdminBuilder() {
           />
         </div>
 
+        <div style={{
+          backgroundColor: "white",
+          borderRadius: "0.5rem",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+          border: "1px solid #e5e7eb",
+          padding: "1.5rem",
+          marginBottom: "2rem"
+        }}>
+          <h2 style={{
+            fontSize: "1.25rem",
+            fontWeight: "600",
+            color: "#111827",
+            margin: "0 0 1.5rem 0"
+          }}>Form Appearance</h2>
+
+          <div style={{ marginBottom: "1.5rem" }}>
+            <label style={{
+              display: "block",
+              fontSize: "0.9rem",
+              color: "#374151",
+              marginBottom: "0.5rem"
+            }}>Header Color (Hex Code)</label>
+            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <input
+                type="color"
+                value={form.headerColor}
+                onChange={(e) => updateFormMeta("headerColor", e.target.value)}
+                style={{
+                  width: "3rem",
+                  height: "3rem",
+                  border: "none",
+                  borderRadius: "0.25rem",
+                  cursor: "pointer"
+                }}
+              />
+              <input
+                type="text"
+                value={form.headerColor}
+                onChange={(e) => {
+                  const hexPattern = /^#([0-9A-Fa-f]{6})$/;
+                  if (hexPattern.test(e.target.value) || e.target.value === "") {
+                    updateFormMeta("headerColor", e.target.value);
+                  }
+                }}
+                style={{
+                  flex: 1,
+                  padding: "0.75rem",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "0.375rem",
+                  fontSize: "0.9rem",
+                  color: "#374151"
+                }}
+                placeholder="#7E0C0E"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label style={{
+              display: "block",
+              fontSize: "0.9rem",
+              color: "#374151",
+              marginBottom: "0.5rem"
+            }}>Cover Image URL (WebP only)</label>
+            <input
+              type="text"
+              value={form.coverImage}
+              onChange={(e) => updateFormMeta("coverImage", e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                border: `1px solid ${coverImageError ? "#ef4444" : "#e5e7eb"}`,
+                borderRadius: "0.375rem",
+                fontSize: "0.9rem",
+                color: "#374151"
+              }}
+              placeholder="https://example.com/cover-image.webp"
+            />
+            {coverImageError && (
+              <p style={{
+                color: "#ef4444",
+                fontSize: "0.8rem",
+                marginTop: "0.5rem",
+                marginBottom: 0
+              }}>{coverImageError}</p>
+            )}
+          </div>
+        </div>
+
         <div style={{ marginBottom: "2rem" }}>
           {form.questions.map((question) => (
             <div
@@ -399,7 +590,6 @@ export default function FormAdminBuilder() {
                   onBlur={(e) => e.target.style.borderBottom = "1px solid transparent"}
                   placeholder="Question"
                 />
-                {/* REMOVED: Media button (🖼️) */}
                 <select
                   value={question.type}
                   onChange={(e) => changeQuestionType(question.id, e.target.value)}
@@ -420,7 +610,6 @@ export default function FormAdminBuilder() {
                 </select>
               </div>
 
-              {/* Short Answer Preview */}
               {question.type === "text" && (
                 <input
                   type="text"
@@ -434,11 +623,10 @@ export default function FormAdminBuilder() {
                     color: "#6b7280",
                     backgroundColor: "#f9fafb"
                   }}
-                  readOnly 
+                  readOnly
                 />
               )}
 
-              {/* Paragraph Preview */}
               {question.type === "textarea" && (
                 <textarea
                   placeholder="Respondent's paragraph answer"
@@ -457,7 +645,6 @@ export default function FormAdminBuilder() {
                 />
               )}
 
-              {/* Multiple Choice/Checkboxes Options */}
               {["radio", "checkbox"].includes(question.type) && (
                 <div style={{
                   marginBottom: "1rem",
@@ -478,7 +665,7 @@ export default function FormAdminBuilder() {
                         borderRadius: question.type === "radio" ? "50%" : "0.25rem",
                         flexShrink: 0
                       }}></div>
-                      
+
                       <input
                         type="text"
                         value={option}
@@ -493,7 +680,7 @@ export default function FormAdminBuilder() {
                         }}
                         placeholder="Option"
                       />
-                      
+
                       <button
                         onClick={() => deleteOption(question.id, index)}
                         disabled={question.options.length === 1}
@@ -546,7 +733,6 @@ export default function FormAdminBuilder() {
                 </div>
               )}
 
-              {/* File Upload Info Box (KEPT) */}
               {question.type === "file" && (
                 <div style={{
                   display: "flex",
@@ -563,7 +749,6 @@ export default function FormAdminBuilder() {
                 </div>
               )}
 
-              {/* Bottom Controls: Required Toggle + Delete Question */}
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -619,7 +804,6 @@ export default function FormAdminBuilder() {
           ))}
         </div>
 
-        {/* Add Question Button */}
         <button
           onClick={addNewQuestion}
           style={{
