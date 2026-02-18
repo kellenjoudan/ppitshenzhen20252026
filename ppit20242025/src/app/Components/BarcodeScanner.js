@@ -107,7 +107,7 @@ export default function BarcodeScanner() {
               await markAttendance(formId);
 
               setResultStatus("success");
-              setResultMessage("Attendance recorded successfully");
+              setResultMessage("Attendance recorded successfully. \nPlease show this page to our committee.");
             } catch (err) {
               setResultStatus("failure");
               setResultMessage(err.message);
@@ -172,7 +172,7 @@ export default function BarcodeScanner() {
               >
                 {resultStatus === "success" ? "Success" : "Failed"}
               </div>
-              <p className="text-white text-sm">{resultMessage}</p>
+              <p className="text-white text-sm" style={{ whiteSpace: "pre-line" }}>{resultMessage}</p>
             </div>
           )}
         </div>

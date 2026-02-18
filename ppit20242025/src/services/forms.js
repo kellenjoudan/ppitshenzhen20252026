@@ -110,7 +110,7 @@ export async function submitResponse(formId, questions, answers) {
   });
 
   // 🔹 UPDATE GOOGLE SHEETS
-  await fetch("https://script.google.com/macros/s/AKfycbykKBcR4K3Y2elhPzepz8QN7hLU-d1OxehOYvsHb01AiLSqxVHkIG5myNpme_9Ixx0H/exec", {
+  await fetch("https://script.google.com/macros/s/AKfycbzcLclk2Se9LlFIcLiCQUutSwaNqvNc_mXx35tpG4-Hy0i0a5rDvVYVMTYrG11L6lZu/exec", {
     method: "POST",
     body: JSON.stringify({
       type: "submission",
@@ -250,7 +250,7 @@ export async function markAttendance(formId) {
   });
 
   // 🔹 UPDATE GOOGLE SHEETS
-  await fetch("https://script.google.com/macros/s/AKfycbx6aGHTuelP56RXt3lyU1OHdEGr8e9CTOFfdkcH6vuV6oxfFVaBER-H6V_gMx1Xui_K/exec", {
+  await fetch("https://script.google.com/macros/s/AKfycbzcLclk2Se9LlFIcLiCQUutSwaNqvNc_mXx35tpG4-Hy0i0a5rDvVYVMTYrG11L6lZu/exec", {
     method: "POST",
     body: JSON.stringify({
       type: "attendance",
