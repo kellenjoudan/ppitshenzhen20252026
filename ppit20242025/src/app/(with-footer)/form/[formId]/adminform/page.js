@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import { auth, functions } from "../../../../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { httpsCallable } from "firebase/functions";
+import { useRouter } from "next/navigation";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../../../../lib/firebase";
+import { useParams } from "next/navigation";
 
 const createForm = httpsCallable(functions, "createForm");
 
@@ -18,6 +22,9 @@ const generateClientId = () => {
 };
 
 export default function FormAdminBuilder() {
+  const router = useRouter();
+  const params = useParams();
+  const formId = params?.formId; 
   const [form, setForm] = useState({
     id: INITIAL_FORM_ID,
     title: "Untitled Form",
@@ -38,42 +45,72 @@ export default function FormAdminBuilder() {
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [coverImageError, setCoverImageError] = useState(""); 
-  const [user, setUser] = useState(null); 
-  const [isAdmin, setIsAdmin] = useState(false); 
+  const [user, setUser] = useState(undefined);
+  const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (form.id === INITIAL_FORM_ID) {
-      setForm((prev) => ({
-        ...prev,
-        id: generateClientId(),
-        questions: prev.questions.map((q) => ({ ...q, id: generateClientId() })),
-      }));
+  if (!formId) return;
+
+  const fetchForm = async () => {
+    try {
+      const formRef = doc(db, "forms", formId);
+      const formSnap = await getDoc(formRef);
+
+      if (!formSnap.exists()) {
+        alert("Form not found");
+        router.push("/admin");
+        return;
+      }
+
+      const data = formSnap.data();
+
+      setForm({
+        id: formId,
+        title: data.title || "Untitled Form",
+        description: data.description || "",
+        headerColor: data.headerColor || "#7E0C0E",
+        coverImage: data.coverImage || "",
+        questions: data.questions?.map((q) => ({
+          id: q.id || generateClientId(),
+          type: q.type,
+          label: q.label,
+          required: q.required || false,
+          options: q.options || [],
+        })) || [],
+      });
+
+    } catch (error) {
+      console.error(error);
+      alert("Failed to load form.");
     }
-  }, []);
+  };
+
+  fetchForm();
+}, [formId]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        localStorage.setItem("uid", currentUser.uid);
-        
-        try {
-          const res = await fetch(`/api/check-admin?uid=${currentUser.uid}`);
-          const data = await res.json();
-          setIsAdmin(data.isAdmin);
-
-          if (!data.isAdmin) {
-            window.location.href = "/user-forms";
-          }
-        } catch (error) {
-          alert("Gagal memverifikasi status admin!");
-          setIsAdmin(false);
-        }
-      } else {
-        window.location.href = "/login";
+      if (!currentUser) {
+          router.replace("/login");
+          return;
       }
-    });
+
+      setUser(currentUser);
+        
+      try {
+        // 🔹 Fetch user data
+        const userRef = doc(db, "users", currentUser.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+            const userData = userSnap.data();
+            setAdmin(userData.admin || false);
+        }
+      } catch (error) {
+        alert("Gagal memverifikasi status admin!");
+      }
+    }); 
 
     return () => unsubscribe();
   }, []);
@@ -170,14 +207,36 @@ export default function FormAdminBuilder() {
   };
 
   const publishForm = async () => {
-    if (showPublishConfirm) {
-      if (coverImageError) {
-        alert(coverImageError);
-        return;
-      }
+    if (!showPublishConfirm) {
+      setShowPublishConfirm(true);
+      setShowDeleteConfirm(false);
+      return;
+    }
 
-      setLoading(true);
-      try {
+    if (coverImageError) {
+      alert(coverImageError);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // 🔥 IF EDITING EXISTING FORM → UPDATE
+      if (formId) {
+        const formRef = doc(db, "forms", formId);
+
+        await updateDoc(formRef, {
+          title: form.title,
+          description: form.description,
+          headerColor: form.headerColor,
+          coverImage: form.coverImage,
+          questions: form.questions,
+        });
+
+        alert("Form updated successfully!");
+      } 
+      // 🔥 IF CREATING NEW FORM → CALL FUNCTION
+      else {
         const response = await createForm({
           title: form.title,
           description: form.description,
@@ -186,29 +245,19 @@ export default function FormAdminBuilder() {
           coverImage: form.coverImage,
         });
 
-        alert(`Form berhasil dipublikasi! Form ID: ${response.data.formId}`);
-        setShowPublishConfirm(false);
-
-        setForm({
-          id: generateClientId(),
-          title: "Untitled Form",
-          description: "",
-          headerColor: "#7E0C0E",
-          coverImage: "",
-          questions: [
-            { id: generateClientId(), type: "text", label: "Type Question", required: false, options: [] },
-          ],
-        });
-      } catch (error) {
-        alert(`Error: ${error.message}`);
-      } finally {
-        setLoading(false);
+        alert(`Form created! Form ID: ${response.data.formId}`);
       }
-    } else {
-      setShowPublishConfirm(true);
-      setShowDeleteConfirm(false);
+
+      setShowPublishConfirm(false);
+
+    } catch (error) {
+      console.error(error);
+      alert("Error: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const deleteForm = () => {
     if (showDeleteConfirm) {
@@ -243,7 +292,7 @@ export default function FormAdminBuilder() {
     { value: "file", label: "File Upload" },
   ];
 
-  if (!user) {
+  if (user === undefined) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
         <p style={{ color: "white", fontSize: "1.2rem" }}>Loading...</p>
@@ -251,7 +300,7 @@ export default function FormAdminBuilder() {
     );
   }
 
-  if (user && !isAdmin) {
+  if (user && !admin) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
         <p style={{ color: "white", fontSize: "1.2rem" }}>Redirecting to user page...</p>
@@ -264,7 +313,7 @@ export default function FormAdminBuilder() {
       minHeight: "100vh",
       backgroundColor: form.headerColor, 
       fontFamily: "Arial, sans-serif",
-      margin: 0,
+      margin: "4rem auto 0 auto",
       padding: 0
     }}>
       <header style={{
