@@ -200,7 +200,7 @@ export default function CommitteeCarousel({ input }) {
 
 				{/* Main Content */}
 				<div className="flex xl:flex-row flex-col items-center justify-center xl:px-[8%] lg:pb-16 pb-12 mt-8">
-					<div className="relative h-[55vh] sm:h-[60vh] lg:h-[80vh] overflow-hidden rounded-lg shadow-lg flex items-center justify-center xl:ml-auto xl:mr-0 mx-auto aspect-[4/5]">
+					<div className="relative h-[55vh] sm:h-[60vh] lg:h-[80vh] overflow-hidden rounded-lg flex items-center justify-center xl:ml-auto xl:mr-0 mx-auto aspect-[4/5]">
 						{sections.map((section, index) => (
 							<Image
 							key={section.id}

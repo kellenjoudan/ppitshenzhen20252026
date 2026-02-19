@@ -81,7 +81,7 @@ export default async function EventPage({ params }) {
       </p>
       </section>
 
-      <div className="relative z-10">
+      <div className="relative z-10 mb-5">
         <EventTabs slug={slug} events={events} />
         <EventsGallery folder={`events/${slug}/${eventName}`} />
       </div>

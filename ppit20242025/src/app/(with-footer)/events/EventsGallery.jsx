@@ -20,10 +20,10 @@ export default function EventsGallery({ folder }) {
 
     const data = await res.json();
 
-    setImages((prev) => [
-      ...prev,
-      ...data.images.filter((img) => !prev.includes(img)), // ✅ dedupe
-    ]);
+    setImages((prev) => {
+      const merged = [...prev, ...data.images];
+      return [...new Set(merged)];
+    });
 
     setCursor(data.nextCursor);
     setLoading(false);
@@ -49,22 +49,51 @@ export default function EventsGallery({ folder }) {
     return () => observer.disconnect();
   }, [cursor]);
 
+
+  function MasonryImage({ src }) {
+    const ref = useRef(null);
+
+    function handleLoad(e) {
+      const grid = ref.current?.parentElement;
+      const rowHeight = 10;
+      const rowGap = 16; // gap-4 = 1rem = 16px
+
+      const height = e.target.getBoundingClientRect().height;
+      const span = Math.ceil((height + rowGap) / (rowHeight + rowGap));
+
+      ref.current.style.gridRowEnd = `span ${span}`;
+    }
+
+    return (
+      <div ref={ref}>
+        <CldImage
+          src={src}
+          width={600}
+          height={800}
+          alt="Event photo"
+          className="rounded-xl w-full h-auto"
+          loading="lazy"
+          onLoad={handleLoad}
+        />
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className="columns-2 md:columns-3 lg:columns-4 gap-4 px-6">
-      {images.map((img) => (
-        <div key={img} className="break-inside-avoid mb-4">
-          <CldImage
-            src={img}
-            width={600}
-            height={800}
-            alt="Event photo"
-            className="rounded-xl w-full"
-            loading="lazy"
-          />
-        </div>
-      ))}
-    </div>
+      <div
+        className="
+          grid
+          grid-cols-2 md:grid-cols-3 lg:grid-cols-4
+          gap-4 px-6
+          auto-rows-[10px]
+        "
+      >
+        {images.map((img) => (
+          <MasonryImage key={img} src={img} />
+        ))}
+
+      </div>
 
       {cursor && (
         <div ref={loaderRef} className="h-16 text-center text-gray-400">
