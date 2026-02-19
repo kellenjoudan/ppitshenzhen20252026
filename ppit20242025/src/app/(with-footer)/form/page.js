@@ -211,6 +211,7 @@ export default function loadAllFormsPage(){
                             const formData = {
                                 title: "Untitled Form",
                                 description: "Add Description",
+                                headerColor: "#7E0C0E",
                                 questions: [
                                     {
                                     id: "Name",
@@ -222,9 +223,12 @@ export default function loadAllFormsPage(){
                                 published: false,
                                 createdBy: user.uid,
                             }
-                            const docRef = await createForm(formData);
+                            
+                            localStorage.setItem("newFormDraft", JSON.stringify(formData)); // Store temporarily
+                            router.push("/form/new/adminform");
 
-                            router.push(`/form/${docRef.id}/adminform`);
+                            //const docRef = await createForm(formData);
+                            //router.push(`/form/${docRef.id}/adminform`);
 
                         } catch (error) {
                             console.error(error);

@@ -1,15 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth, functions } from "../../../../../lib/firebase";
+import { auth } from "../../../../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { httpsCallable } from "firebase/functions";
 import { useRouter } from "next/navigation";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../../../lib/firebase";
 import { useParams } from "next/navigation";
-
-const createForm = httpsCallable(functions, "createForm");
+import { createForm } from "../../../../../services/forms";
 
 const INITIAL_QUESTION_ID = "initial-question-1";
 
@@ -24,6 +22,7 @@ export default function FormAdminBuilder() {
   const router = useRouter();
   const params = useParams();
   const formId = params?.formId; 
+
   const [form, setForm] = useState({
     id: null,
     title: "Untitled Form",
@@ -49,7 +48,17 @@ export default function FormAdminBuilder() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-  if (!formId) return;
+
+  if (formId === "new") {
+    const draft = localStorage.getItem("newFormDraft");
+
+    if (draft) {
+      setForm(JSON.parse(draft));
+      localStorage.removeItem("newFormDraft");
+    }
+
+    return;
+  }
 
   const fetchForm = async () => {
     try {
@@ -220,41 +229,41 @@ export default function FormAdminBuilder() {
     setLoading(true);
 
     try {
-      // 🔥 IF EDITING EXISTING FORM → UPDATE
-      if (formId) {
+      const isEditing = formId && formId !== "new";
+
+      // 🔵 EDIT EXISTING FORM
+      if (isEditing) {
         const formRef = doc(db, "forms", formId);
 
         await updateDoc(formRef, {
-          title: form.title,
-          description: form.description,
-          headerColor: form.headerColor,
-          coverImage: form.coverImage,
-          questions: form.questions,
+            title: form.title,
+            description: form.description,
+            headerColor: form.headerColor,
+            coverImage: form.coverImage,
+            questions: form.questions,
         });
 
         alert("Form updated successfully!");
       } 
-      // 🔥 IF CREATING NEW FORM → CALL FUNCTION
+      
+      // 🟢 CREATE NEW FORM
       else {
         const response = await createForm({
-          title: form.title,
-          description: form.description,
-          questions: form.questions,
-          headerColor: form.headerColor,
-          coverImage: form.coverImage,
-          published: true,
-        });
+            title: form.title,
+            description: form.description,
+            questions: form.questions,
+            headerColor: form.headerColor,
+            coverImage: form.coverImage,
+            published: true,
+            createdBy: user.uid,
+          });
 
-        const newId = response.data.formId;
-
-        setForm((prev) => ({
-          ...prev,
-          id: newId,
-        }));
+        const newId = response.id;
 
         alert("Form created successfully!");
-        router.replace(`/form/${newId}/adminform`);
 
+        // Replace URL so page becomes editing mode
+        router.replace(`/form/${newId}/adminform`);
       }
 
       setShowPublishConfirm(false);
@@ -267,24 +276,51 @@ export default function FormAdminBuilder() {
     }
   };
 
-
-  const deleteForm = () => {
-    if (showDeleteConfirm) {
-      setForm({
-        id: generateClientId(),
-        title: "Untitled Form",
-        description: "",
-        headerColor: "#7E0C0E",
-        coverImage: "",
-        questions: [
-          { id: generateClientId(), type: "text", label: "Type Question", required: false, options: [] },
-        ],
-      });
-      alert("Form deleted successfully! A new blank form has been created.");
-      setShowDeleteConfirm(false);
-    } else {
+  const deleteForm = async () => {
+    if (!showDeleteConfirm) {
       setShowDeleteConfirm(true);
       setShowPublishConfirm(false);
+      return;
+    }
+
+    try {
+      const isEditing = formId && formId !== "new";
+
+      // 🔴 If editing existing form → delete from Firestore
+      if (isEditing) {
+        await deleteDoc(doc(db, "forms", formId));
+
+        alert("Form deleted successfully!");
+        router.replace("/form/new/adminform"); // go to blank builder
+      } 
+      
+      // 🟡 If it's a new unsaved form → just reset state
+      else {
+        setForm({
+          id: null,
+          title: "Untitled Form",
+          description: "",
+          headerColor: "#7E0C0E",
+          coverImage: "",
+          questions: [
+            {
+              id: generateClientId(),
+              type: "text",
+              label: "Type Question",
+              required: false,
+              options: [],
+            },
+          ],
+        });
+
+        alert("Blank form reset.");
+      }
+
+      setShowDeleteConfirm(false);
+
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Failed to delete form.");
     }
   };
 
