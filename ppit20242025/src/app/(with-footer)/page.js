@@ -119,30 +119,15 @@ export default function Home() {
 					className="w-full h-full"
 				>
 					{/* Base red wave */}
-					<defs>
-						<linearGradient id="downGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-							<stop offset="0%" stopColor="#536b75" />					
-							<stop offset="100%" stopColor="#7E0C0E" />
-						</linearGradient>
-					</defs>
 					<path
 					d="M0 96L48 106.7C96 117 192 139 288 160C384 181 480 181 576 160C672 139 768 96 864 80C960 64 1056 75 1152 96C1248 117 1344 149 1392 165.3L1440 181V320H0V96Z"
-					fill="url(#downGradient)"
+					fill="#7E0C0E"
 					/>
 				</svg>
 				</div>
 			</div>
 			
 			<div className="relative overflow-hidden">
-			{/* Right repeating batik */}
-			<div
-				className="absolute w-[120px] sm:w-[230px] h-full inset-y-0 bg-[url('/Home/motif_batik_hp.webp')] sm:bg-[url('/Home/motif_batik.webp')] opacity-10 bg-repeat-y z-10 right-0 bg-[length:120px_auto] sm:bg-[length:230px_auto]"
-			/>
-
-			{/* Left repeating batik */}
-			<div
-				className="absolute w-[120px] sm:w-[230px] h-full inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik_hp.webp')] sm:bg-[url('/Home/motif_batik.webp')] opacity-10 bg-repeat-y z-10 left-0 bg-[length:120px_auto]  sm:bg-[length:230px_auto]"
-			/>
 
 			{/* About Section */}
 			<section
@@ -206,7 +191,25 @@ export default function Home() {
 			</section>
 
 			{/* Vision & Mission */}
-			<section className="bg-[#7E0C0E] pt-12 pb-20 px-4 md:px-8">
+			<section className="relative bg-[#7E0C0E] pt-12 pb-20 px-4 md:px-8">
+				{/* Right repeating batik */}
+				<div
+					className="absolute top-0 right-0 h-full w-[120px] sm:w-[230px]
+					bg-[url('/Home/motif_batik_hp.webp')] 
+					sm:bg-[url('/Home/motif_batik.webp')]
+					opacity-10 bg-repeat-y z-0
+					bg-[length:120px_auto] sm:bg-[length:230px_auto]"
+				/>
+
+				{/* Left repeating batik */}
+				<div
+					className="absolute top-0 left-0 h-full w-[120px] sm:w-[230px]
+					scale-x-[-1]
+					bg-[url('/Home/motif_batik_hp.webp')] 
+					sm:bg-[url('/Home/motif_batik.webp')]
+					opacity-10 bg-repeat-y z-0
+					bg-[length:120px_auto] sm:bg-[length:230px_auto]"
+				/>
 				<div className="max-w-[90rem] mx-auto flex flex-col md:flex-row text-white">
 					<div className="ml-4">
 						<div className="flex flex-col md:flex-row">
