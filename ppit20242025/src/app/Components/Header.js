@@ -148,7 +148,7 @@ const Header = () => {
 			<nav
 				className={`md:flex gap-10 ${
 					menuOpen
-						? "flex flex-col absolute top-[70px] right-0 w-[43%] p-5 text-[#8C0000] shadow-lg z-[999]"
+						? "flex flex-col absolute top-[70px] right-0 w-[43%] p-5 text-[#8C0000] z-[999]"
 						: "hidden"
 				}`}
 			>
