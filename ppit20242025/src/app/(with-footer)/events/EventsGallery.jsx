@@ -21,33 +21,50 @@ export default function EventsGallery({ folder }) {
     const data = await res.json();
 
     setImages((prev) => {
-      const merged = [...prev, ...data.images];
-      return [...new Set(merged)];
+      const existing = new Set(prev);
+      const filtered = data.images.filter((img) => !existing.has(img));
+      return [...prev, ...filtered];
     });
 
     setCursor(data.nextCursor);
     setLoading(false);
   }
 
-  // 🔥 Reset + load first batch on folder change
   useEffect(() => {
-    setImages([]);
-    setCursor(null);
-    loadMore();
+    async function resetAndLoad() {
+      setLoading(true);
+      setImages([]);
+      setCursor(null);
+
+      const res = await fetch(`/api/load-images?folder=${folder}`);
+      const data = await res.json();
+
+      setImages(data.images);
+      setCursor(data.nextCursor);
+      setLoading(false);
+    }
+
+    resetAndLoad();
   }, [folder]);
+
 
   // Infinite scroll
   useEffect(() => {
-    if (!loaderRef.current || !cursor) return;
+    if (!loaderRef.current) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => entry.isIntersecting && loadMore(),
+      ([entry]) => {
+        if (entry.isIntersecting && cursor && !loading) {
+          loadMore();
+        }
+      },
       { rootMargin: "300px" }
     );
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [cursor]);
+  }, [cursor, loading]);
+
 
 
   function MasonryImage({ src }) {
@@ -74,6 +91,7 @@ export default function EventsGallery({ folder }) {
           className="rounded-xl w-full h-auto"
           loading="lazy"
           onLoad={handleLoad}
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
         />
       </div>
     );
