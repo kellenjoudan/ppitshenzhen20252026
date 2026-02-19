@@ -70,16 +70,27 @@ export default function EventsGallery({ folder }) {
   function MasonryImage({ src }) {
     const ref = useRef(null);
 
-    function handleLoad(e) {
-      const grid = ref.current?.parentElement;
-      const rowHeight = 10;
-      const rowGap = 16; // gap-4 = 1rem = 16px
+    useEffect(() => {
+      const img = ref.current?.querySelector("img");
+      if (!img) return;
 
-      const height = e.target.getBoundingClientRect().height;
-      const span = Math.ceil((height + rowGap) / (rowHeight + rowGap));
+      function updateSpan() {
+        const rowHeight = 8;   // MUST match auto-rows-[8px]
+        const rowGap = 16;     // gap-4 = 16px
 
-      ref.current.style.gridRowEnd = `span ${span}`;
-    }
+        const height = img.getBoundingClientRect().height;
+        const span = Math.ceil((height + rowGap) / (rowHeight + rowGap));
+
+        ref.current.style.gridRowEnd = `span ${span}`;
+      }
+
+      if (img.complete) {
+        updateSpan();
+      } else {
+        img.addEventListener("load", updateSpan);
+        return () => img.removeEventListener("load", updateSpan);
+      }
+    }, [src]);
 
     return (
       <div ref={ref}>
@@ -90,22 +101,18 @@ export default function EventsGallery({ folder }) {
           alt="Event photo"
           className="rounded-xl w-full h-auto"
           loading="lazy"
-          onLoad={handleLoad}
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
         />
       </div>
     );
   }
 
+
   return (
     <>
       <div
-        className="
-          grid
-          grid-cols-2 md:grid-cols-3 lg:grid-cols-4
-          gap-4 px-6
-          auto-rows-[10px]
-        "
+        style={{ contentVisibility: "auto" }}
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-6 auto-rows-[8px]"
       >
         {images.map((img) => (
           <MasonryImage key={img} src={img} />
