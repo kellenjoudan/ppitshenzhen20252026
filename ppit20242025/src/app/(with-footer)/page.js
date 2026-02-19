@@ -237,20 +237,20 @@ export default function Home() {
 							</div>
 							<div className="md:border-l-2 border-gray-300 mx-4" />
 							<div className="flex-1 md:pl-4 mb-8 md:mb-0">
-								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
+								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center">
 									MISI
 								</h2>
-									<ul className="list-disc list-inside text-left text-xl lg:text-2xl font-montserrat font-small mx-auto max-w-xl text-justify">
-										<li>
+									<ul className="list-disc list-inside text-xl lg:text-2xl font-montserrat font-small mx-auto max-w-xl text-left sm:text-justify">
+										<li className="mb-2">
 										<span className="font-bold">Grow:</span> Mendorong Pengembangan diri mahasiswa melalui kegiatan edukatif, kreatif, dan kolaboratif yang membentuk pribadi tangguh dan berdaya saing.
 										</li>
-										<li>
+										<li className="mb-2">
 										<span className="font-bold">Laugh:</span> Menciptakan lingkungan yang menyenangkan melalui berbagai program yang membangun suasan positif, sehat, dan penuh tawa.
 										</li>
-										<li>
+										<li className="mb-2">
 										<span className="font-bold">Open:</span> Menumbuhkan budaya keterbukaan, komunikasi 2 arah, dan kolaborasi antaranggota demi terciptanya organisasi yang responsif dan adaptif.
 										</li>
-										<li>
+										<li className="mb-2">
 										<span className="font-bold">Warm:</span> Memperkuat rasa kekeluargaan antar pelajar Indonesia di Shenzhen agar setiap individu merasa diterima, didengar, dan dihargai.
 										</li>
 									</ul>
