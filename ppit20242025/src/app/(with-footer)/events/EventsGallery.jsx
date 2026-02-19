@@ -12,6 +12,9 @@ export default function EventsGallery({ folder }) {
 
   async function loadMore() {
     if (loading) return;
+
+    const scrollY = window.scrollY; // save position
+
     setLoading(true);
 
     const res = await fetch(
@@ -28,6 +31,11 @@ export default function EventsGallery({ folder }) {
 
     setCursor(data.nextCursor);
     setLoading(false);
+
+    // restore scroll AFTER layout
+    requestAnimationFrame(() => {
+      window.scrollTo(0, scrollY);
+    });
   }
 
   useEffect(() => {
@@ -50,7 +58,8 @@ export default function EventsGallery({ folder }) {
 
   // Infinite scroll
   useEffect(() => {
-    if (!loaderRef.current) return;
+    const loader = loaderRef.current;
+    if (!loader) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -58,10 +67,13 @@ export default function EventsGallery({ folder }) {
           loadMore();
         }
       },
-      { rootMargin: "300px" }
+      {
+        rootMargin: "200px",
+        threshold: 0.1,
+      }
     );
 
-    observer.observe(loaderRef.current);
+    observer.observe(loader);
     return () => observer.disconnect();
   }, [cursor, loading]);
 
@@ -111,7 +123,6 @@ export default function EventsGallery({ folder }) {
   return (
     <>
       <div
-        style={{ contentVisibility: "auto" }}
         className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-6 auto-rows-[8px]"
       >
         {images.map((img) => (
