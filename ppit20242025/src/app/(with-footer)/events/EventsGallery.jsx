@@ -3,6 +3,46 @@
 import { useEffect, useRef, useState } from "react";
 import { CldImage } from "next-cloudinary";
 
+function MasonryImage({ src }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const img = ref.current?.querySelector("img");
+    if (!img) return;
+
+    function updateSpan() {
+      const rowHeight = 8;
+      const rowGap = 16;
+
+      const height = img.getBoundingClientRect().height;
+      const span = Math.ceil((height + rowGap) / (rowHeight + rowGap));
+
+      ref.current.style.gridRowEnd = `span ${span}`;
+    }
+
+    if (img.complete) {
+      updateSpan();
+    } else {
+      img.addEventListener("load", updateSpan);
+      return () => img.removeEventListener("load", updateSpan);
+    }
+  }, [src]);
+
+  return (
+    <div ref={ref}>
+      <CldImage
+        src={src}
+        width={600}
+        height={800}
+        alt="Event photo"
+        className="rounded-xl w-full h-auto"
+        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+      />
+    </div>
+  );
+}
+
+
 export default function EventsGallery({ folder }) {
   const [images, setImages] = useState([]);
   const [cursor, setCursor] = useState(null);
@@ -13,8 +53,6 @@ export default function EventsGallery({ folder }) {
   async function loadMore() {
     if (loading) return;
 
-    const scrollY = window.scrollY; // save position
-
     setLoading(true);
 
     const res = await fetch(
@@ -23,19 +61,10 @@ export default function EventsGallery({ folder }) {
 
     const data = await res.json();
 
-    setImages((prev) => {
-      const existing = new Set(prev);
-      const filtered = data.images.filter((img) => !existing.has(img));
-      return [...prev, ...filtered];
-    });
+    setImages((prev) => [...prev, ...data.images]);
 
     setCursor(data.nextCursor);
     setLoading(false);
-
-    // restore scroll AFTER layout
-    requestAnimationFrame(() => {
-      window.scrollTo(0, scrollY);
-    });
   }
 
   useEffect(() => {
@@ -76,49 +105,6 @@ export default function EventsGallery({ folder }) {
     observer.observe(loader);
     return () => observer.disconnect();
   }, [cursor, loading]);
-
-
-
-  function MasonryImage({ src }) {
-    const ref = useRef(null);
-
-    useEffect(() => {
-      const img = ref.current?.querySelector("img");
-      if (!img) return;
-
-      function updateSpan() {
-        const rowHeight = 8;   // MUST match auto-rows-[8px]
-        const rowGap = 16;     // gap-4 = 16px
-
-        const height = img.getBoundingClientRect().height;
-        const span = Math.ceil((height + rowGap) / (rowHeight + rowGap));
-
-        ref.current.style.gridRowEnd = `span ${span}`;
-      }
-
-      if (img.complete) {
-        updateSpan();
-      } else {
-        img.addEventListener("load", updateSpan);
-        return () => img.removeEventListener("load", updateSpan);
-      }
-    }, [src]);
-
-    return (
-      <div ref={ref}>
-        <CldImage
-          src={src}
-          width={600}
-          height={800}
-          alt="Event photo"
-          className="rounded-xl w-full h-auto"
-          loading="lazy"
-          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-        />
-      </div>
-    );
-  }
-
 
   return (
     <>
