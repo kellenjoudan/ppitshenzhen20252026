@@ -12,7 +12,6 @@ import { useParams } from "next/navigation";
 const createForm = httpsCallable(functions, "createForm");
 
 const INITIAL_QUESTION_ID = "initial-question-1";
-const INITIAL_FORM_ID = "initial-form-1";
 
 let clientIdCounter = 1;
 const generateClientId = () => {
@@ -26,7 +25,7 @@ export default function FormAdminBuilder() {
   const params = useParams();
   const formId = params?.formId; 
   const [form, setForm] = useState({
-    id: INITIAL_FORM_ID,
+    id: null,
     title: "Untitled Form",
     description: "",
     headerColor: "#7E0C0E", 
@@ -243,9 +242,19 @@ export default function FormAdminBuilder() {
           questions: form.questions,
           headerColor: form.headerColor,
           coverImage: form.coverImage,
+          published: true,
         });
 
-        alert(`Form created! Form ID: ${response.data.formId}`);
+        const newId = response.data.formId;
+
+        setForm((prev) => ({
+          ...prev,
+          id: newId,
+        }));
+
+        alert("Form created successfully!");
+        router.replace(`/form/${newId}/adminform`);
+
       }
 
       setShowPublishConfirm(false);
