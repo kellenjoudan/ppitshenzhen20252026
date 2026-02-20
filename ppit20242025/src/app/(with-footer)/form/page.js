@@ -83,7 +83,7 @@ export default function loadAllFormsPage(){
     );
 
     // console.log(forms)
-    forms.pop()
+    // forms.pop()
 
     if (forms.length == 0) {
         return (
