@@ -119,8 +119,7 @@ export default function FormClient({ form }) {
             process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
           );
           formData.append("folder", "Form");
-          formData.append("public_id", `${form.id}_${user.uid}`);
-          formData.append("overwrite", "true");
+          formData.append("public_id",`${form.id}_${user.uid}_${Date.now()}`);
 
           const res = await fetch(
             `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
@@ -130,7 +129,11 @@ export default function FormClient({ form }) {
             }
           );
 
-          if (!res.ok) throw new Error("Upload failed");
+          if (!res.ok) {
+            const errorData = await res.json();
+            console.error("Cloudinary error:", errorData);
+            throw new Error(errorData.error?.message || "Upload failed");
+          }
 
           const data = await res.json();
           processedAnswers[q.id] = data.secure_url;

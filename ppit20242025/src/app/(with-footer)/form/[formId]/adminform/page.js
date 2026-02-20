@@ -1,18 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth, functions } from "../../../../../lib/firebase";
+import { auth } from "../../../../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { httpsCallable } from "firebase/functions";
 import { useRouter } from "next/navigation";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../../../lib/firebase";
 import { useParams } from "next/navigation";
-
-const createForm = httpsCallable(functions, "createForm");
+import { createForm } from "../../../../../services/forms";
 
 const INITIAL_QUESTION_ID = "initial-question-1";
-const INITIAL_FORM_ID = "initial-form-1";
 
 let clientIdCounter = 1;
 const generateClientId = () => {
@@ -25,8 +22,9 @@ export default function FormAdminBuilder() {
   const router = useRouter();
   const params = useParams();
   const formId = params?.formId; 
+
   const [form, setForm] = useState({
-    id: INITIAL_FORM_ID,
+    id: null,
     title: "Untitled Form",
     description: "",
     headerColor: "#7E0C0E", 
@@ -48,9 +46,21 @@ export default function FormAdminBuilder() {
   const [user, setUser] = useState(undefined);
   const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [coverFile, setCoverFile] = useState(null); // store selected file
+
 
   useEffect(() => {
-  if (!formId) return;
+
+  if (formId === "new") {
+    const draft = localStorage.getItem("newFormDraft");
+
+    if (draft) {
+      setForm(JSON.parse(draft));
+      localStorage.removeItem("newFormDraft");
+    }
+
+    return;
+  }
 
   const fetchForm = async () => {
     try {
@@ -117,14 +127,26 @@ export default function FormAdminBuilder() {
 
   const updateFormMeta = (field, value) => {
     if (field === "coverImage") {
-      if (value && !value.endsWith(".webp")) {
-        setCoverImageError("Cover image harus berformat .webp!");
-      } else {
-        setCoverImageError("");
-      }
+      setCoverImageError(""); // clear previous error
     }
-    setForm({ ...form, [field]: value });
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
+
+  // Handle file select (no upload yet)
+  const handleCoverUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Optional: validate file size immediately
+    if (file.size > 10 * 1024 * 1024) {
+      setCoverImageError("File must be under 10MB");
+      return;
+    }
+
+    setCoverFile(file);
+    setCoverImageError(""); // clear previous errors
+  };
+
 
   // addNewQuestion
   const addNewQuestion = () => {
@@ -221,34 +243,69 @@ export default function FormAdminBuilder() {
     setLoading(true);
 
     try {
-      // 🔥 IF EDITING EXISTING FORM → UPDATE
-      if (formId) {
+      let coverImageUrl = form.coverImage;
+
+      // Upload cover image only if a new file was selected
+      if (coverFile) {
+        const formData = new FormData();
+        formData.append("file", coverFile);
+        formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET_FORMCOVER);
+        formData.append("folder", "FormCover");
+        formData.append("public_id", `cover_${Date.now()}`);
+
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+          { method: "POST", body: formData }
+        );
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          console.error("Cloudinary error:", errorData);
+          throw new Error(errorData.error?.message || "Cover upload failed");
+        }
+
+        const data = await res.json();
+        coverImageUrl = data.secure_url;
+      }
+      const isEditing = formId && formId !== "new";
+
+      // 🔵 EDIT EXISTING FORM
+      if (isEditing) {
         const formRef = doc(db, "forms", formId);
 
         await updateDoc(formRef, {
-          title: form.title,
-          description: form.description,
-          headerColor: form.headerColor,
-          coverImage: form.coverImage,
-          questions: form.questions,
+            title: form.title,
+            description: form.description,
+            headerColor: form.headerColor,
+            coverImage: coverImageUrl,
+            questions: form.questions,
         });
 
         alert("Form updated successfully!");
       } 
-      // 🔥 IF CREATING NEW FORM → CALL FUNCTION
+      
+      // 🟢 CREATE NEW FORM
       else {
         const response = await createForm({
-          title: form.title,
-          description: form.description,
-          questions: form.questions,
-          headerColor: form.headerColor,
-          coverImage: form.coverImage,
-        });
+            title: form.title,
+            description: form.description,
+            questions: form.questions,
+            headerColor: form.headerColor,
+            coverImage: coverImageUrl,
+            published: true,
+            createdBy: user.uid,
+          });
 
-        alert(`Form created! Form ID: ${response.data.formId}`);
+        const newId = response.id;
+
+        alert("Form created successfully!");
+
+        // Replace URL so page becomes editing mode
+        router.replace(`/form/${newId}/adminform`);
       }
 
       setShowPublishConfirm(false);
+      setCoverFile(null);
 
     } catch (error) {
       console.error(error);
@@ -258,24 +315,51 @@ export default function FormAdminBuilder() {
     }
   };
 
-
-  const deleteForm = () => {
-    if (showDeleteConfirm) {
-      setForm({
-        id: generateClientId(),
-        title: "Untitled Form",
-        description: "",
-        headerColor: "#7E0C0E",
-        coverImage: "",
-        questions: [
-          { id: generateClientId(), type: "text", label: "Type Question", required: false, options: [] },
-        ],
-      });
-      alert("Form deleted successfully! A new blank form has been created.");
-      setShowDeleteConfirm(false);
-    } else {
+  const deleteForm = async () => {
+    if (!showDeleteConfirm) {
       setShowDeleteConfirm(true);
       setShowPublishConfirm(false);
+      return;
+    }
+
+    try {
+      const isEditing = formId && formId !== "new";
+
+      // 🔴 If editing existing form → delete from Firestore
+      if (isEditing) {
+        await deleteDoc(doc(db, "forms", formId));
+
+        alert("Form deleted successfully!");
+        router.replace("/form/new/adminform"); // go to blank builder
+      } 
+      
+      // 🟡 If it's a new unsaved form → just reset state
+      else {
+        setForm({
+          id: null,
+          title: "Untitled Form",
+          description: "",
+          headerColor: "#7E0C0E",
+          coverImage: "",
+          questions: [
+            {
+              id: generateClientId(),
+              type: "text",
+              label: "Type Question",
+              required: false,
+              options: [],
+            },
+          ],
+        });
+
+        alert("Blank form reset.");
+      }
+
+      setShowDeleteConfirm(false);
+
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Failed to delete form.");
     }
   };
 
@@ -565,33 +649,41 @@ export default function FormAdminBuilder() {
           </div>
 
           <div>
-            <label style={{
-              display: "block",
-              fontSize: "0.9rem",
-              color: "#374151",
-              marginBottom: "0.5rem"
-            }}>Cover Image URL (WebP only)</label>
-            <input
-              type="text"
-              value={form.coverImage}
-              onChange={(e) => updateFormMeta("coverImage", e.target.value)}
+            <label
               style={{
-                width: "100%",
-                padding: "0.75rem",
-                border: `1px solid ${coverImageError ? "#ef4444" : "#e5e7eb"}`,
-                borderRadius: "0.375rem",
+                display: "block",
                 fontSize: "0.9rem",
-                color: "#374151"
+                color: "#374151",
+                marginBottom: "0.5rem",
               }}
-              placeholder="https://example.com/cover-image.webp"
+            >
+              Upload Cover Image
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              className="block text-sm
+                file:mr-4 file:rounded
+                file:border-0
+                file:bg-[#B88C8C]
+                file:px-4 file:py-2
+                file:text-black
+                hover:file:opacity-90"
+              onChange={handleCoverUpload}
             />
+
             {coverImageError && (
-              <p style={{
-                color: "#ef4444",
-                fontSize: "0.8rem",
-                marginTop: "0.5rem",
-                marginBottom: 0
-              }}>{coverImageError}</p>
+              <p
+                style={{
+                  color: "#ef4444",
+                  fontSize: "0.8rem",
+                  marginTop: "0.5rem",
+                  marginBottom: 0,
+                }}
+              >
+                {coverImageError}
+              </p>
             )}
           </div>
         </div>
