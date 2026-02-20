@@ -88,7 +88,7 @@ export default function loadAllFormsPage(){
     if (forms.length == 0) {
         return (
             <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0 }}>
-                <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3rem", fontWeight: "bolder" }}>No Events to Register At The Moment.</div>
+                <div className="font-montserrat text-white" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem" }}>No events to register at the moment.</div>
             </div>
         )
     }
