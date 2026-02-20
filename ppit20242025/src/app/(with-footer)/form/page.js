@@ -96,7 +96,7 @@ export default function loadAllFormsPage(){
     return (
         <div style={{ paddingTop: "6rem", minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0 }}>
             {/* FORM CONTENT */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, 30%)", gap: "2rem", padding: "2rem", justifyContent: "center", alignItems: "center" }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 p-8 mx-auto justify-center items-center">
                 {forms.map((form) => {
                     const status = attendedForms.includes(form.id) ? "attended" : submittedForms.includes(form.id) ? "submitted" : "open";
 

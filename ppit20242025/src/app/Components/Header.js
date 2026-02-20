@@ -12,9 +12,16 @@ const Header = () => {
 	const [eventsOpen, setEventsOpen] = useState(false);
 	const [user, setUser] = useState(null);
 	const [sessionOpen, setSessionOpen] = useState(false);
+	const [showLogoutPopup, setShowLogoutPopup] = useState(false); //FOR MOBILE
 	const [loggingOut, setLoggingOut] = useState(false);
 	const dropdownRef = useRef	(null);
 	const router = useRouter();
+
+	async function handleMobileLogout() {
+  		await signOut(auth);
+  		setShowLogoutPopup(false);
+  		router.push("/login");
+	}
 
 	const EVENTS = [
 		{ name: "PPITSZ 2025-2026", slug: "2526" },
@@ -305,6 +312,33 @@ const Header = () => {
 					Forms
 				</Link>
 
+				{/* LOGIN FOR MOBILE USERS */}
+				{!user ? (
+					<Link
+						href="/login"
+						className={`md:hidden text-xl hover:text-[#8C0000] font-montserrat font-semibold ${
+						isScrolled && !menuOpen
+							? "text-[#8C0000]"
+							: menuOpen
+							? "text-[#8C0000]"
+							: "text-white"
+						}`}
+						onClick={() => setMenuOpen(false)}
+					>
+						Login
+					</Link>
+					) : (
+					<>
+						<span
+						onClick={() => setShowLogoutPopup(true)}
+						className="md:hidden text-xl font-montserrat font-semibold text-[#ffcc00] cursor-pointer hover:text-[#8C0000] transition-colors break-words"
+						>
+						Hi, {user.email}
+						</span>
+					</>
+				)}
+
+
 				{/* LOGIN INFO – DESKTOP (click) */}
 				<div className="hidden relative flex items-center justify-between px-6 md:block group" ref={dropdownRef}>
 				<span
@@ -346,8 +380,34 @@ const Header = () => {
 					</button>
 					</div>
 				)}
+
+
 				</div>
 			</nav>
+			{/* LOGOUT POPUP MOBILE */}
+			{showLogoutPopup && (
+				<div className="fixed inset-0 flex items-center justify-center bg-black/50 z-[1000]">
+					<div className="bg-white rounded-xl p-6 w-[80%] max-w-sm text-center shadow-lg">
+					<p className="font-montserrat text-lg text-black mb-4">
+						Are you sure you want to log out?
+					</p>
+					<div className="flex justify-between gap-4">
+						<button
+						onClick={() => setShowLogoutPopup(false)}
+						className="flex-1 py-2 rounded-lg text-black bg-gray-300 hover:bg-gray-400 transition"
+						>
+						No
+						</button>
+						<button
+						onClick={handleMobileLogout}
+						className="flex-1 py-2 rounded-lg bg-[#8C0000] text-white hover:opacity-90 transition"
+						>
+						Yes
+						</button>
+					</div>
+					</div>
+				</div>
+			)}
 		</header>
 	);
 };
