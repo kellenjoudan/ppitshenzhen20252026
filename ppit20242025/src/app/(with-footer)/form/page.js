@@ -211,7 +211,7 @@ export default function loadAllFormsPage(){
                             const formData = {
                                 title: "Untitled Form",
                                 description: "",
-                                headerColor: "#7E0C0E",
+                                headerColor: "#bf3330",
                                 questions: [
                                     {
                                     id: "Name",
