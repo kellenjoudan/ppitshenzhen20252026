@@ -27,15 +27,14 @@ export default function FormAdminBuilder() {
     id: null,
     title: "Untitled Form",
     description: "",
-    headerColor: "#7E0C0E", 
+    headerColor: "#bf3330", 
     coverImage: "", 
     questions: [
       {
-        id: INITIAL_QUESTION_ID,
+        id: "Name",
         type: "text",
-        label: "Type Question", 
-        required: false,
-        options: [],
+        label: "Name", 
+        required: true,
       },
     ],
   });
