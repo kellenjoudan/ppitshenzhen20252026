@@ -46,6 +46,8 @@ export default function FormAdminBuilder() {
   const [user, setUser] = useState(undefined);
   const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [coverFile, setCoverFile] = useState(null); // store selected file
+
 
   useEffect(() => {
 
@@ -125,14 +127,26 @@ export default function FormAdminBuilder() {
 
   const updateFormMeta = (field, value) => {
     if (field === "coverImage") {
-      if (value && !value.endsWith(".webp")) {
-        setCoverImageError("Cover image harus berformat .webp!");
-      } else {
-        setCoverImageError("");
-      }
+      setCoverImageError(""); // clear previous error
     }
-    setForm({ ...form, [field]: value });
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
+
+  // Handle file select (no upload yet)
+  const handleCoverUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Optional: validate file size immediately
+    if (file.size > 10 * 1024 * 1024) {
+      setCoverImageError("File must be under 10MB");
+      return;
+    }
+
+    setCoverFile(file);
+    setCoverImageError(""); // clear previous errors
+  };
+
 
   // addNewQuestion
   const addNewQuestion = () => {
@@ -229,6 +243,30 @@ export default function FormAdminBuilder() {
     setLoading(true);
 
     try {
+      let coverImageUrl = form.coverImage;
+
+      // Upload cover image only if a new file was selected
+      if (coverFile) {
+        const formData = new FormData();
+        formData.append("file", coverFile);
+        formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET_FORMCOVER);
+        formData.append("folder", "FormCover");
+        formData.append("public_id", `cover_${Date.now()}`);
+
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+          { method: "POST", body: formData }
+        );
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          console.error("Cloudinary error:", errorData);
+          throw new Error(errorData.error?.message || "Cover upload failed");
+        }
+
+        const data = await res.json();
+        coverImageUrl = data.secure_url;
+      }
       const isEditing = formId && formId !== "new";
 
       // 🔵 EDIT EXISTING FORM
@@ -239,7 +277,7 @@ export default function FormAdminBuilder() {
             title: form.title,
             description: form.description,
             headerColor: form.headerColor,
-            coverImage: form.coverImage,
+            coverImage: coverImageUrl,
             questions: form.questions,
         });
 
@@ -253,7 +291,7 @@ export default function FormAdminBuilder() {
             description: form.description,
             questions: form.questions,
             headerColor: form.headerColor,
-            coverImage: form.coverImage,
+            coverImage: coverImageUrl,
             published: true,
             createdBy: user.uid,
           });
@@ -267,6 +305,7 @@ export default function FormAdminBuilder() {
       }
 
       setShowPublishConfirm(false);
+      setCoverFile(null);
 
     } catch (error) {
       console.error(error);
@@ -610,33 +649,41 @@ export default function FormAdminBuilder() {
           </div>
 
           <div>
-            <label style={{
-              display: "block",
-              fontSize: "0.9rem",
-              color: "#374151",
-              marginBottom: "0.5rem"
-            }}>Cover Image URL (WebP only)</label>
-            <input
-              type="text"
-              value={form.coverImage}
-              onChange={(e) => updateFormMeta("coverImage", e.target.value)}
+            <label
               style={{
-                width: "100%",
-                padding: "0.75rem",
-                border: `1px solid ${coverImageError ? "#ef4444" : "#e5e7eb"}`,
-                borderRadius: "0.375rem",
+                display: "block",
                 fontSize: "0.9rem",
-                color: "#374151"
+                color: "#374151",
+                marginBottom: "0.5rem",
               }}
-              placeholder="https://example.com/cover-image.webp"
+            >
+              Upload Cover Image
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              className="block text-sm
+                file:mr-4 file:rounded
+                file:border-0
+                file:bg-[#B88C8C]
+                file:px-4 file:py-2
+                file:text-black
+                hover:file:opacity-90"
+              onChange={handleCoverUpload}
             />
+
             {coverImageError && (
-              <p style={{
-                color: "#ef4444",
-                fontSize: "0.8rem",
-                marginTop: "0.5rem",
-                marginBottom: 0
-              }}>{coverImageError}</p>
+              <p
+                style={{
+                  color: "#ef4444",
+                  fontSize: "0.8rem",
+                  marginTop: "0.5rem",
+                  marginBottom: 0,
+                }}
+              >
+                {coverImageError}
+              </p>
             )}
           </div>
         </div>

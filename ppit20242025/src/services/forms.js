@@ -146,6 +146,8 @@ export async function getAllForms() {
             description: data.description,
             createdBy: data.createdBy,
             createdAt: data.createdAt ? data.createdAt.toMillis() : null,
+            coverImage: data.coverImage,
+            headerColor: data.headerColor,
         };
     });
 
