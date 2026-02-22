@@ -179,7 +179,7 @@ export default function BarcodeScanner() {
       </div>
 
       <p className="text-center mt-4 text-gray-600">
-        Position the barcode in the center of the camera
+        Position the QR code in the center of the camera
       </p>
     </div>
   );

@@ -276,7 +276,7 @@ export default function loadAllFormsPage(){
                     onMouseLeave={(e) =>
                         (e.currentTarget.style.transform = "scale(1)")
                     }>
-                    📷 Scan Barcode
+                    📷 Scan QR code
                     </button>
                 </div>
             )}
