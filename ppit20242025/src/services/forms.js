@@ -133,7 +133,7 @@ export async function submitResponse(formId, questions, answers) {
 export async function getAllForms() {
     const q = query(
         collection(db, "forms"),
-        where("isActive", "==", true)
+        // where("isActive", "==", true)
     );
 
     const snap = await getDocs(q);
@@ -148,6 +148,7 @@ export async function getAllForms() {
             createdAt: data.createdAt ? data.createdAt.toMillis() : null,
             coverImage: data.coverImage,
             headerColor: data.headerColor,
+            isActive: data.isActive,
         };
     });
 
