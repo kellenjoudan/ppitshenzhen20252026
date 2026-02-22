@@ -77,7 +77,7 @@ export default function FormAdminBuilder() {
       questions: form.questions.map((q) => {
         if (q.id !== questionId) return q;
         let newOptions = q.options;
-        if (["text", "textarea", "file"].includes(newType)) newOptions = [];
+        if (["text", "textarea", "file", "info"].includes(newType)) newOptions = [];
         else if (["radio", "checkbox"].includes(newType)) newOptions = ["Option 1"];
         return { ...q, type: newType, options: newOptions };
       }),
@@ -156,6 +156,7 @@ export default function FormAdminBuilder() {
     { value: "radio", label: "Multiple Choice" },
     { value: "checkbox", label: "Checkboxes" },
     { value: "file", label: "File Upload" }, // File Upload User
+    { value: "info", label: "Text Only (No Answer)" },
   ];
 
   return (
@@ -559,6 +560,21 @@ export default function FormAdminBuilder() {
                 </div>
               )}
 
+              {question.type === "info" && (
+                <div
+                  style={{
+                    padding: "0.75rem",
+                    borderRadius: "0.375rem",
+                    backgroundColor: "#f9fafb",
+                    color: "#374151",
+                    fontSize: "0.95rem",
+                    marginBottom: "1rem"
+                  }}
+                >
+                  ℹ️ This is display text only. Users will not answer this.
+                </div>
+              )}
+
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -574,6 +590,7 @@ export default function FormAdminBuilder() {
                     type="checkbox"
                     id={`required-${question.id}`}
                     checked={question.required}
+                    disabled={question.type === "info"}
                     onChange={(e) => updateQuestion(question.id, "required", e.target.checked)}
                     style={{
                       width: "1rem",

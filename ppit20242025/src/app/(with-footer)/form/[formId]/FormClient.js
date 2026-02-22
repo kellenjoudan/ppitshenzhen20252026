@@ -74,7 +74,7 @@ export default function FormClient({ form }) {
   /* Validation check */
   const validateRequired = () => {
     for (const q of form.questions) {
-      if (q.required) {
+      if (q.required && q.type !== "info") {
         const value = answers[q.id];
         if (
           value === undefined ||
@@ -153,9 +153,18 @@ export default function FormClient({ form }) {
 
         {form.questions.map((q) => (
           <div key={q.id} className="mb-8">
-            <label className="block mb-3 text-lg font-semibold">
-              {q.label} {q.required && "*"}
-            </label>
+            {q.type === "info" && (
+              <div className="mb-4 p-4 bg-[#B88C8C]/20 rounded text-white">
+                {q.label}
+              </div>
+            )}
+
+            {/* INFO / DISPLAY ONLY */}
+            {q.type === "info" && (
+              <p className="text-gray-200 text-sm leading-relaxed">
+                {q.label}
+              </p>
+            )}
 
             {/* TEXTAREA (COMMENTS) */}
             {q.type === "textarea" && (
