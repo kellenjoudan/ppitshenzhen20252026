@@ -26,8 +26,9 @@ export default function WithFooterLayout({ children }) {
           {/* Main Content */}
           <div className="flex flex-col md:flex-row items-center md:justify-between">
             {/* Logo and Name */}
-            <div className="flex flex-row items-center gap-2">
+            <div className="flex flex-row items-center gap-1.5">
               <Image src="/PPITLOGO.webp" alt="logo" width={70} height={100} />
+              <Image src="/ppitsz2526_redlogo.webp" alt="logo" width={70} height={100} />
               <div className="text-left">
                 <h2 className="md:text-2xl text-lg font-montserrat font-semibold text-gray-900 leading-tight">
                   PPIT <br /> Shenzhen

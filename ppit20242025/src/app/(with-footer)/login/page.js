@@ -17,14 +17,19 @@ export default function LoginPage() {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        await updateUser(user.uid, user.email);
-        localStorage.setItem("user-id", user.uid); //stores uid in localStorage to be accessible throughout the entire directory.
-        router.replace(redirect); //already logged in
+        await updateUser(user.uid, {
+          email: user.email,
+        });
+
+        localStorage.setItem("user-id", user.uid);
+
+        router.replace(redirect);
       }
     });
 
     return () => unsub();
   }, [router, redirect]);
+
 
   const handleLogin = async () => {
     try {

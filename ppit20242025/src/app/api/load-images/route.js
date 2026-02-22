@@ -30,7 +30,7 @@ export async function GET(req) {
   const result = await cloudinary.search
     .expression(`folder:${folder}`)
     .sort_by("public_id", "asc")
-    .max_results(40)
+    .max_results(15)
     .next_cursor(cursor === "FIRST" ? undefined : cursor)
     .execute();
 

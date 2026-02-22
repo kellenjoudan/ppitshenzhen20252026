@@ -7,7 +7,8 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { updateUser } from "../../services/forms";
+import { updateUser, markAttendance } from "../../services/forms";
+import { auth } from "../../lib/firebase";
 
 export default function BarcodeScanner() {
   const videoRef = useRef(null);
@@ -56,18 +57,22 @@ export default function BarcodeScanner() {
             if (videoRef.current) videoRef.current.srcObject = null;
 
             try {
-              const text = result.text;
+               // Expected format: formId
+              const text = result.text.trim();
 
-              // Expected format: formId;uid
-              if (!text.includes(";")) {
-                throw new Error("Invalid barcode format");
+              if (!text) {
+                throw new Error("Invalid QR code");
               }
 
-              const [formId, uid] = text.split(";");
+              const formId = text;
 
-              if (!formId || !uid) {
-                throw new Error("Invalid barcode data");
+              const currentUser = auth.currentUser;
+
+              if (!currentUser) {
+                throw new Error("User not logged in");
               }
+
+              const uid = currentUser.uid;  
 
               // 🔍 Fetch user document
               const userRef = doc(db, "users", uid);
@@ -99,9 +104,10 @@ export default function BarcodeScanner() {
 
               // ✅ Mark attendance
               await updateUser(uid, { attendedFormId: formId });
+              await markAttendance(formId);
 
               setResultStatus("success");
-              setResultMessage("Attendance recorded successfully");
+              setResultMessage("Attendance recorded successfully. \nPlease show this page to our committee.");
             } catch (err) {
               setResultStatus("failure");
               setResultMessage(err.message);
@@ -166,14 +172,14 @@ export default function BarcodeScanner() {
               >
                 {resultStatus === "success" ? "Success" : "Failed"}
               </div>
-              <p className="text-white text-sm">{resultMessage}</p>
+              <p className="text-white text-sm" style={{ whiteSpace: "pre-line" }}>{resultMessage}</p>
             </div>
           )}
         </div>
       </div>
 
       <p className="text-center mt-4 text-gray-600">
-        Position the barcode in the center of the camera
+        Position the QR code in the center of the camera
       </p>
     </div>
   );

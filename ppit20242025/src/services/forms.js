@@ -26,8 +26,8 @@ export async function createForm(formData) {
     title: formData.title,
     description: formData.description,
     questions: formData.questions,
-    isActive: true,
-    createdBy: "admin", // replace with auth later
+    isActive: formData.published,
+    createdBy: formData.createdBy,
     createdAt: serverTimestamp(),
   });
 }
@@ -65,38 +65,66 @@ export async function getFormById(formId) {
    SUBMIT RESPONSE (USER)
 ========================= */
 export async function submitResponse(formId, questions, answers) {
+
   // REQUIRED FIELD VALIDATION
   questions.forEach((q) => {
     const answer = answers[q.id];
 
     if (q.required) {
-      if (!answer) {
+      if (!answer) throw new Error(`"${q.label}" is required`);
+      if (Array.isArray(answer) && answer.length === 0)
         throw new Error(`"${q.label}" is required`);
-      }
-
-      if (Array.isArray(answer) && answer.length === 0) {
+      if (typeof answer === "string" && answer.trim() === "")
         throw new Error(`"${q.label}" is required`);
-      }
-
-      if (typeof answer === "string" && answer.trim() === "") {
-        throw new Error(`"${q.label}" is required`);
-      }
     }
   });
 
-  // GET USER FROM LOCALSTORAGE
-  const user = localStorage.getItem('user-id');
+  const userId = localStorage.getItem("user-id");
+  if (!userId) throw new Error("User not logged in");
 
-  // SAVE RESPONSE
-  return await addDoc(collection(db, "responses"), {
+  // 🔹 GET USER DATA FROM FIRESTORE
+  const userSnap = await getDoc(doc(db, "users", userId));
+  if (!userSnap.exists()) throw new Error("User not found");
+
+  const userData = userSnap.data();
+  const userEmail = userData.email || "";
+
+  // 🔹 GET FORM DATA FROM FIRESTORE
+  const formSnap = await getDoc(doc(db, "forms", formId));
+  if (!formSnap.exists()) throw new Error("Form not found");
+
+  const formData = formSnap.data();
+  const formTitle = formData.title || "";
+
+  // 🔹 SAVE RESPONSE
+  const docRef = await addDoc(collection(db, "responses"), {
     formId,
     answers,
-
-    // LOGIN INFO (NO AUTH)
-    submittedBy: user,
-    
+    submittedBy: userId,
     submittedAt: serverTimestamp(),
   });
+
+  // 🔹 UPDATE USER
+  await updateUser(userId, {
+    submittedFormId: formId,
+  });
+
+  // 🔹 UPDATE GOOGLE SHEETS
+  await fetch("https://script.google.com/macros/s/AKfycbzcLclk2Se9LlFIcLiCQUutSwaNqvNc_mXx35tpG4-Hy0i0a5rDvVYVMTYrG11L6lZu/exec", {
+    method: "POST",
+    body: JSON.stringify({
+      type: "submission",
+      formId,
+      responseId: docRef.id,
+      userId,
+      email: userEmail,
+      eventName: formTitle,
+      submittedAt: new Date().toISOString(),
+      answers,
+    }),
+  });
+
+  return docRef;
 }
 
 /* =========================
@@ -105,7 +133,7 @@ export async function submitResponse(formId, questions, answers) {
 export async function getAllForms() {
     const q = query(
         collection(db, "forms"),
-        where("isActive", "==", true)
+        // where("isActive", "==", true)
     );
 
     const snap = await getDocs(q);
@@ -118,6 +146,9 @@ export async function getAllForms() {
             description: data.description,
             createdBy: data.createdBy,
             createdAt: data.createdAt ? data.createdAt.toMillis() : null,
+            coverImage: data.coverImage,
+            headerColor: data.headerColor,
+            isActive: data.isActive,
         };
     });
 
@@ -135,15 +166,15 @@ export async function getAllUsers() {
 
     const snap = await getDocs(q);
     try {
-      const formList = snap.docs.map(docSnap => {
+      const userList = snap.docs.map(docSnap => {
           const data = docSnap.data();
           return {
-              uid: docSnap.uid,
+              uid: docSnap.id,
               email: data.email,
-              adminStatus: data.admin, //bool
+              admin: data.admin, //bool
           };
       });
-      return formList;
+      return userList;
     } catch (e) {
       console.error(e);
       return [];
@@ -191,4 +222,47 @@ export async function updateUser(
   }
 
   await updateDoc(userRef, updateData);
+}
+
+/* =========================
+   MARK ATTENDANCE (USER)
+========================= */
+export async function markAttendance(formId) {
+
+  const userId = localStorage.getItem("user-id");
+  if (!userId) throw new Error("User not logged in");
+
+  // 🔹 GET USER DATA
+  const userSnap = await getDoc(doc(db, "users", userId));
+  if (!userSnap.exists()) throw new Error("User not found");
+
+  const userData = userSnap.data();
+  const userEmail = userData.email || "";
+  const userName = userData.name || "";
+
+  // 🔹 GET FORM DATA
+  const formSnap = await getDoc(doc(db, "forms", formId));
+  if (!formSnap.exists()) throw new Error("Form not found");
+
+  const formData = formSnap.data();
+  const formTitle = formData.title || "";
+
+  // 🔹 UPDATE FIRESTORE
+  await updateUser(userId, {
+    attendedFormId: formId,
+  });
+
+  // 🔹 UPDATE GOOGLE SHEETS
+  await fetch("https://script.google.com/macros/s/AKfycbzcLclk2Se9LlFIcLiCQUutSwaNqvNc_mXx35tpG4-Hy0i0a5rDvVYVMTYrG11L6lZu/exec", {
+    method: "POST",
+    body: JSON.stringify({
+      type: "attendance",
+      formId,
+      userId,
+      email: userEmail,
+      eventName: formTitle,
+      userName,
+      attendedAt: new Date().toISOString(),
+    }),
+  });
 }

@@ -28,11 +28,19 @@ export default function FormClient({ form }) {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0 }}>
+        <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3rem", fontWeight: "bolder" }}>Loading...</div>
+      </div>
+    );
   }
 
   if (!user) {
-    return <p>Please log in to submit this form.</p>;
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0 }}>
+        <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3rem", fontWeight: "bolder" }}>Please log in to submit this form.</div>
+      </div>
+    );
   }
 
   if (submitting) {
@@ -58,7 +66,7 @@ export default function FormClient({ form }) {
         </h2>
 
         <p className="text-base md:text-md mb-1 text-gray-300">
-          Thank you for your response.
+          Thank you for your registration.
         </p>
 
         <button
@@ -111,8 +119,7 @@ export default function FormClient({ form }) {
             process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
           );
           formData.append("folder", "Form");
-          formData.append("public_id", `${form.id}_${user.uid}`);
-          formData.append("overwrite", "true");
+          formData.append("public_id",`${form.id}_${user.uid}_${Date.now()}`);
 
           const res = await fetch(
             `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
@@ -122,7 +129,11 @@ export default function FormClient({ form }) {
             }
           );
 
-          if (!res.ok) throw new Error("Upload failed");
+          if (!res.ok) {
+            const errorData = await res.json();
+            console.error("Cloudinary error:", errorData);
+            throw new Error(errorData.error?.message || "Upload failed");
+          }
 
           const data = await res.json();
           processedAnswers[q.id] = data.secure_url;

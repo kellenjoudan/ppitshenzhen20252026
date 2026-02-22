@@ -27,7 +27,7 @@ export const EVENTS_BY_YEAR = {
     {
       title: "Riang Ria Nusantara",
       slug: "Riang-Ria-Nusantara",
-      description: "2026 New Year's Party! Enjoy fun interactive games, performances, photobooth, food, drinks and the msot awaited DJ session after party!",
+      description: "2026 New Year's Party! Fun interactive games, performances, photobooth, food, drinks and the most awaited DJ session after party!",
       downloadLink: "https://cuhko365-my.sharepoint.com/:f:/g/personal/124020108_link_cuhk_edu_cn/IgCU9fPTSzGnR5TzA5S5UVajAWDHB8q2lEmcpo4twLqno-E?e=foSteY",
       secondDownloadLink: "https://drive.google.com/drive/folders/1h0-gxM7Qd7mRODguqHgOuST8tP8cVPGM",
       thirdDownloadLink: "https://drive.google.com/drive/folders/1TuFBIrl6-M3fnBSh_EdqTKitkFwhSYV1"
