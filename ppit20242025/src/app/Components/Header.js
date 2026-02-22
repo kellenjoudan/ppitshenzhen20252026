@@ -1,24 +1,52 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { auth } from "../../lib/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [isScrolled, setIsScrolled] = useState(false);
 	const toggleMenu = () => setMenuOpen((prev) => !prev);
 	const [eventsOpen, setEventsOpen] = useState(false);
+	const [user, setUser] = useState(null);
+	const [sessionOpen, setSessionOpen] = useState(false);
+	const [showLogoutPopup, setShowLogoutPopup] = useState(false); //FOR MOBILE
+	const [loggingOut, setLoggingOut] = useState(false);
+	const dropdownRef = useRef	(null);
+	const router = useRouter();
+
+	async function handleMobileLogout() {
+  		await signOut(auth);
+  		setShowLogoutPopup(false);
+  		router.push("/login");
+	}
 
 	const EVENTS = [
 		{ name: "PPITSZ 2025-2026", slug: "2526" },
 	];
 	
 	useEffect(() => {
+		function handleClickOutside(event) {
+			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+				setSessionOpen(false);
+			}
+		}
+
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 0);
 		};
 
+		const unsub = onAuthStateChanged(auth, (currentUser) => {
+    		setUser(currentUser);
+  		});
+
+		document.addEventListener('mousedown', handleClickOutside);
 		window.addEventListener("scroll", handleScroll);
 		return () => {
+			unsub();
+			document.removeEventListener('mousedown', handleClickOutside);
 			window.removeEventListener("scroll", handleScroll);
 		};
 	}, []);
@@ -127,7 +155,7 @@ const Header = () => {
 			<nav
 				className={`md:flex gap-10 ${
 					menuOpen
-						? "flex flex-col absolute top-[70px] right-0 w-[43%] p-5 text-[#8C0000] shadow-lg z-[999]"
+						? "flex flex-col absolute top-[70px] right-0 w-[43%] p-5 text-[#8C0000] z-[999]"
 						: "hidden"
 				}`}
 			>
@@ -181,7 +209,7 @@ const Header = () => {
 				<div
 					className="
 					absolute top-15
-					h-10 w-full
+					h-10 w-20
 					opacity-0
 					pointer-events-auto
 					"
@@ -267,7 +295,119 @@ const Header = () => {
 				>
 					FAQ
 				</Link>
+
+				<Link
+					href="/form"
+					className={`md:text-2xl text-xl hover:text-[#8C0000] font-montserrat font-semibold ${
+						isScrolled && !menuOpen
+							? "text-[#8C0000]"
+							: menuOpen
+							? "text-[#8C0000]"
+							: "text-white"
+					}`}
+					onClick={() => {
+						setMenuOpen(false);
+					}}
+				>
+					Forms
+				</Link>
+
+				{/* LOGIN FOR MOBILE USERS */}
+				{!user ? (
+					<Link
+						href="/login"
+						className={`md:hidden text-xl hover:text-[#8C0000] font-montserrat font-semibold ${
+						isScrolled && !menuOpen
+							? "text-[#8C0000]"
+							: menuOpen
+							? "text-[#8C0000]"
+							: "text-white"
+						}`}
+						onClick={() => setMenuOpen(false)}
+					>
+						Login
+					</Link>
+					) : (
+					<>
+						<span
+						onClick={() => setShowLogoutPopup(true)}
+						className="md:hidden text-xl font-montserrat font-semibold text-[#ffcc00] cursor-pointer hover:text-[#8C0000] transition-colors break-words"
+						>
+						Hi, {user.email}
+						</span>
+					</>
+				)}
+
+
+				{/* LOGIN INFO – DESKTOP (click) */}
+				<div className="hidden relative flex items-center justify-between px-6 md:block group" ref={dropdownRef}>
+				<span
+					className={`
+						    absolute right-2 top-1/2 -translate-y-1/2 inline-block w-10 h-10 rounded-full bg-center bg-cover cursor-pointer border-2 border-white/70 hover:border-[#8C0000] transition
+						${isScrolled ? "border-[#8C0000]" : "bg-white"}
+						${menuOpen ? "border-[#8C0000]" : ""}
+					`}
+					style={{
+						backgroundImage: `url(${user?.photoURL || "/user-pfp.webp"})`,
+					}}
+					onClick={() => setSessionOpen(!sessionOpen)}
+				></span>
+
+				{/* Dropdown */}
+				{sessionOpen && (
+					<div className="absolute right-0 mt-14 max-w-64 bg-white shadow-lg rounded-lg border border-gray-200 p-4 z-50 overflow-auto">
+					<p className="text-sm text-gray-400">{user ? "Logged in as" : ""}</p>
+					<p className="text-sm text-gray-700 mb-2 break-words" style={{fontWeight: "bold"}}>{user ? `${user?.email}` : ""}</p>
+					<button
+						disabled={loggingOut}
+						onClick={async () => {
+							if (user) {
+								setLoggingOut(true);
+								setSessionOpen(false);
+								await signOut(auth);
+								router.replace("/");
+								setLoggingOut(false);
+							} else {
+								setLoggingOut(false);
+								setSessionOpen(false);
+								router.replace('/login');
+							}
+ 						}}
+						className={`w-full bg-red-600 text-white text-sm py-2 rounded hover:bg-red-700 transition ${ loggingOut ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 text-white hover:bg-red-700" }`}
+					> <span className="whitespace-nowrap px-4">
+						{user ? "Log Out" : "Log In"}
+					</span>
+					</button>
+					</div>
+				)}
+
+
+				</div>
 			</nav>
+			{/* LOGOUT POPUP MOBILE */}
+			{showLogoutPopup && (
+				<div className="fixed inset-0 flex items-center justify-center bg-black/50 z-[1000]">
+					<div className="bg-white rounded-xl p-6 w-[80%] max-w-sm text-center shadow-lg">
+					<p className="font-montserrat text-lg text-black mb-4">
+						Are you sure you want to log out?
+					</p>
+					<div className="flex justify-between gap-4">
+						<button
+						onClick={() => setShowLogoutPopup(false)}
+						className="flex-1 py-2 rounded-lg text-black bg-gray-300 hover:bg-gray-400 transition"
+						>
+						No
+						</button>
+						<button
+						onClick={handleMobileLogout}
+						className="flex-1 py-2 rounded-lg bg-[#8C0000] text-white hover:opacity-90 transition"
+						>
+						Yes
+						</button>
+					</div>
+					</div>
+				</div>
+			)}
 		</header>
 	);
 };

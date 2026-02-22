@@ -26,6 +26,7 @@ responses/{responseId} { //ONLY ACCESSIBLE BY ADMIN (REQUIRES LOG IN)
     [questionId]: str | str[]
   },
   submittedAt: timestamp
+  submittedBy: user ID
 }
 ```
 
@@ -41,35 +42,46 @@ Question = {
 }
 ```
 
+
+### IMPORTANT CHANGE:
+UID is stored in localStorage, reducing the need to call firestore everytime to fetch the UID.
+
+
 **(!!!) FLOW :
 Admin creates → Firestore stores → User fills → Firestore stores → Admin reads**
+**After pressing forms tab in the header, it will redirect to login. After login, the system detects if its admin or user.
+* If user, then redirect to user-only page (no edit options)
+* If admin, then redirect to admin-only page (editable), SAVE LOGIN INFORMATION TEMPORARILY IN BROWSER CACHE (to be accessed later)!
 ##
 
-## JOBDESK:
-* Michael - Create firestore scheme/structure, create {question, forms, response} JSON format, monitor progress on design and backend, build HTML and help with PostCSS for the design, maintain mobile responsiveness --> accessibility for mobile phones. Additional: create a diagram of the firestore scheme as well as process flow.
+## UPDATED JOBDESK (3/2/26):
+* Michael - Create the admin version for the list of forms, hide QR code button if the status is not submitted or has attended, and ensure everything stay connected and all variable names are parallel.
 
-* Kellen - Create firebase project (enable firestore), create firebase.js and export it, create functions (form creation, fetch forms, and submit response). Additional: validation on required fields and prevent empty submissions; create designs on loading screens (during suubmission process/form loading process)
+* Kellen - Fix the BarcodeScanner.js to this process flow: **in list of forms page** (admin logs in, admin presses a button that directs them to /barcodescanner) --> opens a web-based barcode scanner, scans the barcode shown by user (NOTE: THE FORMAT OF THE BARCODE IS: "formId;uid", e.g. "YgJDVQi8Te6c6oHu1J4Z;8SS3Va9o0ZZydTOM5Pp6ehXQPTw1) --> perform checks (in the response database, check whether the user has already filled the form (uid exists in response db)) --> call the function updateUser(uid, attendedForms=formID), replace uid and formID with the IDs from the string of the barcode respectively --> close the barcodescanner and display the status of check (successful/failure).
 
-* Miquel - Admin form builder (form creation; basically make the formData) --> create form title input, desc. input, add/remove questions (include question types), toggle required, options input (radio/checkbox --> OPTIONAL TO DO), and call createForm(formData) created by kellen. Additional: validate questions before saving (make sure there is no illegal inputs) and display form link after successful creation.
+* Miquel - ADMIN FORM: update to add (1. form.headerColor (buat tampilan di list of forms), 2. form.coverImage (buat background card di list of forms, **request the image to be in .webp**)) also add it in the JSON object of createForm() and getFormById(). 
 
-* Aldo - User form renderer/UI --> fetch form from db through formID, display title & desc., display input fields based on their type (use if/else and display according to their type property; e.g. question1.type == "MCQ".....), create indicators for required fields (use * for required), collect answers by calling submit response function created by kellen (post/send answers to db and save them). Additional: Validate required questions; ignore optional ones, send success/error messages
+* Aldo - When submitting, other than calling submitResponse(), also call the new function updateUser(uid, submittedForms=formID). Note: (1). uid can be obtained by calling localStorage.getItem("user-id"), (2). The format of updateUser above MUST be exact (include the submittedForms when typing in the parameters) and replace the formID with the actual formID that is being submitted (same variable as the one in submitResponse()).
 
-* Jennickel - UI/UX design --> similar to the previous project, create an illustration using figma to give a big picture of the website, determine color palette, typography, button styles, and input styles (looks-wise).
+* Jennickel - Create a design of the page BarcodeScanner.js (in figma preferrably), and refer to the big image written in Kellen's task. Do final checks on the design of adminform and what user see when they open a form (formClient.js). Fix the design flaw where in desktop, the hover hitbox for events tab in the header is too big (when you hover under forms tab/user-pfp tab, it still triggers the dropdown of the events tab when its not supposed to).
 
 
 ## DEADLINES:
 >**===DEVELOPMENT PHASE===**
-- 18 Jan => Jennickel UI Design for form layout, admin layout, and components styles (figma)
-- 31 Jan => Each members' jobdesk (everything should be set by now); tolerance: design and mobile compatibility not finalized (not part of the main goal)
+- 18 Jan => Jennickel UI Design for form layout, admin layout, and components styles (figma) & Kellen finishing firebase config (code as well) ✅
+- 24 Jan => Each members' draft design and algorithms (additional tasks to be done) ✅
+- 31 Jan => Each members' jobdesk (everything should be set by now); tolerance: design and mobile compatibility not finalized (not part of the main goal) (DELAYED) ✅
 
 >**===TESTING & DEPLOYMENT PHASE===**
-- 5 Feb => Finish testing for the forms and admin page; note down every improvements that can be made (TEST MOBILE COMPATIBILITY)
-- 8 Feb => Finalization of code (ensure everything is written properly and corrrectly + firebase is working smoothly)
-- 9 Feb => Deployment
+- 5 Feb => Finish testing for the forms and admin page; note down every improvements that can be made (TEST MOBILE COMPATIBILITY) ✅
+- 8 Feb => Finalization of code (ensure everything is written properly and corrrectly + firebase is working smoothly) ✅ User-side Completed
+- 18 Feb => Test for form creation + id's match
+- 19 Feb => Deployment
 
 
 ## !!! NAMING CONVENTIONS (keep it the same across files): !!!
 - Function names: createForm(formData), getFormById(formId), submitResponse(formId, response)
+### IMPORTANT NOTE: Every function mentioned above IS SAVED AND CAN BE VIEWED IN src/app/services/forms.js (all functions are exported from here; take the reference from here)
 
 #
 **REPO REFERENCE**: https://github.com/hachln/Investsync_EventHelper

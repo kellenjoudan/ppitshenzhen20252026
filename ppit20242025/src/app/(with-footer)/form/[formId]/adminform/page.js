@@ -1,9 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { auth } from "../../../../../lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../../../../../lib/firebase";
+import { useParams } from "next/navigation";
+import { createForm } from "../../../../../services/forms";
 
 const INITIAL_QUESTION_ID = "initial-question-1";
-const INITIAL_FORM_ID = "initial-form-1";
 
 let clientIdCounter = 1;
 const generateClientId = () => {
@@ -13,40 +19,139 @@ const generateClientId = () => {
 };
 
 export default function FormAdminBuilder() {
+  const router = useRouter();
+  const params = useParams();
+  const formId = params?.formId; 
+
   const [form, setForm] = useState({
-    id: INITIAL_FORM_ID,
+    id: null,
     title: "Untitled Form",
+    description: "",
+    headerColor: "#bf3330", 
+    coverImage: "", 
     questions: [
       {
-        id: INITIAL_QUESTION_ID,
+        id: "Name",
         type: "text",
-        required: false,
-        options: [],
+        label: "Name", 
+        required: true,
       },
     ],
   });
 
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [coverImageError, setCoverImageError] = useState(""); 
+  const [user, setUser] = useState(undefined);
+  const [admin, setAdmin] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [coverFile, setCoverFile] = useState(null); // store selected file
+
 
   useEffect(() => {
-    if (form.id === INITIAL_FORM_ID) {
-      setForm((prev) => ({
-        ...prev,
-        id: generateClientId(),
-        questions: prev.questions.map((q) => ({ ...q, id: generateClientId() })),
-      }));
+
+  if (formId === "new") {
+    const draft = localStorage.getItem("newFormDraft");
+
+    if (draft) {
+      setForm(JSON.parse(draft));
+      localStorage.removeItem("newFormDraft");
     }
+
+    return;
+  }
+
+  const fetchForm = async () => {
+    try {
+      const formRef = doc(db, "forms", formId);
+      const formSnap = await getDoc(formRef);
+
+      if (!formSnap.exists()) {
+        alert("Form not found");
+        router.push("/admin");
+        return;
+      }
+
+      const data = formSnap.data();
+
+      setForm({
+        id: formId,
+        title: data.title || "Untitled Form",
+        description: data.description || "",
+        headerColor: data.headerColor || "#7E0C0E",
+        coverImage: data.coverImage || "",
+        questions: data.questions?.map((q) => ({
+          id: q.id || generateClientId(),
+          type: q.type,
+          label: q.label,
+          required: q.required || false,
+          options: q.options || [],
+        })) || [],
+      });
+
+    } catch (error) {
+      console.error(error);
+      alert("Failed to load form.");
+    }
+  };
+
+  fetchForm();
+}, [formId]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (!currentUser) {
+          router.replace("/login");
+          return;
+      }
+
+      setUser(currentUser);
+        
+      try {
+        // 🔹 Fetch user data
+        const userRef = doc(db, "users", currentUser.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+            const userData = userSnap.data();
+            setAdmin(userData.admin || false);
+        }
+      } catch (error) {
+        alert("Gagal memverifikasi status admin!");
+      }
+    }); 
+
+    return () => unsubscribe();
   }, []);
 
   const updateFormMeta = (field, value) => {
-    setForm({ ...form, [field]: value });
+    if (field === "coverImage") {
+      setCoverImageError(""); // clear previous error
+    }
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Handle file select (no upload yet)
+  const handleCoverUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Optional: validate file size immediately
+    if (file.size > 10 * 1024 * 1024) {
+      setCoverImageError("File must be under 10MB");
+      return;
+    }
+
+    setCoverFile(file);
+    setCoverImageError(""); // clear previous errors
+  };
+
+
+  // addNewQuestion
   const addNewQuestion = () => {
     const newQuestion = {
       id: generateClientId(),
-      type: "text", // (Short Answer)
+      type: "text",
       label: "Type Question",
       required: false,
       options: [],
@@ -55,6 +160,7 @@ export default function FormAdminBuilder() {
     setForm({ ...form, questions: [...form.questions, newQuestion] });
   };
 
+  // deleteQuestion
   const deleteQuestion = (questionId) => {
     setForm({
       ...form,
@@ -62,6 +168,7 @@ export default function FormAdminBuilder() {
     });
   };
 
+  // updateQuestion
   const updateQuestion = (questionId, field, value) => {
     setForm({
       ...form,
@@ -71,6 +178,7 @@ export default function FormAdminBuilder() {
     });
   };
 
+  // changeQuestionType
   const changeQuestionType = (questionId, newType) => {
     setForm({
       ...form,
@@ -84,6 +192,7 @@ export default function FormAdminBuilder() {
     });
   };
 
+  // addOption 
   const addOption = (questionId) => {
     setForm({
       ...form,
@@ -95,6 +204,7 @@ export default function FormAdminBuilder() {
     });
   };
 
+  // deleteOption
   const deleteOption = (questionId, optionIndex) => {
     setForm({
       ...form,
@@ -117,31 +227,138 @@ export default function FormAdminBuilder() {
     });
   };
 
-  const publishForm = () => {
-    if (showPublishConfirm) {
-      console.log("Form Published:", form);
-      alert("Form published successfully! It's now live for respondents.");
-      setShowPublishConfirm(false);
-    } else {
+  const publishForm = async () => {
+    if (!showPublishConfirm) {
       setShowPublishConfirm(true);
       setShowDeleteConfirm(false);
+      return;
+    }
+
+    if (coverImageError) {
+      alert(coverImageError);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      let coverImageUrl = form.coverImage;
+
+      // Upload cover image only if a new file was selected
+      if (coverFile) {
+        const formData = new FormData();
+        formData.append("file", coverFile);
+        formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET_FORMCOVER);
+        formData.append("folder", "FormCover");
+        formData.append("public_id", `cover_${Date.now()}`);
+
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+          { method: "POST", body: formData }
+        );
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          console.error("Cloudinary error:", errorData);
+          throw new Error(errorData.error?.message || "Cover upload failed");
+        }
+
+        const data = await res.json();
+        coverImageUrl = data.secure_url;
+      }
+      const isEditing = formId && formId !== "new";
+
+      // 🔵 EDIT EXISTING FORM
+      if (isEditing) {
+        const formRef = doc(db, "forms", formId);
+
+        await updateDoc(formRef, {
+            title: form.title,
+            description: form.description,
+            headerColor: form.headerColor,
+            coverImage: coverImageUrl,
+            questions: form.questions,
+        });
+
+        alert("Form updated successfully!");
+      } 
+      
+      // 🟢 CREATE NEW FORM
+      else {
+        const response = await createForm({
+            title: form.title,
+            description: form.description,
+            questions: form.questions,
+            headerColor: form.headerColor,
+            coverImage: coverImageUrl,
+            published: true,
+            createdBy: user.uid,
+          });
+
+        const newId = response.id;
+
+        alert("Form created successfully!");
+
+        // Replace URL so page becomes editing mode
+        router.replace(`/form/${newId}/adminform`);
+      }
+
+      setShowPublishConfirm(false);
+      setCoverFile(null);
+
+    } catch (error) {
+      console.error(error);
+      alert("Error: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const deleteForm = () => {
-    if (showDeleteConfirm) {
-      setForm({
-        id: generateClientId(),
-        title: "Untitled Form",
-        questions: [
-          { id: generateClientId(), type: "text", label: "Type Question", required: false, options: [] },
-        ],
-      });
-      alert("Form deleted successfully! A new blank form has been created.");
-      setShowDeleteConfirm(false);
-    } else {
+  const deleteForm = async () => {
+    if (!showDeleteConfirm) {
       setShowDeleteConfirm(true);
       setShowPublishConfirm(false);
+      return;
+    }
+
+    try {
+      const isEditing = formId && formId !== "new";
+
+      // 🔴 If editing existing form → delete from Firestore
+      if (isEditing) {
+        await deleteDoc(doc(db, "forms", formId));
+
+        alert("Form deleted successfully!");
+        router.replace("/form/new/adminform"); // go to blank builder
+      } 
+      
+      // 🟡 If it's a new unsaved form → just reset state
+      else {
+        setForm({
+          id: null,
+          title: "Untitled Form",
+          description: "",
+          headerColor: "#7E0C0E",
+          coverImage: "",
+          questions: [
+            {
+              id: generateClientId(),
+              type: "text",
+              label: "Type Question",
+              required: false,
+              options: [],
+            },
+          ],
+        });
+
+        alert("Blank form reset.");
+      }
+
+      setShowDeleteConfirm(false);
+
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Failed to delete form.");
     }
   };
 
@@ -155,15 +372,31 @@ export default function FormAdminBuilder() {
     { value: "textarea", label: "Paragraph" },
     { value: "radio", label: "Multiple Choice" },
     { value: "checkbox", label: "Checkboxes" },
-    { value: "file", label: "File Upload" }, // File Upload User
+    { value: "file", label: "File Upload" },
   ];
+
+  if (user === undefined) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
+        <p style={{ color: "white", fontSize: "1.2rem" }}>Loading...</p>
+      </div>
+    );
+  }
+
+  if (user && !admin) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
+        <p style={{ color: "white", fontSize: "1.2rem" }}>Redirecting to user page...</p>
+      </div>
+    );
+  }
 
   return (
     <div style={{
       minHeight: "100vh",
-      backgroundColor: "#7E0C0E",
+      backgroundColor: form.headerColor, 
       fontFamily: "Arial, sans-serif",
-      margin: 0,
+      margin: "4rem auto 0 auto",
       padding: 0
     }}>
       <header style={{
@@ -246,35 +479,37 @@ export default function FormAdminBuilder() {
             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
               <button
                 onClick={publishForm}
+                disabled={loading}
                 style={{
                   backgroundColor: "#10b981",
                   color: "white",
                   padding: "0.5rem 1rem",
                   borderRadius: "0.375rem",
                   border: "none",
-                  cursor: "pointer",
+                  cursor: loading ? "not-allowed" : "pointer",
                   fontSize: "0.9rem",
                   transition: "background-color 0.2s"
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = "#059669"}
-                onMouseOut={(e) => e.target.style.backgroundColor = "#10b981"}
+                onMouseOver={(e) => !loading && (e.target.style.backgroundColor = "#059669")}
+                onMouseOut={(e) => !loading && (e.target.style.backgroundColor = "#10b981")}
               >
-                Confirm Publish
+                {loading ? "Publishing..." : "Confirm Publish"}
               </button>
               <button
                 onClick={cancelConfirmation}
+                disabled={loading}
                 style={{
                   backgroundColor: "#f3f4f6",
                   color: "#374151",
                   padding: "0.5rem 1rem",
                   borderRadius: "0.375rem",
                   border: "1px solid #e5e7eb",
-                  cursor: "pointer",
+                  cursor: loading ? "not-allowed" : "pointer",
                   fontSize: "0.9rem",
                   transition: "background-color 0.2s"
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = "#e5e7eb"}
-                onMouseOut={(e) => e.target.style.backgroundColor = "#f3f4f6"}
+                onMouseOver={(e) => !loading && (e.target.style.backgroundColor = "#e5e7eb")}
+                onMouseOut={(e) => !loading && (e.target.style.backgroundColor = "#f3f4f6")}
               >
                 Cancel
               </button>
@@ -355,6 +590,103 @@ export default function FormAdminBuilder() {
           />
         </div>
 
+        <div style={{
+          backgroundColor: "white",
+          borderRadius: "0.5rem",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+          border: "1px solid #e5e7eb",
+          padding: "1.5rem",
+          marginBottom: "2rem"
+        }}>
+          <h2 style={{
+            fontSize: "1.25rem",
+            fontWeight: "600",
+            color: "#111827",
+            margin: "0 0 1.5rem 0"
+          }}>Form Appearance</h2>
+
+          <div style={{ marginBottom: "1.5rem" }}>
+            <label style={{
+              display: "block",
+              fontSize: "0.9rem",
+              color: "#374151",
+              marginBottom: "0.5rem"
+            }}>Header Color (Hex Code)</label>
+            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <input
+                type="color"
+                value={form.headerColor}
+                onChange={(e) => updateFormMeta("headerColor", e.target.value)}
+                style={{
+                  width: "3rem",
+                  height: "3rem",
+                  border: "none",
+                  borderRadius: "0.25rem",
+                  cursor: "pointer"
+                }}
+              />
+              <input
+                type="text"
+                value={form.headerColor}
+                onChange={(e) => {
+                  const hexPattern = /^#([0-9A-Fa-f]{6})$/;
+                  if (hexPattern.test(e.target.value) || e.target.value === "") {
+                    updateFormMeta("headerColor", e.target.value);
+                  }
+                }}
+                style={{
+                  flex: 1,
+                  padding: "0.75rem",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "0.375rem",
+                  fontSize: "0.9rem",
+                  color: "#374151"
+                }}
+                placeholder="#7E0C0E"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              style={{
+                display: "block",
+                fontSize: "0.9rem",
+                color: "#374151",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Upload Cover Image
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              className="block text-sm
+                file:mr-4 file:rounded
+                file:border-0
+                file:bg-[#B88C8C]
+                file:px-4 file:py-2
+                file:text-black
+                hover:file:opacity-90"
+              onChange={handleCoverUpload}
+            />
+
+            {coverImageError && (
+              <p
+                style={{
+                  color: "#ef4444",
+                  fontSize: "0.8rem",
+                  marginTop: "0.5rem",
+                  marginBottom: 0,
+                }}
+              >
+                {coverImageError}
+              </p>
+            )}
+          </div>
+        </div>
+
         <div style={{ marginBottom: "2rem" }}>
           {form.questions.map((question) => (
             <div
@@ -398,7 +730,6 @@ export default function FormAdminBuilder() {
                   onBlur={(e) => e.target.style.borderBottom = "1px solid transparent"}
                   placeholder="Question"
                 />
-                {/* REMOVED: Media button (🖼️) */}
                 <select
                   value={question.type}
                   onChange={(e) => changeQuestionType(question.id, e.target.value)}
@@ -432,7 +763,7 @@ export default function FormAdminBuilder() {
                     color: "#6b7280",
                     backgroundColor: "#f9fafb"
                   }}
-                  readOnly 
+                  readOnly
                 />
               )}
 
@@ -474,7 +805,7 @@ export default function FormAdminBuilder() {
                         borderRadius: question.type === "radio" ? "50%" : "0.25rem",
                         flexShrink: 0
                       }}></div>
-                      
+
                       <input
                         type="text"
                         value={option}
@@ -489,7 +820,7 @@ export default function FormAdminBuilder() {
                         }}
                         placeholder="Option"
                       />
-                      
+
                       <button
                         onClick={() => deleteOption(question.id, index)}
                         disabled={question.options.length === 1}
@@ -542,7 +873,6 @@ export default function FormAdminBuilder() {
                 </div>
               )}
 
-              {/* File Upload Info Box (KEPT) */}
               {question.type === "file" && (
                 <div style={{
                   display: "flex",

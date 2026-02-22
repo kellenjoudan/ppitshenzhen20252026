@@ -1,26 +1,16 @@
 "use client";
 import Image from "next/image";
-import PPIT from "../../../public/Home/foto bareng.webp";
-import PPITTablet from "../../../public/Home/foto bareng.webp";
-import PPITMobile from "../../../public/Home/foto bareng.webp";
+import PPIT from "../../../public/Home/foto_tangga.webp";
+import PPITTablet from "../../../public/Home/foto_tangga.webp";
+import PPITMobile from "../../../public/Home/foto_tangga.webp";
 import AboutImage from "../../../public/Home/3D_Logo.webp";
-import Vision from "../../../public/Home/vision.webp";
 import Mission from "../../../public/Home/mission.webp";
-import BestSeller from "../../../public/Home/merch.webp";
-import SweaterImage from "../../../public/Home/sweater.webp";
-import StarShirt from "../../../public/Home/star-shirt.webp";
-import ShenzhenShirt from "../../../public/Home/shenzhen-shirt.webp";
-import Cap from "../../../public/Home/cap.webp";
+import couplesweater from "../../../public/Home/couplesweater.webp";
+import sweatercewe from "../../../public/Home/sweatercewe.webp";
+import sweatercowo from "../../../public/Home/sweatercowo.webp";
 import Link from "next/link";
 
 export default function Home() {
-
-	const merchandise = [
-		{ name: "Sweater", price: "110元", image: SweaterImage },
-		{ name: "Star Shirt", price: "75元", image: StarShirt },
-		{ name: "Shenzhen Shirt", price: "75元", image: ShenzhenShirt },
-		{ name: "Cap", price: "50元", image: Cap },
-	];
 
 	const universities = [
 		{
@@ -128,15 +118,6 @@ export default function Home() {
 			</div>
 			
 			<div className="relative overflow-hidden">
-			{/* Right repeating batik */}
-			<div
-				className="absolute w-[120px] sm:w-[230px] h-full inset-y-0 bg-[url('/Home/motif_batik_hp.webp')] sm:bg-[url('/Home/motif_batik.webp')] opacity-10 bg-repeat-y z-10 right-0 bg-[length:120px_auto] sm:bg-[length:230px_auto]"
-			/>
-
-			{/* Left repeating batik */}
-			<div
-				className="absolute w-[120px] sm:w-[230px] h-full inset-y-0 scale-x-[-1] bg-[url('/Home/motif_batik_hp.webp')] sm:bg-[url('/Home/motif_batik.webp')] opacity-10 bg-repeat-y z-10 left-0 bg-[length:120px_auto]  sm:bg-[length:230px_auto]"
-			/>
 
 			{/* About Section */}
 			<section
@@ -200,7 +181,25 @@ export default function Home() {
 			</section>
 
 			{/* Vision & Mission */}
-			<section className="bg-[#7E0C0E] pt-12 pb-20 px-4 md:px-8">
+			<section className="relative bg-[#7E0C0E] pt-12 pb-20 px-4 md:px-8">
+				{/* Right repeating batik */}
+				<div
+					className="absolute top-0 right-0 h-full w-[120px] sm:w-[230px]
+					bg-[url('/Home/motif_batik_hp.webp')] 
+					sm:bg-[url('/Home/motif_batik.webp')]
+					opacity-10 bg-repeat-y z-0
+					bg-[length:120px_auto] sm:bg-[length:230px_auto]"
+				/>
+
+				{/* Left repeating batik */}
+				<div
+					className="absolute top-0 left-0 h-full w-[120px] sm:w-[230px]
+					scale-x-[-1]
+					bg-[url('/Home/motif_batik_hp.webp')] 
+					sm:bg-[url('/Home/motif_batik.webp')]
+					opacity-10 bg-repeat-y z-0
+					bg-[length:120px_auto] sm:bg-[length:230px_auto]"
+				/>
 				<div className="max-w-[90rem] mx-auto flex flex-col md:flex-row text-white">
 					<div className="ml-4">
 						<div className="flex flex-col md:flex-row">
@@ -228,20 +227,20 @@ export default function Home() {
 							</div>
 							<div className="md:border-l-2 border-gray-300 mx-4" />
 							<div className="flex-1 md:pl-4 mb-8 md:mb-0">
-								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center mb-6">
+								<h2 className="text-3xl lg:text-4xl font-bold font-montserrat mb-4 text-center">
 									MISI
 								</h2>
-									<ul className="list-disc list-inside text-left text-xl lg:text-2xl font-montserrat font-small mx-auto max-w-xl text-justify">
-										<li>
+									<ul className="list-disc list-inside text-xl lg:text-2xl font-montserrat font-small mx-auto max-w-xl text-left sm:text-justify">
+										<li className="mb-2">
 										<span className="font-bold">Grow:</span> Mendorong Pengembangan diri mahasiswa melalui kegiatan edukatif, kreatif, dan kolaboratif yang membentuk pribadi tangguh dan berdaya saing.
 										</li>
-										<li>
+										<li className="mb-2">
 										<span className="font-bold">Laugh:</span> Menciptakan lingkungan yang menyenangkan melalui berbagai program yang membangun suasan positif, sehat, dan penuh tawa.
 										</li>
-										<li>
+										<li className="mb-2">
 										<span className="font-bold">Open:</span> Menumbuhkan budaya keterbukaan, komunikasi 2 arah, dan kolaborasi antaranggota demi terciptanya organisasi yang responsif dan adaptif.
 										</li>
-										<li>
+										<li className="mb-2">
 										<span className="font-bold">Warm:</span> Memperkuat rasa kekeluargaan antar pelajar Indonesia di Shenzhen agar setiap individu merasa diterima, didengar, dan dihargai.
 										</li>
 									</ul>
@@ -262,68 +261,68 @@ export default function Home() {
 			</section>
 
 			{/* Merchandise Section */}
-			{/* <section className="grid grid-cols-1 lg:grid-cols-8">
-				<div className="col-span-3 md:col-span-3">
-					<div className="h-full lg:w-full sm:w-[65%] w-full mx-auto">
+			<section className="bg-[#7E0C0E] py-16 px-8 lg:px-8 w-full mx-auto">
+    <div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-white">
+        <div className="flex flex-col lg:flex-row gap-4 md:gap-6 xl:gap-8 xl:mx-24 md:mx-16 mx-12 items-center justify-between">
+            <div className="flex flex-col">
+                <h2 className="text-center lg:text-left sm:text-5xl text-3xl font-bold text-white font-montserrat">
+                    Merchandise
+                </h2>
+                <p className="text-xl md:text-2xl text-center lg:text-left font-montserrat relative z-10 text-white">
+                    get them while they're still in stock!
+                </p>
+            </div>
+            <div className="flex items-center justify-center mt-4 lg:mt-0">
+                <Link
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScS3Ng-ee7hA_oZKcF_UQT5--Kx10ihxKPObj8pjOorn7atOA/formResponse"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white font-bold xl:text-3xl text-2xl xl:px-6 px-4 py-3 mx-4 bg-red-600 font-montserrat hover:scale-110 transition duration-300 text-center relative z-20 rounded-md"
+                >
+                    BUY NOW
+                </Link>
+            </div>
+        </div>
+		<div className="mt-4 px-6 lg:px-16">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
+					<div className="flex justify-center">
 						<Image
-							src={BestSeller}
-							alt="Shenzhen EST. 2018 Exclusive Sweater"
-							className="w-full h-full object-contain"
+							src={sweatercewe}
+							alt="Shenzhen EST. 2018 Exclusive Sweater (Cewe)"
+							className="w-full h-auto max-w-[400px] object-contain"
 							width={400}
 							height={400}
-							quality={100}
+							quality={90}
 						/>
 					</div>
-				</div>
 
-				<div className="mt-12 md:mt-16 col-span-5 md:col-span-5">
-					<div className="flex flex-col lg:flex-row gap-4 md:gap-6 xl:gap-8 xl:mx-24 md:mx-16 mx-12">
-						<div className="flex flex-col">
-							<h2 className="md:text-5xl text-4xl font-black text-center lg:text-left font-montserrat">
-								Merchandise
-							</h2>
-							<p className="text-xl md:text-2xl text-center lg:text-left font-montserrat">
-								get them while they're still in stock!
-							</p>
-						</div>
-						<div className="flex items-center justify-center">
-							<Link
-								href="https://docs.google.com/forms/d/e/1FAIpQLSfJbSNKm60OtPAqF9Pk6TqfwXrS3LODmjnwPORwbZDtBu7nDQ/viewform?usp=pp_url"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="text-white font-bold xl:text-3xl text-2xl xl:px-6 px-4 py-3 mx-4 bg-red-600 font-montserrat hover:scale-110 transition duration-300 text-center"
-							>
-								BUY NOW
-							</Link>
-						</div>
+					<div className="flex justify-center">
+						<Image
+							src={couplesweater}
+							alt="Shenzhen EST. 2018 Exclusive Couple Sweater"
+							className="w-full h-auto max-w-[400px] object-contain"
+							width={400}
+							height={400}
+							quality={90}
+						/>
 					</div>
 
-					<div className="grid grid-cols-2 gap-4 md:grid-cols-2 mt-12 mx-12">
-						{merchandise.map((item, index) => (
-							<div key={index} className="flex flex-col items-center">
-								<Image
-									src={item.image}
-									alt={item.name}
-									className="md:w-[70%] h-auto object-cover"
-									width={200}
-									height={200}
-								/>
-								<div className="flex flex-col items-center justify-center p-2">
-									<h3 className="font-bold text-center text-lg font-montserrat">
-										{item.name}
-									</h3>
-									<p className="font-bold text-lg text-red-600 font-montserrat">
-										{item.price}
-									</p>
-								</div>
+					<div className="flex justify-center">
+						<Image
+							src={sweatercowo}
+							alt="Shenzhen EST. 2018 Exclusive Sweater (Cowo)"
+							className="w-full h-auto max-w-[400px] object-contain"
+							width={400}
+							height={400}
+							quality={90}
+						/>
 							</div>
-						))}
-					</div>
 				</div>
-			</section> */}
+			</div>
+		</div>
+	</section>
 
-			{/* <hr className="w-full border-t-2 border-gray-200 font-montserrat mt-10" /> */}
-			{/* Universities Section */}
+			{/* University List */}
 			<section className="bg-[#7E0C0E] py-16 px-4 md:px-8">
 				<div className="max-w-7xl mx-auto">
 					{/* Centered Heading */}
@@ -342,8 +341,7 @@ export default function Home() {
 									<div className="w-6 h-6 rounded-full border-[3px] border-white relative z-10"
 									style={{backgroundColor	: uni.color}}
 									></div>
-									
-									{/* Vertical Line (except for the last item) */}
+
 									{index < universities.length - 1 && (
 										<div className="absolute left-[0.6rem] top-6 h-[calc(100%+3rem)] w-1 bg-white z-0"></div>
 									)}
