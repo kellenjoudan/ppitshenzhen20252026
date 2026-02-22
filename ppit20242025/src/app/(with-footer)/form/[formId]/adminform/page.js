@@ -68,7 +68,7 @@ export default function FormAdminBuilder() {
 
       if (!formSnap.exists()) {
         alert("Form not found");
-        router.push("/admin");
+        router.push("/form");
         return;
       }
 
@@ -378,7 +378,7 @@ export default function FormAdminBuilder() {
   if (user === undefined) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
-        <p style={{ color: "white", fontSize: "1.2rem" }}>Loading...</p>
+        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem" }}>Please try logging in again.</p>
       </div>
     );
   }
@@ -386,7 +386,7 @@ export default function FormAdminBuilder() {
   if (user && !admin) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
-        <p style={{ color: "white", fontSize: "1.2rem" }}>Redirecting to user page...</p>
+        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem" }}>You do not have permission to view this page.</p>
       </div>
     );
   }
