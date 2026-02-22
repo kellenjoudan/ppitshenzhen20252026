@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { auth } from "../../../lib/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { getAllForms, createForm } from "../../../services/forms";
+import { getAllForms } from "../../../services/forms";
 import { db } from "../../../lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -77,7 +77,7 @@ export default function loadAllFormsPage(){
 
     if (loading) return (
         <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", margin: 0, padding: 0 }}>
-            <div className="font-montserrat text-white" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2rem" }}>Fetching forms, please wait...</div>
+            <div className="font-montserrat text-white" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem" }}>Fetching forms, please wait...</div>
         </div>
 
     );
