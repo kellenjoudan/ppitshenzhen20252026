@@ -1,0 +1,27 @@
+name: DEPLOY
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      NEXT_PUBLIC_SCRIPT_URL: ${{secrets.NEXT_PUBLIC_SCRIPT_URL}}
+      NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}}
+      NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: ${{secrets.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}}
+      NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET_FORMCOVER: ${{secrets.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET_FORMCOVER}}
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${{secrets.NEXT_PUBLIC_FIREBASE_API_KEY}}
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID}}
+      
+      CLOUDINARY_API_KEY: ${{secrets.CLOUDINARY_API_KEY}}
+      CLOUDINARY_API_SECRET: ${{secrets.CLOUDINARY_API_SECRET}}
+    
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install
+      - run: npm run build
