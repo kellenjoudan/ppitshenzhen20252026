@@ -326,10 +326,10 @@ export default function FormAdminBuilder() {
 
       // 🔴 If editing existing form → delete from Firestore
       if (isEditing) {
-        await deleteDoc(doc(db, "forms", formId));
-
-        alert("Form deleted successfully!");
-        router.replace("/form/new/adminform"); // go to blank builder
+      await deleteDoc(doc(db, "forms", formId));
+      alert("Form deleted successfully!");
+      router.replace("/form"); //delet > form list
+      router.refresh();
       } 
       
       // 🟡 If it's a new unsaved form → just reset state
