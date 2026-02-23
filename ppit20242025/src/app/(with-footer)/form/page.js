@@ -29,6 +29,8 @@ export default function loadAllFormsPage(){
     const [submittedForms, setSubmittedForms] = useState([]);
     const router = useRouter();
     const getQrUrl = (qrContent) => `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrContent)}`;
+    const activeForms = [];
+
 
     // GET USER AND FORMS DATA
     useEffect(() => {
@@ -65,6 +67,13 @@ export default function loadAllFormsPage(){
 
         return () => unsub();
     }, [router]);
+    
+    //COMPUTE ACTIVE USER FORMS
+    for (let f of forms) {
+        if (f.isActive) {
+            activeForms.push(f);
+        };
+    };
 
     
     if (user === undefined) {
@@ -82,10 +91,7 @@ export default function loadAllFormsPage(){
 
     );
 
-    // console.log(forms)
-    // forms.pop()
-
-    if (forms.length == 0) {
+    if (activeForms.length == 0) {
         return (
             <div style={{ minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0 }}>
                 <div className="font-montserrat text-white" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem" }}>No events to register at the moment.</div>
@@ -251,7 +257,7 @@ export default function loadAllFormsPage(){
             )}
 
             {/* BARCODE SCANNER BUTTON */}
-            {!admin && (
+            {!admin && forms.length != 0 && (
                 <div style={{ marginTop: "2rem", textAlign: "center" }}>
                     <button
                     onClick={() => router.push("scan")}
