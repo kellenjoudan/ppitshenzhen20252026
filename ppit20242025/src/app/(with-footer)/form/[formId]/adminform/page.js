@@ -379,7 +379,7 @@ export default function FormAdminBuilder() {
   if (user === undefined) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
-        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem" }}>Please try logging in again.</p>
+        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem", textAlign: "center" }}>Please try logging in again.</p>
       </div>
     );
   }
@@ -387,7 +387,7 @@ export default function FormAdminBuilder() {
   if (user && !admin) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
-        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem" }}>You do not have permission to view this page.</p>
+        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem", textAlign: "center" }}>You do not have permission to view this page.</p>
       </div>
     );
   }

@@ -109,60 +109,60 @@ export default function AdminControlPage() {
             {/* Main Content */}
             <div className="font-montserrat flex-1 flex justify-center items-start px-6 md:px-12 pt-24 pb-12">
                 <div className="w-full max-w-xl bg-[#1f1f1f] rounded-xl shadow-2xl p-10 text-white">
-                <h1 className="text-2xl font-semibold mb-8"> Admin Status Management </h1>
+                    <h1 className="text-2xl font-semibold mb-8"> Admin Status Management </h1>
 
-                {/* Email Label */}
-                <label className="block mb-2 text-sm text-gray-300"> User Email </label>
+                    {/* Email Label */}
+                    <label className="block mb-2 text-sm text-gray-300"> User Email </label>
 
-                {/* Email Input */}
-                <input
-                    type="email"
-                    value={selectedEmail}
-                    onChange={(e) => {
-                    setSelectedEmail(e.target.value);
-                    setUserFound(null);
-                    setUserNotFound(false);
-                    setSelectedClientEmail(false);
-                    }}
-                    placeholder="Enter user email..."
-                    className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] border border-gray-600 focus:border-purple-500 focus:outline-none transition mb-4"
-                />
-                
-                { userFound && (
-                    <>
-                        <div className="font-montserrat text-white text-sm" style={{ marginTop:"-1rem" }}>User found! ✅</div>
-                        <div className="mb-4 text-white text-sm">Admin Status: {userFound.admin ? "True" : "False"}</div>
-                    </>
-                )}
+                    {/* Email Input */}
+                    <input
+                        type="email"
+                        value={selectedEmail}
+                        onChange={(e) => {
+                        setSelectedEmail(e.target.value);
+                        setUserFound(null);
+                        setUserNotFound(false);
+                        setSelectedClientEmail(false);
+                        }}
+                        placeholder="Enter user email..."
+                        className="w-full px-4 py-3 rounded-lg bg-[#2a2a2a] border border-gray-600 focus:border-purple-500 focus:outline-none transition mb-4"
+                    />
+                    
+                    { userFound && (
+                        <>
+                            <div className="font-montserrat text-white text-sm" style={{ marginTop:"-1rem" }}>User found! ✅</div>
+                            <div className="mb-4 text-white text-sm">Admin Status: {userFound.admin ? "True" : "False"}</div>
+                        </>
+                    )}
 
-                { userNotFound &&
-                    <div className="mb-4 font-montserrat text-white text-sm" style={{ marginTop:"-1rem" }}>User not found! ❌</div>
-                }
+                    { userNotFound &&
+                        <div className="mb-4 font-montserrat text-white text-sm" style={{ marginTop:"-1rem" }}>User not found! ❌</div>
+                    }
 
-                { selectedClientEmail &&
-                    <div className="mb-4 font-montserrat text-white text-sm" style={{ marginTop:"-1rem" }}>Cannot modify yourself! ❌</div>
-                }
+                    { selectedClientEmail &&
+                        <div className="mb-4 font-montserrat text-white text-sm" style={{ marginTop:"-1rem" }}>Cannot modify yourself! ❌</div>
+                    }
 
-                {/* Verify Button */}
-                { !userFound &&
-                    <button
-                        onClick={verifyEmail}
-                        disabled={loading}
-                        className="px-6 py-3 bg-purple-600 hover:bg-purple-500 disabled:opacity-60 disabled:cursor-not-allowed rounded-lg transition mb-6"
-                    >
-                        {loading ? "Verifying..." : "Verify User"}
-                    </button>
-                }
+                    {/* Verify Button */}
+                    { !userFound &&
+                        <button
+                            onClick={verifyEmail}
+                            disabled={loading}
+                            className="px-6 py-3 bg-purple-600 hover:bg-purple-500 disabled:opacity-60 disabled:cursor-not-allowed rounded-lg transition mb-6"
+                        >
+                            {loading ? "Verifying..." : "Verify User"}
+                        </button>
+                    }
 
-                {/* Toggle Button */}
-                {userFound && (
-                    <button
-                    onClick={processAdminStatusChange}
-                    className="px-6 py-3 bg-green-600 hover:bg-green-500 rounded-lg transition"
-                    >
-                    Toggle Admin Status
-                    </button>
-                )}
+                    {/* Toggle Button */}
+                    {userFound && (
+                        <button
+                        onClick={processAdminStatusChange}
+                        className="px-6 py-3 bg-green-600 hover:bg-green-500 rounded-lg transition"
+                        >
+                        Toggle Admin Status
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
