@@ -158,8 +158,10 @@ export default function FormClient({ form }) {
           {form.title}
         </h1>
 
-        <p className="text-sm text-center text-gray-200 mt-2 mb-10">
-          {form.description}
+        <p
+          className="text-sm text-center text-gray-200 mt-2 mb-10 whitespace-pre-line"
+        >
+          {form.description} //description spacing
         </p>
 
         {form.questions.map((q) => (
