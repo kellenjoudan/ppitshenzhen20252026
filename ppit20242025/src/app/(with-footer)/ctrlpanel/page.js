@@ -78,7 +78,7 @@ export default function AdminControlPage() {
                 const userData = userSnap.data();
                 if (!userData.admin) {
                     alert("You do not have permission to view this page.");
-                    router.back();
+                    router.push("/");
                 }
             }
           } catch (error) {
