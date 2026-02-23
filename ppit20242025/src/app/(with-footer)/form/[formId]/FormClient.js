@@ -164,18 +164,10 @@ export default function FormClient({ form }) {
 
         {form.questions.map((q) => (
           <div key={q.id} className="mb-8">
-            {q.type === "info" && (
-              <div className="mb-4 p-4 bg-[#B88C8C]/20 rounded text-white">
-                {q.label}
-              </div>
-            )}
-
-            {/* INFO / DISPLAY ONLY */}
-            {q.type === "info" && (
-              <p className="text-gray-200 text-sm leading-relaxed">
-                {q.label}
-              </p>
-            )}
+            {/* TITLE/LABEL */}
+            <label className="block mb-3 text-lg font-semibold">
+              {q.label} {q.required && q.type !== "info" && "*"}
+            </label>
 
             {/* TEXTAREA (COMMENTS) */}
             {q.type === "textarea" && (
