@@ -185,7 +185,7 @@ export default function FormAdminBuilder() {
       questions: form.questions.map((q) => {
         if (q.id !== questionId) return q;
         let newOptions = q.options;
-        if (["text", "textarea", "file"].includes(newType)) newOptions = [];
+        if (["text", "textarea", "file", "info"].includes(newType)) newOptions = [];
         else if (["radio", "checkbox"].includes(newType)) newOptions = ["Option 1"];
         return { ...q, type: newType, options: newOptions };
       }),
@@ -326,10 +326,10 @@ export default function FormAdminBuilder() {
 
       // 🔴 If editing existing form → delete from Firestore
       if (isEditing) {
-        await deleteDoc(doc(db, "forms", formId));
-
-        alert("Form deleted successfully!");
-        router.replace("/form/new/adminform"); // go to blank builder
+      await deleteDoc(doc(db, "forms", formId));
+      alert("Form deleted successfully!");
+      router.replace("/form"); //delet > form list
+      router.refresh();
       } 
       
       // 🟡 If it's a new unsaved form → just reset state
@@ -372,13 +372,14 @@ export default function FormAdminBuilder() {
     { value: "textarea", label: "Paragraph" },
     { value: "radio", label: "Multiple Choice" },
     { value: "checkbox", label: "Checkboxes" },
-    { value: "file", label: "File Upload" },
+    { value: "file", label: "File Upload" }, // File Upload User
+    { value: "info", label: "Text Only (No Answer)" },
   ];
 
   if (user === undefined) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
-        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem" }}>Please try logging in again.</p>
+        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem", textAlign: "center" }}>Please try logging in again.</p>
       </div>
     );
   }
@@ -386,7 +387,7 @@ export default function FormAdminBuilder() {
   if (user && !admin) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
-        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem" }}>You do not have permission to view this page.</p>
+        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem", textAlign: "center" }}>You do not have permission to view this page.</p>
       </div>
     );
   }
@@ -889,6 +890,21 @@ export default function FormAdminBuilder() {
                 </div>
               )}
 
+              {question.type === "info" && (
+                <div
+                  style={{
+                    padding: "0.75rem",
+                    borderRadius: "0.375rem",
+                    backgroundColor: "#f9fafb",
+                    color: "#374151",
+                    fontSize: "0.95rem",
+                    marginBottom: "1rem"
+                  }}
+                >
+                  ℹ️ This is display text only. Users will not answer this.
+                </div>
+              )}
+
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -904,6 +920,7 @@ export default function FormAdminBuilder() {
                     type="checkbox"
                     id={`required-${question.id}`}
                     checked={question.required}
+                    disabled={question.type === "info"}
                     onChange={(e) => updateQuestion(question.id, "required", e.target.checked)}
                     style={{
                       width: "1rem",

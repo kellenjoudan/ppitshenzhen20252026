@@ -82,7 +82,7 @@ export default function FormClient({ form }) {
   /* Validation check */
   const validateRequired = () => {
     for (const q of form.questions) {
-      if (q.required) {
+      if (q.required && q.type !== "info") {
         const value = answers[q.id];
         if (
           value === undefined ||
@@ -158,14 +158,17 @@ export default function FormClient({ form }) {
           {form.title}
         </h1>
 
-        <p className="text-sm text-center text-gray-200 mt-2 mb-10">
-          {form.description}
+        <p
+          className="text-sm text-center text-gray-200 mt-2 mb-10 whitespace-pre-line"
+        >
+          {form.description} //description spacing
         </p>
 
         {form.questions.map((q) => (
           <div key={q.id} className="mb-8">
+            {/* TITLE/LABEL */}
             <label className="block mb-3 text-lg font-semibold">
-              {q.label} {q.required && "*"}
+              {q.label} {q.required && q.type !== "info" && "*"}
             </label>
 
             {/* TEXTAREA (COMMENTS) */}
