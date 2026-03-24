@@ -161,7 +161,7 @@ export default function FormClient({ form }) {
         <p
           className="text-sm text-center text-gray-200 mt-2 mb-10 whitespace-pre-line"
         >
-          {form.description} //description spacing
+          {form.description}
         </p>
 
         {form.questions.map((q) => (
@@ -197,6 +197,18 @@ export default function FormClient({ form }) {
                 onChange={(e) =>
                   setAnswers({ ...answers, [q.id]: e.target.files[0] })
                 }
+              />
+            )}
+
+            {q.type === "image" && q.imageUrl && (
+              <img
+                src={q.imageUrl}
+                alt="Form content"
+                style={{
+                  width: "100%",
+                  borderRadius: "0.5rem",
+                  marginBottom: "1rem"
+                }}
               />
             )}
 
