@@ -86,6 +86,7 @@ export default function FormAdminBuilder() {
           label: q.label,
           required: q.required || false,
           options: q.options || [],
+          imageUrl: q.imageUrl || "",
         })) || [],
       });
 
@@ -149,16 +150,17 @@ export default function FormAdminBuilder() {
 
   // addNewQuestion
   const addNewQuestion = () => {
-    const newQuestion = {
-      id: generateClientId(),
-      type: "text",
-      label: "Type Question",
-      required: false,
-      options: [],
-    };
-    if (["radio", "checkbox"].includes(newQuestion.type)) newQuestion.options = ["Option 1"];
-    setForm({ ...form, questions: [...form.questions, newQuestion] });
+  const newQuestion = {
+    id: generateClientId(),
+    type: "text",
+    label: "Type Question",
+    required: false,
+    options: [],
+    imageUrl: "", // ✅ NEW
   };
+  if (["radio", "checkbox"].includes(newQuestion.type)) newQuestion.options = ["Option 1"];
+  setForm({ ...form, questions: [...form.questions, newQuestion] });
+};
 
   // deleteQuestion
   const deleteQuestion = (questionId) => {
@@ -185,9 +187,10 @@ export default function FormAdminBuilder() {
       questions: form.questions.map((q) => {
         if (q.id !== questionId) return q;
         let newOptions = q.options;
+        let imageUrl = q.imageUrl || "";
         if (["text", "textarea", "file", "info"].includes(newType)) newOptions = [];
         else if (["radio", "checkbox"].includes(newType)) newOptions = ["Option 1"];
-        return { ...q, type: newType, options: newOptions };
+        return { ...q, type: newType, options: newOptions, label: newType === "image" ? "" : q.label, imageUrl };
       }),
     });
   };
@@ -374,7 +377,37 @@ export default function FormAdminBuilder() {
     { value: "checkbox", label: "Checkboxes" },
     { value: "file", label: "File Upload" }, // File Upload User
     { value: "info", label: "Text Only (No Answer)" },
+    { value: "image", label: "Image Display" }, // Image Upload Admin
   ];
+
+  const handleQuestionImageUpload = async (e, questionId) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Image must be under 10MB");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET_FORMCOVER);
+      formData.append("folder", "FormImages");
+
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: "POST", body: formData }
+      );
+      
+      const data = await res.json();
+
+      updateQuestion(questionId, "imageUrl", data.secure_url);
+    } catch (err) {
+      console.error(err);
+      alert("Image upload failed");
+    }
+  };
 
   if (user === undefined) {
     return (
@@ -905,12 +938,73 @@ export default function FormAdminBuilder() {
                 </div>
               )}
 
+              {question.type === "image" && (
+                <div style={{ marginBottom: "1rem" }}>
+                  
+                  {!question.imageUrl ? (
+                    // ✅ No image yet → show upload
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleQuestionImageUpload(e, question.id)}
+                    />
+                  ) : (
+                    // ✅ Image exists → show preview + controls
+                    <div>
+                      <img
+                        src={question.imageUrl}
+                        alt="Uploaded"
+                        style={{
+                          maxWidth: "100%",
+                          borderRadius: "0.5rem",
+                          border: "1px solid #e5e7eb"
+                        }}
+                      />
+
+                      <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem" }}>
+                        {/* Change Image */}
+                        <label
+                          style={{
+                            cursor: "pointer",
+                            color: "#2563eb",
+                            fontSize: "0.85rem"
+                          }}
+                        >
+                          Change Image
+                          <input
+                            type="file"
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            onChange={(e) => handleQuestionImageUpload(e, question.id)}
+                          />
+                        </label>
+
+                        {/* Remove Image */}
+                        <button
+                          onClick={() => updateQuestion(question.id, "imageUrl", "")}
+                          style={{
+                            color: "#ef4444",
+                            border: "none",
+                            background: "none",
+                            cursor: "pointer",
+                            fontSize: "0.85rem"
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
                 marginTop: "1rem"
               }}>
+                {!["info", "image"].includes(question.type) && (
                 <div style={{
                   display: "flex",
                   alignItems: "center",
@@ -920,7 +1014,6 @@ export default function FormAdminBuilder() {
                     type="checkbox"
                     id={`required-${question.id}`}
                     checked={question.required}
-                    disabled={question.type === "info"}
                     onChange={(e) => updateQuestion(question.id, "required", e.target.checked)}
                     style={{
                       width: "1rem",
@@ -939,10 +1032,12 @@ export default function FormAdminBuilder() {
                     Required
                   </label>
                 </div>
+              )}
 
                 <button
                   onClick={() => deleteQuestion(question.id)}
                   style={{
+                    marginLeft: "auto",
                     color: "#ef4444",
                     border: "none",
                     background: "none",
