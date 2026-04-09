@@ -5,9 +5,10 @@
 
 import { useState, useEffect } from "react";
 import { submitResponse } from "../../../../services/forms";
-import { auth } from "../../../../lib/firebase";
+import { auth, db } from "../../../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { getDoc, doc } from "firebase/firestore";
 
 export default function FormClient({ form }) {
   const [user, setUser] = useState(null);
@@ -16,14 +17,26 @@ export default function FormClient({ form }) {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const router = useRouter();
 
   /* Auth check */
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u);
       setLoading(false);
+      try {
+        const ref = doc(db, "users", u.uid);
+        const snapshot = await getDoc(ref);
+        const submittedForms = snapshot.data().submittedForms;
+        if(submittedForms.includes(form.id)) {
+          setFormSubmitted(true);
+        }
+      } catch (e) {
+        console.error("error in checking status" + e)
+      }
     });
+
     return () => unsub();
   }, []);
 
@@ -41,6 +54,17 @@ export default function FormClient({ form }) {
         <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3rem", fontWeight: "bolder" }}>Please log in to submit this form.</div>
       </div>
     );
+  }
+
+  if (formSubmitted) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0, gap: "1rem" }}>
+        <div className="font-montserrat" style={{ fontSize: "2rem", fontWeight: "bold" }}>Form can only be filled once.</div>
+        <button onClick={() => router.push('/form')} className="underline hover:text-white text-lg md:text-base text-gray-300">
+          Go back to forms page
+        </button>
+      </div>
+    )
   }
 
   if (submitting) {

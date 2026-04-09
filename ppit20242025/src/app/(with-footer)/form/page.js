@@ -106,7 +106,7 @@ export default function loadAllFormsPage(){
                 {forms.map((form) => {
                     const status = attendedForms.includes(form.id) ? "attended" : submittedForms.includes(form.id) ? "submitted" : "open";
 
-                    const buttonDisabled = status != "open";
+                    const buttonDisabled = status != "open" && !admin;
                     const buttonStyle = {
                         marginBottom: "1rem",
                         padding: "0.45rem 1.4rem",
@@ -118,10 +118,12 @@ export default function loadAllFormsPage(){
                         opacity: buttonDisabled ? 0.7 : 1,
                         pointerEvents: buttonDisabled ? "none" : "auto",
                         color:
+                        admin ? "white" :
                         status === "submitted"
                             ? "#000"
                             : "white",
                         background:
+                        admin ? "#e40000" :
                         status === "submitted"
                             ? "#fbbf24"
                             : status === "attended"
