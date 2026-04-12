@@ -104,7 +104,13 @@ export default function loadAllFormsPage(){
             {/* FORM CONTENT */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 p-8 mx-auto justify-center items-center">
                 {forms.map((form) => {
-                    const status = attendedForms.includes(form.id) ? "attended" : submittedForms.includes(form.id) ? "submitted" : "open";
+                    const status = attendedForms.includes(form.id)
+                        ? "attended"
+                        : submittedForms.includes(form.id)
+                        ? "submitted"
+                        : form.isClosed
+                        ? "closed"
+                        : "open";
 
                     const buttonDisabled = status != "open" && !admin;
                     const buttonStyle = {
@@ -128,6 +134,8 @@ export default function loadAllFormsPage(){
                             ? "#fbbf24"
                             : status === "attended"
                             ? "#000"
+                            : status === "closed"
+                            ? "#9ca3af" // grey
                             : "#e40000",
                     }
 
@@ -169,7 +177,15 @@ export default function loadAllFormsPage(){
                                         router.push(`form/${form.id}`)
                                     }
                                 }}>
-                            {admin ? "Edit" : status === "submitted" ? "Submitted" : status === "attended" ? "Attended" : "Register"}
+                            {admin
+                                ? "Edit"
+                                : status === "submitted"
+                                ? "Submitted"
+                                : status === "attended"
+                                ? "Attended"
+                                : status === "closed"
+                                ? "Closed"
+                                : "Register"}
                             </button>
                         </div> 
                     </div>
