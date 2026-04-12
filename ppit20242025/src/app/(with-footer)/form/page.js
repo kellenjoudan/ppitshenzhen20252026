@@ -187,6 +187,17 @@ export default function loadAllFormsPage(){
                                 ? "Closed"
                                 : "Register"}
                             </button>
+
+                            {/* VIEW RESPONSES BUTTON (ADMIN ONLY) */}
+                            {admin && (
+                                <button 
+                                    className="font-montserrat"
+                                    style={ buttonStyle }
+                                    onClick={() => router.push(`form/${form.id}/responses`)}
+                                > 
+                                Responses
+                                </button>
+                            )}
                         </div> 
                     </div>
                 )})}
