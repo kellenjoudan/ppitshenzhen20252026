@@ -180,11 +180,7 @@ return (
             key={res.id}
             className="bg-[#B88C8C] text-black p-4 rounded"
             >
-
-            {/* <p className="text-sm mb-2 text-gray-700">
-                {res.email || "No email"}
-            </p> */}
-
+                
             <p className="font-semibold text-xl mb-4">
                 Response #{index + 1}
             </p>
@@ -205,10 +201,6 @@ return (
                     </div>
                 )
             })}
-
-            {/* {Object.entries(res.answers || {}).map(([qId, value]) => (
-                
-            ))} */}
             </div>
         ))}
         </div>
