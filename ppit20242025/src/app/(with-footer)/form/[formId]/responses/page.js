@@ -154,7 +154,7 @@ const exportToCSV = () => {
 
 if (loading) {
     return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen text-lg flex items-center justify-center">
         Loading responses...
     </div>
     );

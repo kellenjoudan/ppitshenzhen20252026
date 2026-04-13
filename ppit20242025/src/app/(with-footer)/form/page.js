@@ -191,7 +191,7 @@ export default function loadAllFormsPage(){
                             {/* VIEW RESPONSES BUTTON (ADMIN ONLY) */}
                             {admin && (
                                 <button 
-                                    className="font-montserrat"
+                                    className="font-montserrat ml-4"
                                     style={ buttonStyle }
                                     onClick={() => router.push(`form/${form.id}/responses`)}
                                 > 
