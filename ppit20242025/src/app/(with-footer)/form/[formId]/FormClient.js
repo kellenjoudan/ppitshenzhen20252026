@@ -183,17 +183,25 @@ export default function FormClient({ form }) {
         </h1>
 
         <p
-          className="text-sm text-center text-gray-200 mt-2 mb-10 whitespace-pre-line"
-        >
-          {form.description}
-        </p>
+          className="text-sm text-center text-gray-200 mt-2 mb-10"
+          style={{ whiteSpace: "pre-line" }}
+          dangerouslySetInnerHTML={{ __html: form.description }}
+        />
 
         {form.questions.map((q) => (
           <div key={q.id} className="mb-8">
             {/* TITLE/LABEL */}
-            <label className="block mb-3 text-lg font-semibold">
-              {q.label} {q.required && q.type !== "info" && "*"}
-            </label>
+            <label
+              className="block mb-3 text-lg font-semibold"
+              style={{ whiteSpace: "pre-line" }}
+              dangerouslySetInnerHTML={{
+                __html:
+                  (q.type === "info"
+                    ? `<span style="font-weight: normal;">${q.label}</span>`
+                    : q.label) +
+                  (q.required && q.type !== "info" ? " *" : ""),
+              }}
+            />
 
             {/* TEXTAREA (COMMENTS) */}
             {q.type === "textarea" && (
