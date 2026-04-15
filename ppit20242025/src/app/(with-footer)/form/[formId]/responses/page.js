@@ -9,7 +9,8 @@ import { useRouter, useParams } from "next/navigation"
 export default function ResponsesPage() {
 const [responses, setResponses] = useState([]);
 const [loading, setLoading] = useState(true);
-const [user, setUser] = useState(null);
+const [loadingSheets, setLoadingSheets] = useState(false);
+// const [user, setUser] = useState(null);
 const [questions, setQuestions] = useState({});
 const router = useRouter();
 const formId = useParams()?.formId;
@@ -19,7 +20,7 @@ useEffect(() => {
         if(!u) {
             router.push("/login")
         }
-        setUser(u);
+        // setUser(u);
 
         try {
             const userRef = doc(db, "users", u.uid);
@@ -45,7 +46,7 @@ useEffect(() => {
         const q = query(
             collection(db, "responses"),
             where("formId", "==", formId),
-            orderBy("submittedAt", "desc")
+            orderBy("submittedAt", "asc")
         );
 
         const snapshot = await getDocs(q); 
@@ -127,11 +128,13 @@ const exportToCSV = () => {
         const ans = res.answers || {}
         const values = [];
         headerIdArray.forEach((id) => {
-            const val = ans?.[id] ?? "—";
-            if(Array.isArray(val)) return `"${val.join(", ")}"`;
-            return values.push(escapeCSV(val));
+            let val = ans?.[id] ?? "—";
+            if (Array.isArray(val)) {
+                val = val.join(", ");
+            }
+            values.push(escapeCSV(val));
         });
-        return rows.push(values);
+        rows.push(values);
     });
 
     const csvContent = [
@@ -152,10 +155,44 @@ const exportToCSV = () => {
     link.click();
 };
 
+const openInSheets = async () => {
+    setLoadingSheets(true);
+    
+    try{
+        const res = await fetch("/api/sheets", {
+            method: "POST",
+            body: JSON.stringify({
+            formId,
+            responses,
+            questions,
+            }),
+        });
+
+        const data = await res.json();
+
+        if (data.url) {
+            window.open(data.url, "_blank");
+        }
+    } catch(e) {
+        console.error("network error: "+ e);
+        alert("Failed to connect to server.");
+    } finally {
+        setLoadingSheets(false);
+    }
+};
+
 if (loading) {
     return (
     <div className="min-h-screen text-lg flex items-center justify-center">
         Loading responses...
+    </div>
+    );
+}
+
+if (loadingSheets) {
+    return (
+    <div className="min-h-screen font-montserrat text-white text-2xl font-bold flex items-center bg-[#7E0C0E] justify-center">
+        Creating Google Sheets...
     </div>
     );
 }
@@ -169,6 +206,13 @@ return (
         className="mb-6 bg-white text-black px-4 py-2 rounded"
     >
         Export CSV
+    </button>
+
+    <button
+        onClick={openInSheets}
+        className="mb-6 bg-white text-black px-4 py-2 rounded ml-4"
+    >
+        Open in Google Sheets
     </button>
 
     {responses.length === 0 ? (
