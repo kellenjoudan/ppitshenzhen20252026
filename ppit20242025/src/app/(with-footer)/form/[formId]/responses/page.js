@@ -157,6 +157,8 @@ const exportToCSV = () => {
 
 const openInSheets = async () => {
     setLoadingSheets(true);
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     
     try{
         const res = await fetch("/api/sheets", {
@@ -169,23 +171,21 @@ const openInSheets = async () => {
         });
 
         const data = await res.json();
+        setLoadingSheets(false);
 
         if (data.url) {
-            // Fixes pop-up issues with mobile browsers
-            const link = document.createElement("a");
-            link.href = data.url;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-            link.style.display = "none";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            if (isMobile) {
+                window.location.href = data.url
+            } else {
+                window.open(data.url, "_blank");
+            }
+        } else if (data.error) {
+            alert("Failed to create spreadsheet: " + data.error);
         }
     } catch(e) {
-        console.error("network error: "+ e);
-        alert("Failed to connect to server.");
-    } finally {
+        console.error("Network error: " + e);
         setLoadingSheets(false);
+        alert("Failed to connect to server.");
     }
 };
 
@@ -234,7 +234,7 @@ return (
             >
                 
             <p className="font-semibold text-xl mb-4">
-                Response #{index + 1}
+                Response #{responses.length - (index + 1) + 1}
             </p>
 
             {questions.map((q) => {
