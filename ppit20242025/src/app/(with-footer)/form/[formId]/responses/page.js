@@ -56,6 +56,8 @@ useEffect(() => {
         ...doc.data(),
         }));
 
+        data.reverse();
+
         setResponses(data);
     } catch (err) {
         console.error(err);
