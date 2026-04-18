@@ -3,7 +3,7 @@ import "./globals.css";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "./Components/Header";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 
 const montserrat = Montserrat({
 	variable: "--font-montserrat",
