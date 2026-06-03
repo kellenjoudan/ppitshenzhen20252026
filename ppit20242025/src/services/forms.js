@@ -149,6 +149,7 @@ export async function getAllForms() {
             coverImage: data.coverImage,
             headerColor: data.headerColor,
             isActive: data.isActive,
+            isClosed: data.isClosed,
         };
     });
 
@@ -166,15 +167,15 @@ export async function getAllUsers() {
 
     const snap = await getDocs(q);
     try {
-      const formList = snap.docs.map(docSnap => {
+      const userList = snap.docs.map(docSnap => {
           const data = docSnap.data();
           return {
-              uid: docSnap.uid,
+              uid: docSnap.id,
               email: data.email,
-              adminStatus: data.admin, //bool
+              admin: data.admin, //bool
           };
       });
-      return formList;
+      return userList;
     } catch (e) {
       console.error(e);
       return [];

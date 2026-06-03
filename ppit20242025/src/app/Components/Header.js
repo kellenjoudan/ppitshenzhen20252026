@@ -134,7 +134,7 @@ const Header = () => {
 				<>
 					<span
 						className={`block w-full h-[3px] rounded transition-transform origin-center ${
-							menuOpen ? "transform translate-y-[11px] rotate-45 bg-[#8C0000]" : "bg-white"
+							menuOpen ? "transform translate-y-[11px] rotate-45 bg-[#8C0000]" : "!bg-white"
 						} `}
 					></span>
 					<span
@@ -144,7 +144,7 @@ const Header = () => {
 					></span>
 					<span
 						className={`block w-full h-[3px] rounded transition-transform origin-center ${
-							menuOpen ? "transform translate-y-[-11px] -rotate-45 bg-[#8C0000]" : "bg-white"
+							menuOpen ? "transform translate-y-[-11px] -rotate-45 bg-[#8C0000]" : "!bg-white"
 						} `}
 					></span>
 				</>

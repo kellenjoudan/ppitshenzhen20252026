@@ -68,7 +68,7 @@ export default function FormAdminBuilder() {
 
       if (!formSnap.exists()) {
         alert("Form not found");
-        router.push("/admin");
+        router.push("/form");
         return;
       }
 
@@ -86,6 +86,7 @@ export default function FormAdminBuilder() {
           label: q.label,
           required: q.required || false,
           options: q.options || [],
+          imageUrl: q.imageUrl || "",
         })) || [],
       });
 
@@ -149,16 +150,17 @@ export default function FormAdminBuilder() {
 
   // addNewQuestion
   const addNewQuestion = () => {
-    const newQuestion = {
-      id: generateClientId(),
-      type: "text",
-      label: "Type Question",
-      required: false,
-      options: [],
-    };
-    if (["radio", "checkbox"].includes(newQuestion.type)) newQuestion.options = ["Option 1"];
-    setForm({ ...form, questions: [...form.questions, newQuestion] });
+  const newQuestion = {
+    id: generateClientId(),
+    type: "text",
+    label: "Type Question",
+    required: false,
+    options: [],
+    imageUrl: "", // ✅ NEW
   };
+  if (["radio", "checkbox"].includes(newQuestion.type)) newQuestion.options = ["Option 1"];
+  setForm({ ...form, questions: [...form.questions, newQuestion] });
+};
 
   // deleteQuestion
   const deleteQuestion = (questionId) => {
@@ -185,9 +187,10 @@ export default function FormAdminBuilder() {
       questions: form.questions.map((q) => {
         if (q.id !== questionId) return q;
         let newOptions = q.options;
-        if (["text", "textarea", "file"].includes(newType)) newOptions = [];
+        let imageUrl = q.imageUrl || "";
+        if (["text", "textarea", "file", "info"].includes(newType)) newOptions = [];
         else if (["radio", "checkbox"].includes(newType)) newOptions = ["Option 1"];
-        return { ...q, type: newType, options: newOptions };
+        return { ...q, type: newType, options: newOptions, label: newType === "image" ? "" : q.label, imageUrl };
       }),
     });
   };
@@ -225,6 +228,19 @@ export default function FormAdminBuilder() {
           : q
       ),
     });
+  };
+
+  const moveQuestion = (index, direction) => {
+    const newQuestions = [...form.questions];
+    const targetIndex = index + direction;
+
+    if (targetIndex < 0 || targetIndex >= newQuestions.length) return;
+
+    // swap
+    [newQuestions[index], newQuestions[targetIndex]] = 
+      [newQuestions[targetIndex], newQuestions[index]];
+
+    setForm({ ...form, questions: newQuestions });
   };
 
   const publishForm = async () => {
@@ -326,10 +342,10 @@ export default function FormAdminBuilder() {
 
       // 🔴 If editing existing form → delete from Firestore
       if (isEditing) {
-        await deleteDoc(doc(db, "forms", formId));
-
-        alert("Form deleted successfully!");
-        router.replace("/form/new/adminform"); // go to blank builder
+      await deleteDoc(doc(db, "forms", formId));
+      alert("Form deleted successfully!");
+      router.replace("/form"); //delet > form list
+      router.refresh();
       } 
       
       // 🟡 If it's a new unsaved form → just reset state
@@ -372,13 +388,79 @@ export default function FormAdminBuilder() {
     { value: "textarea", label: "Paragraph" },
     { value: "radio", label: "Multiple Choice" },
     { value: "checkbox", label: "Checkboxes" },
-    { value: "file", label: "File Upload" },
+    { value: "file", label: "File Upload" }, // File Upload User
+    { value: "info", label: "Text Only (No Answer)" },
+    { value: "image", label: "Image Display" }, // Image Upload Admin
   ];
+
+  const handleQuestionImageUpload = async (e, questionId) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Image must be under 10MB");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET_FORMCOVER);
+      formData.append("folder", "FormImages");
+
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: "POST", body: formData }
+      );
+      
+      const data = await res.json();
+
+      updateQuestion(questionId, "imageUrl", data.secure_url);
+    } catch (err) {
+      console.error(err);
+      alert("Image upload failed");
+    }
+  };
+
+  // Allow <b> and <strong> for questions
+  const sanitizeBoldOnly = (html) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+
+    const walk = (node) => {
+      // Copy children first (important to avoid mutation issues)
+      const children = Array.from(node.childNodes);
+
+      for (let child of children) {
+        if (child.nodeType === 1) {
+          const tag = child.tagName.toLowerCase();
+
+          if (!["b", "strong", "br"].includes(tag)) {
+            const parent = child.parentNode;
+
+            // ✅ SAFETY CHECK (fixes your crash)
+            if (!parent) continue;
+
+            while (child.firstChild) {
+              parent.insertBefore(child.firstChild, child);
+            }
+
+            parent.removeChild(child);
+          } else {
+            walk(child);
+          }
+        }
+      }
+    };
+
+    walk(div);
+    return div.innerHTML;
+  };
 
   if (user === undefined) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
-        <p style={{ color: "white", fontSize: "1.2rem" }}>Loading...</p>
+        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem", textAlign: "center" }}>Please try logging in again.</p>
       </div>
     );
   }
@@ -386,7 +468,7 @@ export default function FormAdminBuilder() {
   if (user && !admin) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#7E0C0E" }}>
-        <p style={{ color: "white", fontSize: "1.2rem" }}>Redirecting to user page...</p>
+        <p className="font-montserrat" style={{ color: "white", fontSize: "1.2rem", textAlign: "center" }}>You do not have permission to view this page.</p>
       </div>
     );
   }
@@ -570,23 +652,31 @@ export default function FormAdminBuilder() {
             }}
             placeholder="Form Title"
           />
-          <textarea
-            value={form.description}
-            onChange={(e) => updateFormMeta("description", e.target.value)}
+          <div
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(e) => {
+              const clean = sanitizeBoldOnly(e.currentTarget.innerHTML);
+              updateFormMeta("description", clean);
+            }}
+            onPaste={(e) => {
+              e.preventDefault();
+              const text = e.clipboardData.getData("text/plain");
+              document.execCommand("insertText", false, text);
+            }}
+            dangerouslySetInnerHTML={{ __html: form.description || "" }}
             style={{
               width: "100%",
               fontSize: "1rem",
-              border: "none",
               outline: "none",
               padding: "0.25rem 0",
-              boxSizing: "border-box",
               color: "#4b5563",
-              resize: "none",
               minHeight: "40px",
-              placeholder: "Form Description"
+              whiteSpace: "pre-wrap",
+              borderBottom: "1px solid transparent"
             }}
-            placeholder="Form Description"
-            rows={2}
+            onFocus={(e) => (e.target.style.borderBottom = "1px solid #2563eb")}
+            onBlurCapture={(e) => (e.target.style.borderBottom = "1px solid transparent")}
           />
         </div>
 
@@ -688,7 +778,7 @@ export default function FormAdminBuilder() {
         </div>
 
         <div style={{ marginBottom: "2rem" }}>
-          {form.questions.map((question) => (
+          {form.questions.map((question, index) => (
             <div
               key={question.id}
               style={{
@@ -709,10 +799,19 @@ export default function FormAdminBuilder() {
                 alignItems: "flex-start",
                 marginBottom: "1rem"
               }}>
-                <input
-                  type="text"
-                  value={question.label}
-                  onChange={(e) => updateQuestion(question.id, "label", e.target.value)}
+                <div
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) => {
+                    const clean = sanitizeBoldOnly(e.currentTarget.innerHTML);
+                    updateQuestion(question.id, "label", clean);
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    const text = e.clipboardData.getData("text/plain");
+                    document.execCommand("insertText", false, text);
+                  }}
+                  dangerouslySetInnerHTML={{ __html: question.label || "" }}
                   style={{
                     width: "100%",
                     maxWidth: "600px",
@@ -724,11 +823,10 @@ export default function FormAdminBuilder() {
                     boxSizing: "border-box",
                     borderBottom: "1px solid transparent",
                     color: "#111827",
-                    placeholder: "Question"
+                    whiteSpace: "pre-wrap"
                   }}
-                  onFocus={(e) => e.target.style.borderBottom = "1px solid #2563eb"}
-                  onBlur={(e) => e.target.style.borderBottom = "1px solid transparent"}
-                  placeholder="Question"
+                  onFocus={(e) => (e.target.style.borderBottom = "1px solid #2563eb")}
+                  onBlurCapture={(e) => (e.target.style.borderBottom = "1px solid transparent")}
                 />
                 <select
                   value={question.type}
@@ -889,12 +987,88 @@ export default function FormAdminBuilder() {
                 </div>
               )}
 
+              {question.type === "info" && (
+                <div
+                  style={{
+                    padding: "0.75rem",
+                    borderRadius: "0.375rem",
+                    backgroundColor: "#f9fafb",
+                    color: "#374151",
+                    fontSize: "0.95rem",
+                    marginBottom: "1rem"
+                  }}
+                >
+                  ℹ️ This is display text only. Users will not answer this.
+                </div>
+              )}
+
+              {question.type === "image" && (
+                <div style={{ marginBottom: "1rem" }}>
+                  
+                  {!question.imageUrl ? (
+                    // ✅ No image yet → show upload
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleQuestionImageUpload(e, question.id)}
+                    />
+                  ) : (
+                    // ✅ Image exists → show preview + controls
+                    <div>
+                      <img
+                        src={question.imageUrl}
+                        alt="Uploaded"
+                        style={{
+                          maxWidth: "100%",
+                          borderRadius: "0.5rem",
+                          border: "1px solid #e5e7eb"
+                        }}
+                      />
+
+                      <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem" }}>
+                        {/* Change Image */}
+                        <label
+                          style={{
+                            cursor: "pointer",
+                            color: "#2563eb",
+                            fontSize: "0.85rem"
+                          }}
+                        >
+                          Change Image
+                          <input
+                            type="file"
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            onChange={(e) => handleQuestionImageUpload(e, question.id)}
+                          />
+                        </label>
+
+                        {/* Remove Image */}
+                        <button
+                          onClick={() => updateQuestion(question.id, "imageUrl", "")}
+                          style={{
+                            color: "#ef4444",
+                            border: "none",
+                            background: "none",
+                            cursor: "pointer",
+                            fontSize: "0.85rem"
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
                 marginTop: "1rem"
               }}>
+                {!["info", "image"].includes(question.type) && (
                 <div style={{
                   display: "flex",
                   alignItems: "center",
@@ -922,10 +1096,12 @@ export default function FormAdminBuilder() {
                     Required
                   </label>
                 </div>
-
+              )}
+              
                 <button
                   onClick={() => deleteQuestion(question.id)}
                   style={{
+                    marginLeft: "auto",
                     color: "#ef4444",
                     border: "none",
                     background: "none",
@@ -939,6 +1115,30 @@ export default function FormAdminBuilder() {
                 >
                   🗑️ Delete Question
                 </button>
+
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <button
+                    onClick={() => moveQuestion(index, -1)}
+                    disabled={index === 0}
+                    style={{
+                      cursor: index === 0 ? "not-allowed" : "pointer",
+                      opacity: index === 0 ? 0.3 : 1
+                    }}
+                  >
+                    ⬆️
+                  </button>
+
+                  <button
+                    onClick={() => moveQuestion(index, 1)}
+                    disabled={index === form.questions.length - 1}
+                    style={{
+                      cursor: index === form.questions.length - 1 ? "not-allowed" : "pointer",
+                      opacity: index === form.questions.length - 1 ? 0.3 : 1
+                    }}
+                  >
+                    ⬇️
+                  </button>
+                </div>
               </div>
             </div>
           ))}
