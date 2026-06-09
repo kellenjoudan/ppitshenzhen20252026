@@ -260,6 +260,30 @@ export default function Home() {
 				</div>
 			</section>
 
+			{/* Guidebook Section */}
+			<section className="bg-[#7E0C0E] py-16 px-8 lg:px-8 w-full mx-auto">
+				<div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-white">
+					<div className="flex flex-col lg:flex-row gap-4 md:gap-6 xl:gap-8 xl:mx-24 md:mx-16 mx-12 items-center justify-between">
+						<div className="flex flex-col">
+							<h2 className="text-center lg:text-left sm:text-5xl text-3xl font-bold text-white font-montserrat">
+								Guidebook for Freshmen
+							</h2>
+							<p className="text-xl md:text-2xl text-center lg:text-left font-montserrat relative z-10 text-white mt-2 max-w-2xl">
+								Guidebook ini dibuat untuk membantu mahasiswa yang akan atau sedang menjalani minggu awal di Shenzhen. Di sini kamu bisa menemukan informasi yang paling sering dibutuhkan, dikemas sesuai dengan masing-masing universitas biar lebih relevan dan mudah dicari.
+							</p>
+						</div>
+						<div className="flex items-center justify-center mt-4 lg:mt-0">
+							<Link
+								href="https://docs.google.com/document/d/1B8F7FHKaJyNP60lPWjCit8to9lZ5qNiGvsrr4nQGD14/edit?usp=drivesdk"
+								className="text-white font-bold xl:text-3xl text-2xl xl:px-6 px-4 py-3 mx-4 bg-red-600 font-montserrat hover:scale-110 transition duration-300 text-center relative z-20 rounded-md"
+							>
+								View Here
+							</Link>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			{/* Merchandise Section */}
 			<section className="bg-[#7E0C0E] py-16 px-8 lg:px-8 w-full mx-auto">
     <div className="relative z-10 max-w-[90rem] mx-auto md:px-12 px-8 lg:px-8 text-white">
