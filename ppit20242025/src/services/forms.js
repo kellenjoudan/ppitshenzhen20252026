@@ -149,6 +149,7 @@ export async function getAllForms() {
             coverImage: data.coverImage,
             headerColor: data.headerColor,
             isActive: data.isActive,
+            isClosed: data.isClosed,
         };
     });
 

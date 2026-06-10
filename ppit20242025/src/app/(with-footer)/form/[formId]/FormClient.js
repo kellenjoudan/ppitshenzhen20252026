@@ -5,9 +5,10 @@
 
 import { useState, useEffect } from "react";
 import { submitResponse } from "../../../../services/forms";
-import { auth } from "../../../../lib/firebase";
+import { auth, db } from "../../../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { getDoc, doc } from "firebase/firestore";
 
 export default function FormClient({ form }) {
   const [user, setUser] = useState(null);
@@ -16,14 +17,26 @@ export default function FormClient({ form }) {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const router = useRouter();
 
   /* Auth check */
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u);
       setLoading(false);
+      try {
+        const ref = doc(db, "users", u.uid);
+        const snapshot = await getDoc(ref);
+        const submittedForms = snapshot.data().submittedForms;
+        if(submittedForms.includes(form.id)) {
+          setFormSubmitted(true);
+        }
+      } catch (e) {
+        console.error("error in checking status" + e)
+      }
     });
+
     return () => unsub();
   }, []);
 
@@ -41,6 +54,17 @@ export default function FormClient({ form }) {
         <div className="font-montserrat" style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "3rem", fontWeight: "bolder" }}>Please log in to submit this form.</div>
       </div>
     );
+  }
+
+  if (formSubmitted) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", backgroundColor: "#7E0C0E", fontFamily: "Arial, sans-serif", margin: 0, padding: 0, gap: "1rem" }}>
+        <div className="font-montserrat" style={{ fontSize: "2rem", fontWeight: "bold" }}>Form can only be filled once.</div>
+        <button onClick={() => router.push('/form')} className="underline hover:text-white text-lg md:text-base text-gray-300">
+          Go back to forms page
+        </button>
+      </div>
+    )
   }
 
   if (submitting) {
@@ -158,24 +182,26 @@ export default function FormClient({ form }) {
           {form.title}
         </h1>
 
-        <p className="text-sm text-center text-gray-200 mt-2 mb-10">
-          {form.description}
-        </p>
+        <p
+          className="text-sm text-center text-gray-200 mt-2 mb-10"
+          style={{ whiteSpace: "pre-line" }}
+          dangerouslySetInnerHTML={{ __html: form.description }}
+        />
 
         {form.questions.map((q) => (
           <div key={q.id} className="mb-8">
-            {q.type === "info" && (
-              <div className="mb-4 p-4 bg-[#B88C8C]/20 rounded text-white">
-                {q.label}
-              </div>
-            )}
-
-            {/* INFO / DISPLAY ONLY */}
-            {q.type === "info" && (
-              <p className="text-gray-200 text-sm leading-relaxed">
-                {q.label}
-              </p>
-            )}
+            {/* TITLE/LABEL */}
+            <label
+              className="block mb-3 text-lg font-semibold"
+              style={{ whiteSpace: "pre-line" }}
+              dangerouslySetInnerHTML={{
+                __html:
+                  (q.type === "info"
+                    ? `<span style="font-weight: normal;">${q.label}</span>`
+                    : q.label) +
+                  (q.required && q.type !== "info" ? " *" : ""),
+              }}
+            />
 
             {/* TEXTAREA (COMMENTS) */}
             {q.type === "textarea" && (
@@ -203,6 +229,18 @@ export default function FormClient({ form }) {
                 onChange={(e) =>
                   setAnswers({ ...answers, [q.id]: e.target.files[0] })
                 }
+              />
+            )}
+
+            {q.type === "image" && q.imageUrl && (
+              <img
+                src={q.imageUrl}
+                alt="Form content"
+                style={{
+                  width: "100%",
+                  borderRadius: "0.5rem",
+                  marginBottom: "1rem"
+                }}
               />
             )}
 
